@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group>
+        <item
+            android:id="@+id/Profile"
+            android:icon="@drawable/person_"
+            android:title="Profile" />
+        <item
+            android:id="@+id/Wishlist"
+            android:icon="@drawable/wishlist"
+            android:title="Wishlist" />
+
+        <item
+            android:id="@+id/History"
+            android:icon="@drawable/history"
+            android:title="History" />
+        <item
+            android:id="@+id/FAQ"
+            android:icon="@drawable/faq"
+            android:title="FAQ" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@drawable/baseline_logout_24"
+            android:title="Logout" />
+    </group>
+
+
+</menu>

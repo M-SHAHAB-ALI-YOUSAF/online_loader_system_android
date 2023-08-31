@@ -1,0 +1,51 @@
+<!-- res/layout/splash_screen.xml -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#fece2f">
+
+    <ImageView
+        android:id="@+id/logo_image"
+        android:layout_width="@dimen/_350sdp"
+        android:layout_height="@dimen/_300sdp"
+        android:layout_marginTop="130dp"
+        android:src="@drawable/truck"
+        android:transitionName="logo_image"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/book_loader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/bungee"
+        android:text="BOOK LOADER"
+        android:transitionName="logo_text"
+        android:textAlignment="center"
+        android:textSize="48sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logo_image" />
+
+    <TextView
+        android:id="@+id/slogan"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/antic"
+        android:text="Load up, Lift off"
+        android:textAlignment="center"
+        android:textColor="#000000"
+        android:transitionName="logo_text"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/book_loader" />
+
+
+    <!-- You can add more UI elements or customize the layout further -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

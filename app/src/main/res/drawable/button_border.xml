@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/button_border.xml -->
+<!-- res/drawable/button_border.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="#00000000" /> <!-- Transparent background -->
+    <stroke android:width="2dp" android:color="#FF000000" /> <!-- Black border -->
+    <corners android:radius="4dp" />
+</shape>

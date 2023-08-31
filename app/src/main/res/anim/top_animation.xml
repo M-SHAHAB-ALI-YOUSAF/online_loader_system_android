@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Translate animation for moving 50% from left to right -->
+    <translate
+        android:duration="1000"
+        android:fromXDelta="-0%"
+        android:toXDelta="0%" />
+
+    <!-- Delay animation in the center for 1 second -->
+    <set android:startOffset="2000">
+        <alpha
+            android:duration="0"
+            android:fromAlpha="1.0"
+            android:toAlpha="1.0" />
+    </set>
+
+    <!-- Translate animation for moving the remaining 50% to the right -->
+    <translate
+        android:duration="1000"
+        android:fromXDelta="0%"
+        android:toXDelta="20%" />
+</set>
+
+
+
+    <!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<set xmlns:android="http://schemas.android.com/apk/res/android">-->
+<!--    <translate-->
+<!--        android:duration="2000"-->
+<!--        android:fromXDelta="0%"-->
+<!--        android:fromYDelta="-50%" />-->
+<!--    <alpha-->
+<!--        android:duration="1500"-->
+<!--        android:fromAlpha="0.1"-->
+<!--        android:toAlpha="1.0" />-->
+<!--</set>-->
