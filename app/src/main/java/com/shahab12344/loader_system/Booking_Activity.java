@@ -13,7 +13,7 @@ public class Booking_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_booking);
 
 
-        Fragment fragment = new Show_Profile_customerFragment();
+        Fragment fragment = new Dashbaord_Fragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
     }
 }

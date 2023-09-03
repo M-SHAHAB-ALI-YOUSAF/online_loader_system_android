@@ -1,27 +1,35 @@
 package com.shahab12344.loader_system;
+
 import android.os.Bundle;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Faq extends AppCompatActivity {
-
+public class FaqFragment extends Fragment {
     private RecyclerView recyclerView;
     private ParentAdapter parentAdapter;
     private List<QuestionAnswer> questionAnswers;
+    public FaqFragment() {
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_faq);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        View view =  inflater.inflate(R.layout.fragment_faq, container, false);
+
+        //faq
+        recyclerView = view.findViewById(R.id.recyclerViewforfaq);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         // Create sample question-answer pairs
         questionAnswers = new ArrayList<>();
@@ -43,5 +51,7 @@ public class Faq extends AppCompatActivity {
 
         parentAdapter = new ParentAdapter(questionAnswers);
         recyclerView.setAdapter(parentAdapter);
+
+        return view;
     }
 }

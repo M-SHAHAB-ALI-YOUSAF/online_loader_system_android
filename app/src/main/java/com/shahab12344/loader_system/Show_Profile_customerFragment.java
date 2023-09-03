@@ -8,10 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 public class Show_Profile_customerFragment extends Fragment {
 
-    Button btn_edit_profile, back_to_dashboard;
+    Button btn_edit_profile;
+    ImageView back_to_dashboard;
     public Show_Profile_customerFragment() {
 
     }
@@ -28,6 +30,15 @@ public class Show_Profile_customerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new Edit_customer_profileFragment();
+                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
+            }
+        });
+
+        back_to_dashboard = view.findViewById(R.id.showprofile_back);
+        back_to_dashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new Dashbaord_Fragment();
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
             }
         });

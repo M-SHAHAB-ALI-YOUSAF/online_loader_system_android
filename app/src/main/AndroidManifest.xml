@@ -38,12 +38,6 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".imagepicker"
-            android:exported="false" />
-        <activity
-            android:name=".Edit_profile_customer"
-            android:exported="false" />
-        <activity
             android:name=".message_customer_end"
             android:exported="false" />
         <!--
@@ -65,53 +59,6 @@
             android:name=".Dashboard_with_map"
             android:exported="false"
             android:label="@string/title_activity_dashboard_with_map" />
-        <activity
-            android:name=".ride_detail_customer_end"
-            android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".UserProfile"
-            android:exported="false" />
-        <activity
-            android:name=".OTP_screen"
-            android:exported="false" />
-        <activity
-            android:name=".Login_customer"
-            android:exported="false" />
-        <activity
-            android:name=".complaint"
-            android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- &lt;!&ndash;&ndash;&gt; -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".Faq"
-            android:exported="false" />
-        <activity
-            android:name=".Dashboard"
-            android:exported="true">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
-        <activity
-            android:name=".SignUp_customer"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

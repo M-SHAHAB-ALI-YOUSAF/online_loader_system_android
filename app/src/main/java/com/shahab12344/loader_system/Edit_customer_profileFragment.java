@@ -11,7 +11,7 @@ import android.widget.ImageView;
 
 public class Edit_customer_profileFragment extends Fragment {
 
-    ImageView back_to_show_profile;
+    ImageView back_to_show_profile, btn_edit_done;
     public Edit_customer_profileFragment() {
         // Required empty public constructor
     }
@@ -29,6 +29,17 @@ public class Edit_customer_profileFragment extends Fragment {
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
             }
         });
+
+        //update
+        btn_edit_done = view.findViewById(R.id.btn_profile_edit_done);
+        btn_edit_done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment fragment = new ComplaintFragment();
+                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
+            }
+        });
+
         return  view;
     }
 }

@@ -1,5 +1,6 @@
 package com.shahab12344.loader_system;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,12 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class OTP_Fragment extends Fragment {
     Button btn_otp_verify;
     TextView resent_otp;
+    ImageView back_to_login;
     public OTP_Fragment() {
         // Required empty public constructor
     }
@@ -27,9 +30,22 @@ public class OTP_Fragment extends Fragment {
         btn_otp_verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent dashboard = new Intent(getContext(), Booking_Activity.class);
+                startActivity(dashboard);
+
+              }
+        });
 
 
-                Fragment fragment = new Signup_driverFragment();
+        //back to login
+
+        back_to_login = view.findViewById(R.id.otp_back);
+        back_to_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+                Fragment fragment = new Login_customers();
                 getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
             }
         });

@@ -56,7 +56,7 @@ public class driver_vehicle_informationFragment extends Fragment {
         back_to_driver_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               Intent booking = new Intent(getActivity(), Booking_Activity.class);
+               Intent booking = new Intent(getActivity(), Signup_driverFragment.class);
                startActivity(booking);
                   }
         });
