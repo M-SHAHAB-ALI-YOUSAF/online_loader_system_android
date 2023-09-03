@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,8 @@ import java.util.List;
 
 public class FaqFragment extends Fragment {
     private RecyclerView recyclerView;
+
+    ImageView bac_to_home;
     private ParentAdapter parentAdapter;
     private List<QuestionAnswer> questionAnswers;
     public FaqFragment() {
@@ -51,6 +54,16 @@ public class FaqFragment extends Fragment {
 
         parentAdapter = new ParentAdapter(questionAnswers);
         recyclerView.setAdapter(parentAdapter);
+
+        bac_to_home = view.findViewById(R.id.faqBack);
+        bac_to_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment dashboard = new Dashbaord_Fragment();
+                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, dashboard).commit();
+
+            }
+        });
 
         return view;
     }

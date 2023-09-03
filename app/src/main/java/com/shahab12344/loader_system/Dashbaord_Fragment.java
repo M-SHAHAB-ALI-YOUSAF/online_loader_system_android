@@ -243,10 +243,10 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment3).commit();
                 break;
 //
-//            case R.id.History:
-//                Intent history = new Intent(Dashboard.this, ride_detail_customer_end.class);
-//                startActivity(history);
-//                break;
+            case R.id.History:
+                Fragment review = new review_and_rating();
+                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, review).commit();
+                break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;

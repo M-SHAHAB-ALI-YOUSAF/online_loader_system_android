@@ -8,11 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 public class ComplaintFragment extends Fragment {
 
     Button btn_submit_complaint;
+    ImageView back_to_home;
 
     public ComplaintFragment() {
 
@@ -32,6 +34,16 @@ public class ComplaintFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "Complaint submit", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        back_to_home = view.findViewById(R.id.complaintback);
+        back_to_home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment dashboard = new Dashbaord_Fragment();
+                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, dashboard).commit();
 
             }
         });

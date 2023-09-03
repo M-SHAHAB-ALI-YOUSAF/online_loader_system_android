@@ -38,7 +38,7 @@
                 android:id="@+id/centerText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Profile"
+                android:text="Edit Profile"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15ssp"
@@ -126,24 +126,6 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Text Input Field 2 -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_username"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Username"
-                android:transitionName="username_tran"
-                app:counterMaxLength="15">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/person_"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:text="Yashii"
-                    android:inputType="text" />
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Text Input Field 3 -->
             <com.google.android.material.textfield.TextInputLayout
@@ -162,6 +144,22 @@
                     android:inputType="textEmailAddress" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/reg_password"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Phone No"
+                android:transitionName="password_tran">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/call_icon"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:inputType="number"
+                    android:text="+923129809112" />
+            </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
 
