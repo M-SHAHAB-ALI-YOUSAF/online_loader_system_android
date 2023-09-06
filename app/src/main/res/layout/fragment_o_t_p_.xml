@@ -148,7 +148,7 @@
                     ></EditText>
 
                 <EditText
-                    android:id="@+id/otp6"
+                    android:id="@+id/otp5"
                     android:layout_width="40dp"
                     android:layout_height="46dp"
                     android:layout_marginStart="4dp"
@@ -162,7 +162,7 @@
                     android:textStyle="bold"></EditText>
 
                 <EditText
-                    android:id="@+id/otp5"
+                    android:id="@+id/otp6"
                     android:layout_width="40dp"
                     android:layout_height="46dp"
                     android:layout_marginStart="4dp"
@@ -215,6 +215,9 @@
                 android:text="SUBMIT"
                 android:textStyle="bold" />
         </LinearLayout>
+
+
     </RelativeLayout>
+
 
 </FrameLayout>

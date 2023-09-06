@@ -15,7 +15,7 @@ public class Login_Registration extends AppCompatActivity {
 
         //---- PreLogin Fragement ---
 
-        Fragment fragment = new Login_customers();
+        Fragment fragment = new signup_customer_Fragment();
 
         // Replace the fragment in the container
         getSupportFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();

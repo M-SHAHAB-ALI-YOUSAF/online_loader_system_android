@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "803792577549",
+    "project_id": "cargo--go",
+    "storage_bucket": "cargo--go.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:803792577549:android:41773c3a1c71bae6e56144",
+        "android_client_info": {
+          "package_name": "com.shahab12344.loader_system"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "803792577549-jinqa2j815r0q7nivb36uo5edn9vchsi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shahab12344.loader_system",
+            "certificate_hash": "af416c1860ab315b9d991ac807740f1e6bae6815"
+          }
+        },
+        {
+          "client_id": "803792577549-sota5tom9mig7j8eqmkmjjrokl9jq7m1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB56_yL-AI3617c-iLAfyErBwV1T-tRC7Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "803792577549-sota5tom9mig7j8eqmkmjjrokl9jq7m1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
