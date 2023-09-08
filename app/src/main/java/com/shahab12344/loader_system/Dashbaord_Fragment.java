@@ -49,6 +49,10 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     private Spinner spinnerCount;
     private Button buttonFindDriver;
     NavigationView navigationView;
+
+    //session
+    private SessionManager sessionManager;
+
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
@@ -63,6 +67,11 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_dashbaord_, container, false);
+
+        //session
+        sessionManager = new SessionManager(getContext());
+
+
         //location must on
         if (!isLocationEnabled()) {
             showLocationSettingsAlert();
@@ -239,8 +248,11 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 //                break;
 
             case R.id.logout:
-                Fragment fragment3 = new ComplaintFragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment3).commit();
+                sessionManager.logoutUser();
+
+                // Navigate back to the login or splash screen
+                Intent intent = new Intent(requireActivity(), Login_Registration.class); // Replace with your login activity
+                startActivity(intent);
                 break;
 //
             case R.id.History:

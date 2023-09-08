@@ -17,34 +17,56 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+
+    //+++++++++++++++++++++variables++++++++++++++++++++++++++++++++++++++
     Animation topAnim, bottomAnim;
     ImageView image;
     TextView logo, slogan;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+    //+++++++++++++++++++++Full screen no top bar++++++++++++++++++++++++++++++++++++++
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        //Hooks
+
+    //+++++++++++++++++++++Session for customer+++++++++++++++++++++++++++++++++++++++++
+        sessionManager = new SessionManager(this);
+
+    //+++++++++++++++++++++++++++hetting ids++++++++++++++++++++++++++++++++++++++++++++
         image = findViewById(R.id.logo_image);
         logo = findViewById(R.id.book_loader);
         slogan = findViewById(R.id.slogan);
 
-        //Animations
+    //+++++++++++++++++++++Animation+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
         bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
-        //Set animation to elements
+
+    //+++++++++++++++++++++setting animation to elements++++++++++++++++++++++++++++++++++++++
         image.setAnimation(topAnim);
         logo.setAnimation(bottomAnim);
         slogan.setAnimation(bottomAnim);
 
+
+    //+++++++++++++++++++++Handle for going to login+++++++++++++++++++++++++++++++++++++++++++++
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this, driver_or_customer.class);
+
+   //+++++++++++++++++++++if customer has logged in before and don't logout++++++++++++++++++++++++++++++++++++++
+                if (sessionManager.isLoggedIn()) {
+                    // User is logged in, navigate to the dashboard activity
+                    Intent intent = new Intent(MainActivity.this, Booking_Activity.class);
+                    startActivity(intent);
+                }
+
+     //+++++++++++++++++++++new customer or customer logout when last use++++++++++++++++++++++++++++++++++++++
+                else {
+                Intent intent = new Intent(MainActivity.this, Login_Registration.class);
                 // Attach all the elements those you want to animate in design
                 Pair[] pairs = new Pair[2];
                 pairs[0] = new Pair<View, String>(image, "logo_image");
@@ -56,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
                 }
                 finish();
             }
+            }
         }, 3000);
     }
+
 
 
 }

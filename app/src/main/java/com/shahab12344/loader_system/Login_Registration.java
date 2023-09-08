@@ -13,11 +13,8 @@ public class Login_Registration extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_registration);
 
-        //---- PreLogin Fragement ---
-
-        Fragment fragment = new signup_customer_Fragment();
-
-        // Replace the fragment in the container
+   //++++++++++++++++++++++++++++++++++Activity that handle all login methods first it go to login+++++++++++++++++++++++++++++
+        Fragment fragment = new Login_customers();
         getSupportFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
     }
 
