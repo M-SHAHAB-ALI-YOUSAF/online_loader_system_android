@@ -3,12 +3,16 @@ package com.shahab12344.loader_system;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +21,10 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.material.textfield.TextInputLayout;
@@ -31,6 +37,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -249,8 +256,13 @@ public class signup_customer_Fragment extends Fragment {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            progressDialog.hide();
-                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                            if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                                // Handle connection error here
+                                Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            } else {
+                                // Handle other errors
+                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
                     }) {
                 @Override
@@ -267,18 +279,25 @@ public class signup_customer_Fragment extends Fragment {
 
     //+++++++++++++++++++++++++++++++After OTP VERIFICATION DATA IS SEND TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void senddatatodatabase() {
+        // Convert the drawable image to a byte array
+//        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.truck);
+//        Bitmap bitmap = bitmapDrawable.getBitmap();
+//        ByteArrayOutputStream byteArrayOutputStream;
+//        byteArrayOutputStream = new ByteArrayOutputStream();
+//        if(bitmap!=null){
+//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+//            byte[] bytes = byteArrayOutputStream.toByteArray();
+//            final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_REGISTER,
+                "http://192.168.10.4/FYP/v1/registerUser.php",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-//                        progressDialog.dismiss();
-
+                        // Handle the response here
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-
                             Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -287,8 +306,13 @@ public class signup_customer_Fragment extends Fragment {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        progressDialog.hide();
-                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            // Handle connection error here
+                            Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                        } else {
+                            // Handle other errors
+                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }) {
             @Override
@@ -299,11 +323,15 @@ public class signup_customer_Fragment extends Fragment {
                 params.put("email", email);
                 params.put("phoneno", phoneno);
                 params.put("profileimage", "null");
+
                 return params;
             }
         };
 
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
+
+
+//}
 
 }

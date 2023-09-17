@@ -11,6 +11,8 @@ public class Constants {
 
     public static final String URL_USER_DATA = ROOT_URL+"alluserbyphoneno.php";
 
+    public static final String URL_UPDATE_RECORD = ROOT_URL+"updateUser.php";
+
 
 
 }

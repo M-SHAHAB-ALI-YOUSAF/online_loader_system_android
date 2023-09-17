@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -108,21 +109,10 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 //---- PreLogin Fragement ---
 
                 Fragment fragment = new Booking_detail_Fragment();
-
-                // Replace the fragment in the container
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
 
-                // Perform actions based on the user input
-                // For example, start a new activity or show a message
             }
         });
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//
-//        trip_detail_fragment tripRequestFragment = new trip_detail_fragment();
-//        fragmentTransaction.replace(R.id.fragmentContainer, tripRequestFragment);
-//
-//        fragmentTransaction.commit();
 
 
         //side drawer code
@@ -139,7 +129,18 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         });
 
 
-        NavigationView navigationView = view.findViewById(R.id.nav_view);
+        navigationView = view.findViewById(R.id.nav_view);
+        //adding textview header
+        View headerView = navigationView.getHeaderView(0);
+
+        // Find the TextView in the header layout by its ID
+        TextView headerTextView = headerView.findViewById(R.id.User_name_in_header);
+
+        // Retrieve the user's first name from SessionManager
+        String firstName = sessionManager.getFirstName();
+
+        // Set the first name in the TextView
+        headerTextView.setText(firstName);
         navigationView.bringToFront();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -245,7 +246,6 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 Fragment fragment2 = new FaqFragment();
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment2).commit();
                 break;
-//                break;
 
             case R.id.logout:
                 sessionManager.logoutUser();
@@ -254,7 +254,6 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 Intent intent = new Intent(requireActivity(), Login_Registration.class); // Replace with your login activity
                 startActivity(intent);
                 break;
-//
             case R.id.History:
                 Fragment review = new review_and_rating();
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, review).commit();

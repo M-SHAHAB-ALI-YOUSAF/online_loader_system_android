@@ -11,6 +11,8 @@ public class SessionManager {
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PHONE_NUMBER = "phone_number";
 
+    private static final String KEY_PROFILE_IMAGE_URI = "profile_image_uri";
+
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private Context context;
@@ -57,5 +59,14 @@ public class SessionManager {
 
     public String getPhoneNumber() {
         return sharedPreferences.getString(KEY_PHONE_NUMBER, "");
+    }
+
+    public void saveProfileImageUri(String uri) {
+        editor.putString(KEY_PROFILE_IMAGE_URI, uri);
+        editor.apply();
+    }
+
+    public String getProfileImageUri() {
+        return sharedPreferences.getString(KEY_PROFILE_IMAGE_URI, null);
     }
 }

@@ -54,12 +54,12 @@
             android:padding="20dp">
 
             <!-- Profile border -->
-            <ImageView
-                android:id="@+id/profile_border"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/circle_background" />
+<!--            <ImageView-->
+<!--                android:id="@+id/profile_border"-->
+<!--                android:layout_width="@dimen/_100sdp"-->
+<!--                android:layout_height="@dimen/_100sdp"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:src="@drawable/circle_background" />-->
 
             <!-- Profile image -->
             <ImageView
@@ -96,7 +96,7 @@
 
             <!-- Text Input Field 1 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_name"
+                android:id="@+id/et_f_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/last_name"
+                android:id="@+id/et_l_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -129,7 +129,7 @@
 
             <!-- Text Input Field 3 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_email"
+                android:id="@+id/et_email"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_password"
+                android:id="@+id/et_phone"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/call_icon"
                     android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="number"
+                    android:inputType="phone"
                     android:text="+923129809112" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

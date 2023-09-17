@@ -246,7 +246,6 @@ public class OTP_Fragment extends Fragment {
                                 user.setEmail(userData.getString("email"));
                                 user.setPhoneNumber(userData.getString("phoneno"));
                                 user.setProfileImage(userData.getString("profileimage"));
-                                Toast.makeText(getContext(), user.getEmail(), Toast.LENGTH_SHORT).show();
 
                                 // Create a user session and store the user's data
                                 sessionManager.createUserSession(

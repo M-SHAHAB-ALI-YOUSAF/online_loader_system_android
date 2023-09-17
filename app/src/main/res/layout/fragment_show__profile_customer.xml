@@ -123,7 +123,7 @@
 
             <!-- Text Input Field 1 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_name"
+                android:id="@+id/et_first_name_customer"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -135,11 +135,13 @@
                     android:drawableLeft="@drawable/person_"
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="text"
-                    android:text="Yashfa" />
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text="First Name" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/last_name"
+                android:id="@+id/et_last_name_customer"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -151,13 +153,15 @@
                     android:drawableLeft="@drawable/person_"
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="text"
-                    android:text="Azhar" />
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text="Last Name" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <!-- Text Input Field 3 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_email"
+                android:id="@+id/et_email_customer"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -169,12 +173,14 @@
                     android:drawableLeft="@drawable/email"
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="textEmailAddress"
-                    android:text="Yashii@gmail.com" />
+                    android:text="Example123@gmail.com"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Text Input Field 4 -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_password"
+                android:id="@+id/et_phone_customer"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -186,8 +192,10 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/call_icon"
                     android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="number"
-                    android:text="+923129809112" />
+                    android:inputType="phone"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:text="++92XXXXXXXXXX" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

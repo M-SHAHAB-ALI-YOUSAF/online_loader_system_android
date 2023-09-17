@@ -9,11 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 public class Show_Profile_customerFragment extends Fragment {
 
     Button btn_edit_profile;
     ImageView back_to_dashboard;
+
+    private SessionManager sessionManager;
     public Show_Profile_customerFragment() {
 
     }
@@ -24,6 +30,12 @@ public class Show_Profile_customerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_show__profile_customer, container, false);
+
+
+
+        //session
+        sessionManager = new SessionManager(getContext());
+
 
         btn_edit_profile = view.findViewById(R.id.edit_profile);
         btn_edit_profile.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +56,22 @@ public class Show_Profile_customerFragment extends Fragment {
         });
 
 
+        TextInputLayout firstNameEditText = view.findViewById(R.id.et_first_name_customer);
+        TextInputLayout lastNameTabTextView = view.findViewById(R.id.et_last_name_customer);
+        TextInputLayout emailTabTextView = view.findViewById(R.id.et_email_customer);
+        TextInputLayout phoneTabTextView = view.findViewById(R.id.et_phone_customer);
+
+// Retrieve user data from SessionManager
+        String firstName = sessionManager.getFirstName();
+        String lastName = sessionManager.getLastName();
+        String email = sessionManager.getEmail();
+        String phoneNumber = sessionManager.getPhoneNumber();
+
+// Set the retrieved user data to TextViews
+        firstNameEditText.getEditText().setText(firstName);
+        lastNameTabTextView.getEditText().setText(lastName);
+        emailTabTextView.getEditText().setText(email);
+        phoneTabTextView.getEditText().setText(phoneNumber);
         return view;
     }
 }
