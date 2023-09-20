@@ -7,11 +7,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class Driver_Homepage_Fragment extends Fragment {
-
+    private ToggleButton toggleButtonStatus;
+    private LinearLayout linearLayoutOffline;
     public Driver_Homepage_Fragment() {
 
     }
@@ -28,21 +33,54 @@ public class Driver_Homepage_Fragment extends Fragment {
                     return true;
                 case R.id.bottom_rating:
                     Fragment rating = new Driver_Rating_Fragment();
-                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, rating).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.driver_fragment, rating)
+                            .addToBackStack(null).commit();
                     return true;
 
                 case R.id.bottom_history:
                     Fragment history = new Driver_History_Fragment();
-                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, history).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.driver_fragment, history)
+                            .addToBackStack(null).commit();
                     return true;
 
                 case R.id.bottom_profile:
                     Fragment profile = new Driver_profile_Fragment();
-                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, profile).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.driver_fragment, profile)
+                            .addToBackStack(null).commit();
                     return true;
 
             }
             return false;
+        });
+
+        //++++++++++++++++++++++++++++++++++++++Linear layout for offline button++++++++++++++++++++++++++++++++++++++++
+        linearLayoutOffline = view.findViewById(R.id.linearLayoutOffline);
+
+
+
+        //++++++++++++++++++++++++++++++++++++++Toggle button++++++++++++++++++++++++++++++++++++++++
+        toggleButtonStatus = view.findViewById(R.id.toggleButtonStatus);
+        linearLayoutOffline.setVisibility(View.VISIBLE);
+
+        // Set an initial status (offline)
+        toggleButtonStatus.setChecked(false);
+
+        // Set a listener for the toggle button
+        toggleButtonStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // Handle status change here
+                if (isChecked) {
+                    Toast.makeText(getContext(), "ONLINE", Toast.LENGTH_SHORT).show();
+                    linearLayoutOffline.setVisibility(View.GONE);
+
+                } else {
+                    linearLayoutOffline.setVisibility(View.VISIBLE);
+                }
+            }
         });
         return view;
     }

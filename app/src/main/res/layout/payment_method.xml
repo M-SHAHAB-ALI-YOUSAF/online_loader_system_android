@@ -26,13 +26,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/btn__color"
-        android:text="EasyPaisa" />
-
-    <Button
-        android:id="@+id/jazzcashButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/btn__color"
-        android:text="JazzCash" />
+        android:text="ONLINE" />
 
 </LinearLayout>

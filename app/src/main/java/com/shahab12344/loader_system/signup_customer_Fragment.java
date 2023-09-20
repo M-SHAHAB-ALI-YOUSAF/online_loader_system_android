@@ -11,6 +11,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -50,6 +52,7 @@ public class signup_customer_Fragment extends Fragment {
     Button btn_register, btn_go_login;
     ImageView back_to_login;
     String firstname;
+    private SessionManager sessionManager;
     String lastname;
     String email;
     String phoneno, status;
@@ -77,6 +80,10 @@ public class signup_customer_Fragment extends Fragment {
         textInputEmail = view.findViewById(R.id.reg_email);
         textInputPhoneno = view.findViewById(R.id.reg_phoneNo);
 
+
+        //++++++++++++++++++++++++++++validate function+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        validation();
+
         //++++++++++++++++++++++++++++++++Bundle for data coming from otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -86,6 +93,9 @@ public class signup_customer_Fragment extends Fragment {
             email = bundle.getString("email");
             phoneno = bundle.getString("phone");
         }
+
+
+        sessionManager = new SessionManager(getContext());
 
         //++++++++++++++++++++++++++++++++FOR OTP IS VERIFIED OR NOT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
@@ -136,19 +146,153 @@ public class signup_customer_Fragment extends Fragment {
         return view;
     }
 
+    private void validation() {
+        textInputFirstname.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateFirstname(s.toString().trim());
+            }
+        });
+
+        textInputLastname.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateLastname(s.toString().trim());
+            }
+        });
+
+        textInputEmail.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validateEmail(s.toString().trim());
+            }
+        });
+
+        textInputPhoneno.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validatePhoneno(s.toString().trim());
+            }
+        });
+
+        textInputFirstname.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validateFirstname(textInputFirstname.getEditText().getText().toString().trim());
+            }
+        });
+
+        textInputLastname.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validateLastname(textInputLastname.getEditText().getText().toString().trim());
+            }
+        });
+
+        textInputEmail.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validateEmail(textInputEmail.getEditText().getText().toString().trim());
+            }
+        });
+
+        textInputPhoneno.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validatePhoneno(textInputPhoneno.getEditText().getText().toString().trim());
+            }
+        });
+    }
+
+    private void validateFirstname(String firstname) {
+        textInputFirstname.setError(null);
+
+        if (firstname.isEmpty()) {
+            textInputFirstname.setError("First name is required");
+        }
+    }
+
+    private void validateLastname(String lastname) {
+        textInputLastname.setError(null);
+
+        if (lastname.isEmpty()) {
+            textInputLastname.setError("Last name is required");
+        }
+    }
+
+    private void validateEmail(String email) {
+        textInputEmail.setError(null);
+
+        if (email.isEmpty()) {
+            textInputEmail.setError("Email is required");
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            textInputEmail.setError("Invalid email format");
+        }
+    }
+
+    private void validatePhoneno(String phoneno) {
+        textInputPhoneno.setError(null);
+
+        if (phoneno.isEmpty()) {
+            textInputPhoneno.setError("Phone number is required");
+        } else if (!isValidPakistanPhoneNumber(phoneno)) {
+            textInputPhoneno.setError("Invalid Phone No pattern");
+        }
+    }
+
+
+
 
     //++++++++++++++++++++++++++++++++Signup OTP SENDING++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void otpsend() {
-
+        progressDialog.setMessage("Sending OTP..."); // Set the message for the progress dialog
+        progressDialog.show(); // Show the progress dialog
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
-
+                progressDialog.dismiss();
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
 
@@ -158,7 +302,7 @@ public class signup_customer_Fragment extends Fragment {
 
 
                 //++++++++++++++++++++++++++++++++BUNDLE AND NAVIGATION TO OTP SCREEN++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
+                progressDialog.dismiss();
                 OTP_Fragment otp = new OTP_Fragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("f_name", firstname);
@@ -202,30 +346,7 @@ public class signup_customer_Fragment extends Fragment {
         email = textInputEmail.getEditText().getText().toString().trim();
         phoneno = textInputPhoneno.getEditText().getText().toString().trim();
 
-        textInputFirstname.setError(null);
-        textInputLastname.setError(null);
-        textInputEmail.setError(null);
-        textInputPhoneno.setError(null);
 
-        if (firstname.isEmpty()) {
-            textInputFirstname.setError("First name is required");
-            return;
-        } else if (lastname.isEmpty()) {
-            textInputLastname.setError("Last name is required");
-            return;
-        } else if (email.isEmpty()) {
-            textInputEmail.setError("Email is required");
-            return;
-        } else if (phoneno.isEmpty()) {
-            textInputPhoneno.setError("Phone number is required");
-            return;
-        } else if (!isValidPakistanPhoneNumber(phoneno)) {
-            textInputPhoneno.setError("Invalid Phone No pattern");
-            return;
-        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            textInputEmail.setError("Invalid email format");
-            return;
-        } else {
             progressDialog.setMessage("Checking Phone Number...");
             progressDialog.show();
 
@@ -274,23 +395,22 @@ public class signup_customer_Fragment extends Fragment {
             };
 
             RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
-        }
     }
 
     //+++++++++++++++++++++++++++++++After OTP VERIFICATION DATA IS SEND TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void senddatatodatabase() {
-        // Convert the drawable image to a byte array
-//        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.truck);
-//        Bitmap bitmap = bitmapDrawable.getBitmap();
-//        ByteArrayOutputStream byteArrayOutputStream;
-//        byteArrayOutputStream = new ByteArrayOutputStream();
-//        if(bitmap!=null){
-//            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
-//            byte[] bytes = byteArrayOutputStream.toByteArray();
-//            final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.truck);
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream byteArrayOutputStream;
+        byteArrayOutputStream = new ByteArrayOutputStream();
+        if(bitmap!=null){
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
+            byte[] bytes = byteArrayOutputStream.toByteArray();
+            final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "http://192.168.10.4/FYP/v1/registerUser.php",
+                "http://10.0.2.2/FYP/v1/registerUser.php",
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -298,6 +418,13 @@ public class signup_customer_Fragment extends Fragment {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+
+                            Login_customers otp = new Login_customers();
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.login_RegFragmentContainer, otp);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -322,7 +449,7 @@ public class signup_customer_Fragment extends Fragment {
                 params.put("lastname", lastname);
                 params.put("email", email);
                 params.put("phoneno", phoneno);
-                params.put("profileimage", "null");
+                params.put("profileimage", base64Image);
 
                 return params;
             }
@@ -332,6 +459,6 @@ public class signup_customer_Fragment extends Fragment {
     }
 
 
-//}
+}
 
 }

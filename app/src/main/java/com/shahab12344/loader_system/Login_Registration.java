@@ -14,7 +14,7 @@ public class Login_Registration extends AppCompatActivity {
         setContentView(R.layout.activity_login_registration);
 
    //++++++++++++++++++++++++++++++++++Activity that handle all login methods first it go to login+++++++++++++++++++++++++++++
-        Fragment fragment = new Login_customers();
+        Fragment fragment = new choiceFragment();
         getSupportFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
     }
 

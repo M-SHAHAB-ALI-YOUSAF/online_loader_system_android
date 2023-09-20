@@ -89,13 +89,21 @@ public class Login_customers extends Fragment {
 
     //+++++++++++++++++++++++++OTP SEND METHOD+++++++++++++++++++++++++++++++++++++++++++
     private void otpsend() {
+        progressDialog = new AlertDialog.Builder(getContext())
+                .setMessage("Sending OTP...")
+                .setCancelable(false) // Optionally, prevent users from dismissing the dialog
+                .create();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                progressDialog.dismiss();
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
+                progressDialog.dismiss();
+
                 Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
 
@@ -104,6 +112,8 @@ public class Login_customers extends Fragment {
                                    @NonNull PhoneAuthProvider.ForceResendingToken token) {
 
                 //+++++++++++++++++++++++++Bundle for data send and naviation to otp screen+++++++++++++++++++++++++++++++++++++++++++
+                progressDialog.dismiss();
+                progressDialog.dismiss();
                 OTP_Fragment otp = new OTP_Fragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("source", "login_customer");

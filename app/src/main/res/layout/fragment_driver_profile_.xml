@@ -128,8 +128,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/bungee"
             android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/_16ssp"
             android:text="Your Information"
             android:textColor="@color/btn__color">
 

@@ -188,7 +188,7 @@ public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallb
 
             Button buttonOption1 = dialogView.findViewById(R.id.cashButton);
             Button buttonOption2 = dialogView.findViewById(R.id.easypaisaButton);
-            Button buttonOption3 = dialogView.findViewById(R.id.jazzcashButton);
+
 
             buttonOption1.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,14 +207,6 @@ public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallb
                 }
             });
 
-            buttonOption3.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showToast("Option 3 clicked");
-                    dismiss();
-
-                }
-            });
 
             builder.setView(dialogView);
 

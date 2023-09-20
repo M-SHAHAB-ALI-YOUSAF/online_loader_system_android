@@ -78,7 +78,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Your Information"
-            android:fontFamily="@font/bungee"
+            android:textStyle="bold"
+            android:textSize="@dimen/_16ssp"
             android:gravity="center"
             android:textColor="@color/btn__color">
 

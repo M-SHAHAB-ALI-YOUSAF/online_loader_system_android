@@ -2,7 +2,7 @@ package com.shahab12344.loader_system;
 
 public class Constants {
 
-    private static final String ROOT_URL = "http://192.168.10.4/FYP/v1/";
+    private static final String ROOT_URL = "http://10.0.2.2/FYP/v1/";
 
     public static final String URL_REGISTER = ROOT_URL+"registerUser.php";
 

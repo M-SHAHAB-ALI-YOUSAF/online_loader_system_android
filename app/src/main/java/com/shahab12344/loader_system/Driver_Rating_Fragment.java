@@ -29,7 +29,9 @@ public class Driver_Rating_Fragment extends Fragment {
             switch (item.getItemId()) {
                 case R.id.bottom_home:
                     Fragment rating = new Driver_Homepage_Fragment();
-                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, rating).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.driver_fragment, rating)
+                            .addToBackStack(null).commit();
                     return true;
                 case R.id.bottom_rating:
 
@@ -37,12 +39,16 @@ public class Driver_Rating_Fragment extends Fragment {
 
                 case R.id.bottom_history:
                     Fragment history = new Driver_History_Fragment();
-                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, history).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.driver_fragment, history)
+                            .addToBackStack(null).commit();
                     return true;
 
                 case R.id.bottom_profile:
                     Fragment profile = new Driver_profile_Fragment();
-                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, profile).commit();
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.driver_fragment, profile)
+                            .addToBackStack(null).commit();
                     return true;
 
             }
