@@ -50,7 +50,6 @@
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:text="Enter your phone number"
             android:layout_marginTop="@dimen/_30sdp"
             android:textAlignment="center"
@@ -62,47 +61,29 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout2"
-            android:layout_width="245dp"
-            android:layout_height="56dp"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/backgroundbox"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_gravity="center"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            tools:ignore="MissingConstraints">
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="@dimen/_40ssp"
-                android:layout_height="@dimen/_30ssp"
-                android:textColor="@color/black"
-                android:layout_marginStart="9dp"
-                android:text="+92"
-                android:textSize="@dimen/_15ssp"
-                android:gravity="center_vertical"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-            <EditText
-                android:id="@+id/et_phone_no"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_37ssp"
-                android:background="@android:color/transparent"
-                android:ems="10"
-                android:hint="3128591374"
-                android:inputType="number"
-                android:textColor="#861B1A1A"
-                android:textSize="@dimen/_15ssp"
+           <LinearLayout
+               android:layout_width="@dimen/_200sdp"
+               android:layout_height="wrap_content"
+              android:layout_marginTop="@dimen/_10sdp"
+               >
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/login_phoneno"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                app:errorEnabled="true"
+                android:layout_height="wrap_content"
+                android:hint="Phone No">
 
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/textView3"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
-        </LinearLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="phone"
+                    android:text="+923128591374"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
+           </LinearLayout>
         <Button
             android:id="@+id/get_otp"
             android:layout_width="@dimen/_100sdp"

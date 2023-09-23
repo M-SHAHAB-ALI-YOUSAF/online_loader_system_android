@@ -1,13 +1,17 @@
 package com.shahab12344.loader_system;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -57,6 +61,7 @@ public class signup_customer_Fragment extends Fragment {
     String email;
     String phoneno, status;
 
+    private Dialog dialog;
     //++++++++++++++++++++++++++++++++Firebase variables++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     private FirebaseAuth mAuth;
@@ -98,7 +103,6 @@ public class signup_customer_Fragment extends Fragment {
         sessionManager = new SessionManager(getContext());
 
         //++++++++++++++++++++++++++++++++FOR OTP IS VERIFIED OR NOT++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
         if (status == "true") {
             textInputFirstname.getEditText().setText(firstname);
             textInputLastname.getEditText().setText(lastname);
@@ -107,6 +111,35 @@ public class signup_customer_Fragment extends Fragment {
 
             senddatatodatabase();
         }
+
+
+        //+++++++++++++++++++++++++++++=custome dialog+++++++++++++++++++++++++++++++++++++++++
+        dialog = new Dialog(getContext());
+        dialog.setContentView(R.layout.custom_dialog_layout);
+        // Get the drawable resource using ContextCompat.getDrawable()
+        Drawable drawable = ContextCompat.getDrawable(requireContext(), R.drawable.custom_dialog_background);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            dialog.getWindow().setBackgroundDrawable(drawable);
+        }
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false); //Optional
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
+
+        Button Okay = dialog.findViewById(R.id.btn_okay);
+
+        Okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                dialog.dismiss();
+                Login_customers otp = new Login_customers();
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.replace(R.id.login_RegFragmentContainer, otp);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
 
         // Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
@@ -131,8 +164,8 @@ public class signup_customer_Fragment extends Fragment {
             }
         });
 
-        //++++++++++++++++++++++++++++++++Using back button to login++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+        //++++++++++++++++++++++++++++++++Using back button to login++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         back_to_login = view.findViewById(R.id.signup_back);
         back_to_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,6 +179,8 @@ public class signup_customer_Fragment extends Fragment {
         return view;
     }
 
+
+    //+++++++++++++++++++++++++++++++++validation of input fields+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void validation() {
         textInputFirstname.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -240,11 +275,18 @@ public class signup_customer_Fragment extends Fragment {
         });
     }
 
+    //++++++++++++++++++++++++++++++++++ Helper method to check if a string contains only alphabetic characters
+    private boolean isAlphaString(String input) {
+        return input.matches("[a-zA-Z]+");
+    }
+
     private void validateFirstname(String firstname) {
         textInputFirstname.setError(null);
 
         if (firstname.isEmpty()) {
             textInputFirstname.setError("First name is required");
+        } else if (!isAlphaString(firstname)) {
+            textInputFirstname.setError("First name should only contain alphabetic characters");
         }
     }
 
@@ -253,6 +295,8 @@ public class signup_customer_Fragment extends Fragment {
 
         if (lastname.isEmpty()) {
             textInputLastname.setError("Last name is required");
+        } else if (!isAlphaString(lastname)) {
+            textInputLastname.setError("Last name should only contain alphabetic characters");
         }
     }
 
@@ -275,8 +319,6 @@ public class signup_customer_Fragment extends Fragment {
             textInputPhoneno.setError("Invalid Phone No pattern");
         }
     }
-
-
 
 
     //++++++++++++++++++++++++++++++++Signup OTP SENDING++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -316,8 +358,6 @@ public class signup_customer_Fragment extends Fragment {
                 transaction.replace(R.id.login_RegFragmentContainer, otp);
                 transaction.addToBackStack(null); // Optional, allows the user to navigate back to the previous fragment
                 transaction.commit();
-
-
             }
         };
 
@@ -331,7 +371,7 @@ public class signup_customer_Fragment extends Fragment {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-    //++++++++++++++++++++++++++++++++Pakistani pphone no validation++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++Pakistani phone no validation++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private boolean isValidPakistanPhoneNumber(String phoneNumber) {
         String pakistanPhoneNumberPattern = "^(\\+92|0)[1-9]{1}[0-9]{9}$";
         Pattern pattern = Pattern.compile(pakistanPhoneNumberPattern);
@@ -339,7 +379,7 @@ public class signup_customer_Fragment extends Fragment {
         return matcher.matches();
     }
 
-    //++++++++++++++++++++++++++++++++SFor register a new user ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++For register a new user ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void registerUser() {
         firstname = textInputFirstname.getEditText().getText().toString().trim();
         lastname = textInputLastname.getEditText().getText().toString().trim();
@@ -347,55 +387,71 @@ public class signup_customer_Fragment extends Fragment {
         phoneno = textInputPhoneno.getEditText().getText().toString().trim();
 
 
-            progressDialog.setMessage("Checking Phone Number...");
+        validateFirstname(firstname);
+        validateLastname(lastname);
+        validateEmail(email);
+        validatePhoneno(phoneno);
+
+        if (textInputFirstname.getError() != null
+                || textInputLastname.getError() != null
+                || textInputEmail.getError() != null
+                || textInputPhoneno.getError() != null) {
+            // There are errors in the fields, so don't proceed
+            return;
+        }
+
+            progressDialog.setMessage("Checking User Details...");
             progressDialog.show();
 
 
-            //++++++++++++++++++++++++++++++++Checking phone no is not register + email TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-            StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                    Constants.URL_PHONENO,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            progressDialog.dismiss();
+       //++++++++++++++++++++++++++++++++Checking phone no is not register + email ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                Constants.URL_PHONENO, // Update the URL to include both phone number and email check
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
 
-                            try {
-                                JSONObject jsonObject = new JSONObject(response);
-                                if (jsonObject.has("message")) {
-                                    String message = jsonObject.getString("message");
-                                    if (message.equals("Phone number is already registered, please choose a different one.")) {
-                                        Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
-                                    } else {
-                                        otpsend();
-                                    }
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.has("message")) {
+                                String message = jsonObject.getString("message");
+                                if (message.equals("Phone number is already registered, please choose a different one.")) {
+                                    textInputPhoneno.setError("Phone number is already registered");
+                                } else if (message.equals("Email is already registered, please choose a different one.")) {
+                                    textInputEmail.setError("Email is already registered");
+                                } else {
+                                    otpsend();
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
                             }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                                // Handle connection error here
-                                Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
-                            } else {
-                                // Handle other errors
-                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                            }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            // Handle connection error here
+                            Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                        } else {
+                            // Handle other errors
+                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    }) {
-                @Override
-                protected Map<String, String> getParams() {
-                    Map<String, String> params = new HashMap<>();
-                    params.put("phoneno", phoneno);
-                    return params;
-                }
-            };
-
-            RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("phoneno", phoneno);
+                params.put("email", email);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
+
 
     //+++++++++++++++++++++++++++++++After OTP VERIFICATION DATA IS SEND TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void senddatatodatabase() {
@@ -410,20 +466,20 @@ public class signup_customer_Fragment extends Fragment {
             final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "http://10.0.2.2/FYP/v1/registerUser.php",
+                Constants.URL_REGISTER,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Handle the response here
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
-
-                            Login_customers otp = new Login_customers();
-                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                            transaction.replace(R.id.login_RegFragmentContainer, otp);
-                            transaction.addToBackStack(null);
-                            transaction.commit();
+                           // Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
+                            dialog.show();
+//                            Login_customers otp = new Login_customers();
+//                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//                            transaction.replace(R.id.login_RegFragmentContainer, otp);
+//                            transaction.addToBackStack(null);
+//                            transaction.commit();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -450,15 +506,10 @@ public class signup_customer_Fragment extends Fragment {
                 params.put("email", email);
                 params.put("phoneno", phoneno);
                 params.put("profileimage", base64Image);
-
                 return params;
             }
         };
-
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
-
-
 }
-
 }

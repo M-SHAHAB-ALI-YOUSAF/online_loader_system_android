@@ -73,4 +73,7 @@ dependencies {
     // for circle image view
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    ///stripe
+    implementation 'com.stripe:stripe-android:20.31.0'
+
 }

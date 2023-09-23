@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
@@ -201,9 +202,8 @@ public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallb
             buttonOption2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showToast("Option 2 clicked");
-                    dismiss();
-
+                    Intent online_payment = new Intent(getActivity(), PaymentMethod.class);
+                    startActivity(online_payment);
                 }
             });
 

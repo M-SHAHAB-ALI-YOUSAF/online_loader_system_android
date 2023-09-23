@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -47,19 +48,23 @@ public class OTP_Fragment extends Fragment {
 
     //++++++++++++++++++++++++++++++++++Variables++++++++++++++++++++++++++++++++++++++++++++
     Button btn_otp_verify;
-    TextView resent_otp;
+    TextView resent_otp, countdownText;
     ImageView back_to_login;
     EditText otp1, otp2, otp3, otp4, otp5, otp6;
     String f_name;
     String l_name;
     String email;
-    String phone;
+    String signup_phone_no;
     String source;
     private ProgressDialog progressDialog;
+    private CountDownTimer resendOtpTimer;
+    private boolean isResendOtpEnabled = true;
+
 
     //++++++++++++++++++++++++++++++++++Firebase Varaiables++++++++++++++++++++++++++++++++++++++++++++
     private FirebaseAuth mAuth;
     private String verificationId, verfication_login, login_contact;
+    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
     //++++++++++++++++++++++++++++++++++Session for customer++++++++++++++++++++++++++++++++++++++++++++
 
@@ -77,6 +82,8 @@ public class OTP_Fragment extends Fragment {
         //++++++++++++++++++++++++++++++++++Firebase and session++++++++++++++++++++++++++++++++++++++++++++
         mAuth = FirebaseAuth.getInstance();
         sessionManager = new SessionManager(getContext());
+        progressDialog = new ProgressDialog(getContext());
+
 
         //++++++++++++++++++++++++++++++++++values coming from login and signup++++++++++++++++++++++++++++++++++++++++++++
         Bundle bundle = getArguments();
@@ -90,7 +97,7 @@ public class OTP_Fragment extends Fragment {
             f_name = bundle.getString("f_name");
             l_name = bundle.getString("l_name");
             email = bundle.getString("email");
-            phone = bundle.getString("phone");
+            signup_phone_no = bundle.getString("phone");
             verificationId = bundle.getString("verificationid");
         }
 
@@ -159,18 +166,117 @@ public class OTP_Fragment extends Fragment {
             }
         });
 
-        //++++++++++++++++++++++++++++++++Resend otp TODO++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //++++++++++++++++++++++++++++++++Resend otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         resent_otp = view.findViewById(R.id.resent_otp);
+        countdownText = view.findViewById(R.id.countdown_text);
+        updateResendOtpButtonState();
+
+
+        startResendOtpTimer();
         resent_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // Resend OTP logic goes here
                 Toast.makeText(getContext(), "Resending OTP...", Toast.LENGTH_SHORT).show();
-                // sendVerificationCode(phone);
+                if("login_customer".equals(source)){
+                    resend_otp(login_contact);
+                }
+                else{
+                    resend_otp(signup_phone_no);
+                }
+
             }
         });
 
         return view;
+    }
+
+    private void updateResendOtpButtonState() {
+        if (isResendOtpEnabled) {
+            // Show the Resend OTP button and hide the countdown TextView
+            resent_otp.setVisibility(View.VISIBLE);
+            countdownText.setVisibility(View.GONE);
+
+            resent_otp.setEnabled(true);
+            resent_otp.setTextColor(getResources().getColor(R.color.black)); // Change text color to indicate it's enabled
+        } else {
+            // Hide the Resend OTP button and show the countdown TextView
+            resent_otp.setVisibility(View.GONE);
+            countdownText.setVisibility(View.VISIBLE);
+            countdownText.setText("Resend OTP in 0 seconds"); // Set the text to indicate 0 seconds
+
+            // You can also optionally disable the countdown TextView here
+            // countdownText.setEnabled(false);
+        }
+    }
+
+
+    private void startResendOtpTimer() {
+        // Show the countdown TextView
+        countdownText.setVisibility(View.VISIBLE);
+
+        // Hide the Resend OTP button
+        resent_otp.setVisibility(View.GONE);
+
+        resendOtpTimer = new CountDownTimer(60000, 1000) { // 60 seconds, with a tick interval of 1 second
+            @Override
+            public void onTick(long millisUntilFinished) {
+                // Update the countdown TextView with the remaining time
+                countdownText.setText("Resend OTP in " + millisUntilFinished / 1000 + " seconds");
+            }
+
+            @Override
+            public void onFinish() {
+                // Timer finished, enable the Resend OTP button and hide the countdown TextView
+                isResendOtpEnabled = true;
+                updateResendOtpButtonState();
+            }
+        }.start();
+
+        // Disable the Resend OTP button during the countdown
+        isResendOtpEnabled = false;
+        updateResendOtpButtonState();
+    }
+
+
+
+
+
+    private void resend_otp(String phone_no) {
+        progressDialog.setMessage("OTP is Resending..."); // Set the message for the progress dialog
+        progressDialog.show(); // Show the progress dialog
+        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+
+            @Override
+            public void onVerificationCompleted(@NonNull PhoneAuthCredential credential) {
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onVerificationFailed(@NonNull FirebaseException e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCodeSent(@NonNull String verificationId,
+                                   @NonNull PhoneAuthProvider.ForceResendingToken token) {
+
+                //+++++++++++++++++++++++++Bundle for data send and naviation to otp screen+++++++++++++++++++++++++++++++++++++++++++
+                progressDialog.dismiss();
+                startResendOtpTimer();
+            }
+        };
+
+        //+++++++++++++++++++++++++Firebase Send OTP function+++++++++++++++++++++++++++++++++++++++++++
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(mAuth)
+                        .setPhoneNumber(phone_no)       // Phone number to verify
+                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
+                        .setActivity(getActivity())                 // (optional) Activity for callback binding
+                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
     //++++++++++++++++++++++++++++++++Signup verification of otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -181,13 +287,14 @@ public class OTP_Fragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
+                    resendOtpTimer.cancel();
                     signup_customer_Fragment fragment = new signup_customer_Fragment();
                     Bundle passdata = new Bundle();
                     passdata.putString("verfiy", "true");
                     passdata.putString("f_name", f_name);
                     passdata.putString("l_name", l_name);
                     passdata.putString("email", email);
-                    passdata.putString("phone", phone);
+                    passdata.putString("phone", signup_phone_no);
                     fragment.setArguments(passdata);
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.login_RegFragmentContainer, fragment);
@@ -195,7 +302,7 @@ public class OTP_Fragment extends Fragment {
                     transaction.commit();
 
                 } else {
-                    Toast.makeText(getContext(), "Not valid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
 
                 }
             }
@@ -214,9 +321,10 @@ public class OTP_Fragment extends Fragment {
                 if (task.isSuccessful()) {
                     //Toast.makeText(getContext(), "welcome", Toast.LENGTH_SHORT).show();
                     fetchUserDataFromDatabase(login_contact);
+                    resendOtpTimer.cancel();
 
                 } else {
-                    Toast.makeText(getContext(), "Not valid", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
 
                 }
             }

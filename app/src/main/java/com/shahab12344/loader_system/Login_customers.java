@@ -1,12 +1,15 @@
 package com.shahab12344.loader_system;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -38,9 +42,9 @@ import java.util.regex.Pattern;
 public class Login_customers extends Fragment {
 
     //+++++++++++++++++++++++++Variables+++++++++++++++++++++++++++++++++++++++++++
-    EditText phoneno;
+    private TextInputLayout textInputPhonenologin;
     String phone;
-    AlertDialog progressDialog;
+    private ProgressDialog progressDialog;
     Button btn_otp, btn_go_singup;
 
     //+++++++++++++++++++++++++Firebase variables+++++++++++++++++++++++++++++++++++++++++++
@@ -59,11 +63,13 @@ public class Login_customers extends Fragment {
         View view = inflater.inflate(R.layout.fragment_login_customers, container, false);
 
         //+++++++++++++++++++++++++getting id+++++++++++++++++++++++++++++++++++++++++++
-        phoneno = view.findViewById(R.id.et_phone_no);
+        textInputPhonenologin = view.findViewById(R.id.login_phoneno);
+        progressDialog = new ProgressDialog(getContext());
 
         //+++++++++++++++++++++++++Initialize Firebase Authentication+++++++++++++++++++++++++++++++++++++++++++
 
         mAuth = FirebaseAuth.getInstance();
+        validation();
 
         //+++++++++++++++++++++++++button to send otp+++++++++++++++++++++++++++++++++++++++++++
         btn_otp = view.findViewById(R.id.get_otp);
@@ -89,10 +95,8 @@ public class Login_customers extends Fragment {
 
     //+++++++++++++++++++++++++OTP SEND METHOD+++++++++++++++++++++++++++++++++++++++++++
     private void otpsend() {
-        progressDialog = new AlertDialog.Builder(getContext())
-                .setMessage("Sending OTP...")
-                .setCancelable(false) // Optionally, prevent users from dismissing the dialog
-                .create();
+        progressDialog.setMessage("Sending OTP..."); // Set the message for the progress dialog
+        progressDialog.show(); // Show the progress dialog
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
@@ -103,7 +107,6 @@ public class Login_customers extends Fragment {
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
                 progressDialog.dismiss();
-
                 Toast.makeText(getContext(), e.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
             }
 
@@ -112,7 +115,6 @@ public class Login_customers extends Fragment {
                                    @NonNull PhoneAuthProvider.ForceResendingToken token) {
 
                 //+++++++++++++++++++++++++Bundle for data send and naviation to otp screen+++++++++++++++++++++++++++++++++++++++++++
-                progressDialog.dismiss();
                 progressDialog.dismiss();
                 OTP_Fragment otp = new OTP_Fragment();
                 Bundle bundle = new Bundle();
@@ -147,23 +149,62 @@ public class Login_customers extends Fragment {
         return matcher.matches();
     }
 
+    private void validation() {
+
+        textInputPhonenologin.getEditText().addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // Not needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Not needed
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                validatePhoneno(s.toString().trim());
+            }
+        });
+
+
+
+        textInputPhonenologin.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                validatePhoneno(textInputPhonenologin.getEditText().getText().toString().trim());
+            }
+        });
+    }
+
+
+    private void validatePhoneno(String phoneno) {
+        textInputPhonenologin.setError(null);
+
+        if (phoneno.isEmpty()) {
+            textInputPhonenologin.setError("Phone number is required");
+        } else if (!isValidPakistanPhoneNumber(phoneno)) {
+            textInputPhonenologin.setError("Invalid Phone No pattern");
+        }
+    }
+
 
     //++++++++++++++++++++++++++++++++++Validation of phone no++++++++++++++++++++++++++++++++++++++++++++
     private void SendOtp() {
-        phone = "+92" + phoneno.getText().toString().trim();
+        phone = textInputPhonenologin.getEditText().getText().toString().trim();
+        validatePhoneno(phone);
 
-        if (phone.isEmpty()) {
-            Toast.makeText(getContext(), "Phone number is required", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (!isValidPakistanPhoneNumber(phone)) {
-
-            Toast.makeText(getContext(), "Invalid Phone No pattern", Toast.LENGTH_SHORT).show();
+        if (textInputPhonenologin.getError() != null ){
+            // There are errors in the fields, so don't proceed
             return;
         }
 
+        progressDialog.setMessage("Checking User Details...");
+        progressDialog.show();
+
         //++++++++++++++++++++++++++++++++++Checking phone no is register or not++++++++++++++++++++++++++++++++++++++++++++
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_PHONENO,
+                Constants.URL_LOGIN,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -174,7 +215,7 @@ public class Login_customers extends Fragment {
                                 if (message.equals("Phone number is already registered, please choose a different one.")) {
                                     otpsend();
                                 } else {
-                                    Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                                    textInputPhonenologin.setError("Phone number is not registered");
                                 }
                             }
                         } catch (JSONException e) {
