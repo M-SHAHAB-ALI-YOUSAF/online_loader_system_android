@@ -67,7 +67,6 @@ public class Login_customers extends Fragment {
         progressDialog = new ProgressDialog(getContext());
 
         //+++++++++++++++++++++++++Initialize Firebase Authentication+++++++++++++++++++++++++++++++++++++++++++
-
         mAuth = FirebaseAuth.getInstance();
         validation();
 
@@ -86,14 +85,14 @@ public class Login_customers extends Fragment {
         btn_go_singup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new signup_customer_Fragment();
-                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
+                Fragment signup_page = new signup_customer_Fragment();
+                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, signup_page).commit();
             }
         });
         return view;
     }
 
-    //+++++++++++++++++++++++++OTP SEND METHOD+++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++=++++OTP SEND METHOD+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void otpsend() {
         progressDialog.setMessage("Sending OTP..."); // Set the message for the progress dialog
         progressDialog.show(); // Show the progress dialog
@@ -150,7 +149,6 @@ public class Login_customers extends Fragment {
     }
 
     private void validation() {
-
         textInputPhonenologin.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -168,8 +166,6 @@ public class Login_customers extends Fragment {
             }
         });
 
-
-
         textInputPhonenologin.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
                 validatePhoneno(textInputPhonenologin.getEditText().getText().toString().trim());
@@ -180,7 +176,6 @@ public class Login_customers extends Fragment {
 
     private void validatePhoneno(String phoneno) {
         textInputPhonenologin.setError(null);
-
         if (phoneno.isEmpty()) {
             textInputPhonenologin.setError("Phone number is required");
         } else if (!isValidPakistanPhoneNumber(phoneno)) {
@@ -208,6 +203,7 @@ public class Login_customers extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.has("message")) {

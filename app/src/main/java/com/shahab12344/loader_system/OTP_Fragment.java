@@ -170,8 +170,6 @@ public class OTP_Fragment extends Fragment {
         resent_otp = view.findViewById(R.id.resent_otp);
         countdownText = view.findViewById(R.id.countdown_text);
         updateResendOtpButtonState();
-
-
         startResendOtpTimer();
         resent_otp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +189,7 @@ public class OTP_Fragment extends Fragment {
         return view;
     }
 
+    //++++++++++++++++++++++++++++++++++++++++++++++++Button state of resendotp+++++++++++++++++++++++++++++++
     private void updateResendOtpButtonState() {
         if (isResendOtpEnabled) {
             // Show the Resend OTP button and hide the countdown TextView
@@ -210,14 +209,12 @@ public class OTP_Fragment extends Fragment {
         }
     }
 
-
+    //++++++++++++++++++++++++++++++++++++++++++++++++otp timer restart function+++++++++++++++++++++++++++++++
     private void startResendOtpTimer() {
         // Show the countdown TextView
         countdownText.setVisibility(View.VISIBLE);
-
         // Hide the Resend OTP button
         resent_otp.setVisibility(View.GONE);
-
         resendOtpTimer = new CountDownTimer(60000, 1000) { // 60 seconds, with a tick interval of 1 second
             @Override
             public void onTick(long millisUntilFinished) {
@@ -238,10 +235,7 @@ public class OTP_Fragment extends Fragment {
         updateResendOtpButtonState();
     }
 
-
-
-
-
+    //++++++++++++++++++++++++++++++++++++++++++++Resend OTP customer done TODO FOR DRIVER++++++++++++++++++++++++++++++++++++++++++
     private void resend_otp(String phone_no) {
         progressDialog.setMessage("OTP is Resending..."); // Set the message for the progress dialog
         progressDialog.show(); // Show the progress dialog
@@ -262,7 +256,6 @@ public class OTP_Fragment extends Fragment {
             public void onCodeSent(@NonNull String verificationId,
                                    @NonNull PhoneAuthProvider.ForceResendingToken token) {
 
-                //+++++++++++++++++++++++++Bundle for data send and naviation to otp screen+++++++++++++++++++++++++++++++++++++++++++
                 progressDialog.dismiss();
                 startResendOtpTimer();
             }
@@ -334,6 +327,9 @@ public class OTP_Fragment extends Fragment {
 
     //++++++++++++++++++++++++++++++++Fetching logged in user data from DB to create a session++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void fetchUserDataFromDatabase(String login_contact) {
+
+        progressDialog.setMessage("Logging In..."); // Set the message for the progress dialog
+        progressDialog.show(); // Show the progress dialog
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_USER_DATA,
                 new Response.Listener<String>() {
@@ -363,6 +359,7 @@ public class OTP_Fragment extends Fragment {
                                         userData.getString("email"),
                                         userData.getString("phoneno")
                                 );
+                                progressDialog.dismiss();
                                 Intent intent = new Intent(getContext(), Booking_Activity.class);
                                 startActivity(intent);
                             } else {

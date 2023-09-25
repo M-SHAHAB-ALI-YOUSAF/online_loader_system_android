@@ -1,6 +1,9 @@
 package com.shahab12344.loader_system;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.widget.Toast;
 import com.android.volley.Request;
@@ -20,17 +23,23 @@ import java.util.Map;
 public class PaymentMethod extends AppCompatActivity {
 
     PaymentSheet paymentSheet;
+    private ProgressDialog progressDialog;
+
     String paymentintent;
     PaymentSheet.CustomerConfiguration customerConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.payment_method);
+        setContentView(R.layout.activity_payment_method);
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait..."); // Set the message for the progress dialog
+        progressDialog.setCancelable(false); // Make it not cancellable
+
 
         // Initialize the PaymentSheet
         paymentSheet = new PaymentSheet(this, this::onPaymentResult);
-
         // Fetch payment information from your API
         fetchapi();
     }
@@ -44,10 +53,15 @@ public class PaymentMethod extends AppCompatActivity {
         }
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
             Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
+            review_and_rating fragment = new review_and_rating();
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.replace(R.id.feedbackarea, fragment);
+            transaction.commit();
         }
     }
 
     public void fetchapi() {
+        progressDialog.show();
         RequestQueue queue = Volley.newRequestQueue(this);
         String url = "http://10.0.2.2/stripe/index.php";
 
@@ -55,6 +69,7 @@ public class PaymentMethod extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             customerConfiguration = new PaymentSheet.CustomerConfiguration(

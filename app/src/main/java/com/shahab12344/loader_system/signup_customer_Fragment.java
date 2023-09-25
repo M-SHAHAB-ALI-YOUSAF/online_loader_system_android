@@ -123,7 +123,7 @@ public class signup_customer_Fragment extends Fragment {
             dialog.getWindow().setBackgroundDrawable(drawable);
         }
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        dialog.setCancelable(false); //Optional
+        dialog.setCancelable(false);
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation; //Setting the animations to dialog
 
         Button Okay = dialog.findViewById(R.id.btn_okay);
@@ -159,8 +159,8 @@ public class signup_customer_Fragment extends Fragment {
         btn_go_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new Login_customers();
-                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
+                Fragment login_page = new Login_customers();
+                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, login_page).commit();
             }
         });
 
@@ -473,14 +473,7 @@ public class signup_customer_Fragment extends Fragment {
                         // Handle the response here
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                           // Toast.makeText(getContext(), jsonObject.getString("message"), Toast.LENGTH_LONG).show();
                             dialog.show();
-//                            Login_customers otp = new Login_customers();
-//                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-//                            transaction.replace(R.id.login_RegFragmentContainer, otp);
-//                            transaction.addToBackStack(null);
-//                            transaction.commit();
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

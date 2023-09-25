@@ -9,12 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+
         <LinearLayout
             android:id="@+id/centeredLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/_20sdp">
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_120sdp"
+                android:src="@drawable/person_2"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -22,26 +31,28 @@
                 android:textStyle="bold"
                 android:layout_gravity="center"
                 android:textSize="@dimen/_16ssp"
-                android:text="How was your Ride?"
-                android:textColor="#000"></TextView>
+                android:text="How was your Ride with Shahab?"
+                android:textColor="#000"
+                android:padding="@dimen/_10sdp"></TextView>
 
             <RatingBar
                 android:id="@+id/ratingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:contentDescription="@string/app_name"
                 android:numStars="5"
                 android:stepSize="1.0" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lastname"
+                android:id="@+id/review"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
+                android:layout_width="@dimen/_250sdp"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:layout_marginBottom="@dimen/_10sdp"
-                android:hint="Review"
-               >
+                android:hint="Review">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/reviewEditText"
@@ -49,10 +60,15 @@
                     android:layout_height="61dp"
                     android:inputType="textMultiLine|textCapSentences"
                     android:scrollbars="vertical"
-                    android:text="Enter Review" />
+                     />
             </com.google.android.material.textfield.TextInputLayout>
 
+
         </LinearLayout>
+
+
+
+
 
         <LinearLayout
             android:layout_width="match_parent"

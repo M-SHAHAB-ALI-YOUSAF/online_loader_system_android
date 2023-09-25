@@ -1,5 +1,6 @@
 package com.shahab12344.loader_system;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -33,7 +34,10 @@ public class ComplaintFragment extends Fragment {
         btn_submit_complaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Complaint submit", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Complaint submitted", Toast.LENGTH_SHORT).show();
+                Intent home = new Intent(getActivity(), Booking_Activity.class);
+                startActivity(home);
+
 
             }
         });
@@ -42,8 +46,8 @@ public class ComplaintFragment extends Fragment {
         back_to_home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment dashboard = new Dashbaord_Fragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, dashboard).commit();
+                Intent home = new Intent(getActivity(), Booking_Activity.class);
+                startActivity(home);
 
             }
         });

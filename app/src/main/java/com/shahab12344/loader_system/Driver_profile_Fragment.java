@@ -70,7 +70,7 @@ public class Driver_profile_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Fragment fragment = new Edit_customer_profileFragment();
-                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
+                getFragmentManager().beginTransaction().replace(R.id.driver_fragment, fragment).commit();
             }
         });
 
