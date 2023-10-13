@@ -89,7 +89,7 @@ public class PaymentMethod extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(getApplication(), "Volley error", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplication(), error.toString(), Toast.LENGTH_SHORT).show();
             }
         }) {
             protected Map<String, String> getParams() {

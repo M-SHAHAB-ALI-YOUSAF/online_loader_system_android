@@ -11,8 +11,10 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
@@ -60,6 +62,7 @@ public class signup_customer_Fragment extends Fragment {
     String lastname;
     String email;
     String phoneno, status;
+    String Role, returnrole;
 
     private Dialog dialog;
     //++++++++++++++++++++++++++++++++Firebase variables++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -96,6 +99,7 @@ public class signup_customer_Fragment extends Fragment {
             firstname = bundle.getString("f_name");
             lastname = bundle.getString("l_name");
             email = bundle.getString("email");
+            returnrole = bundle.getString("Roles");
             phoneno = bundle.getString("phone");
         }
 
@@ -150,7 +154,12 @@ public class signup_customer_Fragment extends Fragment {
         btn_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerUser();
+
+                if (Role == null) {
+                    Toast.makeText(getContext(), "Select Role Customer/Driver", Toast.LENGTH_SHORT).show();
+                } else {
+                    registerUser();
+                }
             }
         });
 
@@ -176,12 +185,42 @@ public class signup_customer_Fragment extends Fragment {
         });
 
 
+        //customer or driver
+        CardView customerCardView = view.findViewById(R.id.customerCardView);
+        CardView driverCardView = view.findViewById(R.id.driverCardView);
+
+        customerCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerCardView.setSelected(true);
+                driverCardView.setSelected(false);
+                Role = "Customer";
+            }
+        });
+
+        driverCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerCardView.setSelected(false);
+                driverCardView.setSelected(true);
+                Role = "Driver";
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                Signup_driverFragment driver_signup = new Signup_driverFragment();
+                transaction.replace(R.id.login_RegFragmentContainer, driver_signup);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+        });
+
+
         return view;
     }
 
 
     //+++++++++++++++++++++++++++++++++validation of input fields+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void validation() {
+
         textInputFirstname.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -347,6 +386,7 @@ public class signup_customer_Fragment extends Fragment {
                 progressDialog.dismiss();
                 OTP_Fragment otp = new OTP_Fragment();
                 Bundle bundle = new Bundle();
+                bundle.putString("Role", Role);
                 bundle.putString("f_name", firstname);
                 bundle.putString("l_name", lastname);
                 bundle.putString("email", email);
@@ -386,7 +426,6 @@ public class signup_customer_Fragment extends Fragment {
         email = textInputEmail.getEditText().getText().toString().trim();
         phoneno = textInputPhoneno.getEditText().getText().toString().trim();
 
-
         validateFirstname(firstname);
         validateLastname(lastname);
         validateEmail(email);
@@ -400,13 +439,13 @@ public class signup_customer_Fragment extends Fragment {
             return;
         }
 
-            progressDialog.setMessage("Checking User Details...");
-            progressDialog.show();
+        progressDialog.setMessage("Checking User Details...");
+        progressDialog.show();
 
 
-       //++++++++++++++++++++++++++++++++Checking phone no is not register + email ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //++++++++++++++++++++++++++++++++Checking phone no is not register + email ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_PHONENO, // Update the URL to include both phone number and email check
+                "http://10.0.2.2/Cargo_Go/v1/checkingphoneno.php", // Update the URL to include both phone number and email check
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -434,9 +473,11 @@ public class signup_customer_Fragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
                             // Handle connection error here
+                            progressDialog.dismiss();
                             Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                         } else {
                             // Handle other errors
+                            progressDialog.dismiss();
                             Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -444,8 +485,8 @@ public class signup_customer_Fragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("phoneno", phoneno);
-                params.put("email", email);
+                params.put("Phone_No", phoneno);
+                params.put("Email", email);
                 return params;
             }
         };
@@ -455,54 +496,56 @@ public class signup_customer_Fragment extends Fragment {
 
     //+++++++++++++++++++++++++++++++After OTP VERIFICATION DATA IS SEND TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void senddatatodatabase() {
-
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.truck);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.person_2);
         Bitmap bitmap = bitmapDrawable.getBitmap();
         ByteArrayOutputStream byteArrayOutputStream;
         byteArrayOutputStream = new ByteArrayOutputStream();
-        if(bitmap!=null){
+        if (bitmap != null) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
             byte[] bytes = byteArrayOutputStream.toByteArray();
             final String base64Image = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_REGISTER,
-                new com.android.volley.Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Handle the response here
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            dialog.show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    "http://10.0.2.2/Cargo_Go/v1/registerUser.php",
+                    new com.android.volley.Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Handle the response here
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                dialog.show();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            // Handle connection error here
-                            Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
-                        } else {
-                            // Handle other errors
-                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                                // Handle connection error here
+                                progressDialog.dismiss();
+                                Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            } else {
+                                // Handle other errors
+                                progressDialog.dismiss();
+                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("firstname", firstname);
-                params.put("lastname", lastname);
-                params.put("email", email);
-                params.put("phoneno", phoneno);
-                params.put("profileimage", base64Image);
-                return params;
-            }
-        };
-        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
+                    }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("First_Name", firstname);
+                    params.put("Last_Name", lastname);
+                    params.put("Email", email);
+                    params.put("Phone_No", phoneno);
+                    params.put("Profile_Image", base64Image);
+                    return params;
+                }
+            };
+            RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
+        }
     }
-}
 }

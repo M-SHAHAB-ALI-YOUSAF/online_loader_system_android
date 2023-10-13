@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/blackborder"
+    android:orientation="horizontal"
+    android:padding="16dp">
+
+    <!-- Driver Picture (Left) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/driverPictureImageView"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_launcher_background"
+            android:layout_gravity="start"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp" />
+        <TextView
+            android:id="@+id/driverNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Driver's Name"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+    <!-- Driver Information (Name, Car Model, Car Number, Ride Price) -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal">
+
+        <!-- Driver Name -->
+
+
+        <!-- Car Model -->
+        <TextView
+            android:id="@+id/carModelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Car Model"
+            android:layout_marginTop="8dp" />
+
+        <!-- Car Number -->
+        <TextView
+            android:id="@+id/carNumberTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Car Number"
+            android:layout_marginTop="8dp" />
+
+        <!-- Ride Price -->
+        <TextView
+            android:id="@+id/ridePriceTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ride Price"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+
+    <!-- Accept and Reject Buttons (Right) -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Accept Button -->
+        <Button
+            android:id="@+id/acceptButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Accept"
+            android:backgroundTint="@color/btn__color"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp" />
+
+        <!-- Reject Button -->
+        <Button
+            android:id="@+id/rejectButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reject"
+            android:backgroundTint="@color/btn__color"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</LinearLayout>

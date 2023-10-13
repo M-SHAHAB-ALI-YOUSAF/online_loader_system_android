@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
@@ -108,8 +109,12 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 //                int selectedCount = (int) spinnerCount.getSelectedItem();
                 //---- PreLogin Fragement ---
 
-                Fragment fragment = new Booking_detail_Fragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
+                fragment_driver_request fragment = new fragment_driver_request();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.bookingfragment, fragment);
+                fragmentTransaction.addToBackStack(null);// Replace with the container ID
+                fragmentTransaction.commit();
 
             }
         });

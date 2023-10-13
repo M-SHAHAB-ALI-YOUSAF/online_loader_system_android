@@ -1,6 +1,7 @@
 package com.shahab12344.loader_system;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,19 +52,16 @@ public class OTP_Fragment extends Fragment {
     TextView resent_otp, countdownText;
     ImageView back_to_login;
     EditText otp1, otp2, otp3, otp4, otp5, otp6;
-    String f_name;
-    String l_name;
-    String email;
-    String signup_phone_no;
-    String source;
+    String f_name,l_name, email, signup_phone_no,source,Role, loginRole;
     private ProgressDialog progressDialog;
     private CountDownTimer resendOtpTimer;
     private boolean isResendOtpEnabled = true;
+    private static final int CREDENTIAL_PICKER_REQUEST =120 ;
 
 
     //++++++++++++++++++++++++++++++++++Firebase Varaiables++++++++++++++++++++++++++++++++++++++++++++
     private FirebaseAuth mAuth;
-    private String verificationId, verfication_login, login_contact;
+    private String verificationId, login_contact;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
     //++++++++++++++++++++++++++++++++++Session for customer++++++++++++++++++++++++++++++++++++++++++++
@@ -84,21 +82,24 @@ public class OTP_Fragment extends Fragment {
         sessionManager = new SessionManager(getContext());
         progressDialog = new ProgressDialog(getContext());
 
-
         //++++++++++++++++++++++++++++++++++values coming from login and signup++++++++++++++++++++++++++++++++++++++++++++
         Bundle bundle = getArguments();
         if (bundle != null) {
             //++++++++++++++++++++++++++++++++++Login data++++++++++++++++++++++++++++++++++++++++++++
             source = bundle.getString("source");
-            verfication_login = bundle.getString("verificationid_login");
+            verificationId = bundle.getString("verificationid_login");
             login_contact = bundle.getString("phone_login");
+            loginRole = bundle.getString("Rolefromlogin");
 
             //++++++++++++++++++++++++++++++++++SignUp data++++++++++++++++++++++++++++++++++++++++++++
             f_name = bundle.getString("f_name");
             l_name = bundle.getString("l_name");
             email = bundle.getString("email");
             signup_phone_no = bundle.getString("phone");
-            verificationId = bundle.getString("verificationid");
+            Role = bundle.getString("Role");
+            if(source!="login_customer") {
+                verificationId = bundle.getString("verificationid");
+            }
         }
 
         //++++++++++++++++++++++++++++++++++Six box for otp++++++++++++++++++++++++++++++++++++++++++++
@@ -134,8 +135,8 @@ public class OTP_Fragment extends Fragment {
 
                     //++++++++++++++++++++++++++++++++If customer coming from login screen+++++++++++++++++++++++++++++++++++
                     if ("login_customer".equals(source)) {
-                        if (!verfication_login.isEmpty()) {
-                            Login_otp_verification(code);
+                        if (!verificationId.isEmpty()) {
+                            OTP_Verify(code);
                         } else {
                             Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
                         }
@@ -144,7 +145,7 @@ public class OTP_Fragment extends Fragment {
                     //++++++++++++++++++++++++++++++++Coming from signup+++++++++++++++++++++++++++++++++++++++++++++++++++++
                     else {
                         if (!verificationId.isEmpty()) {
-                            Signup_otp_verfiy(code);
+                            OTP_Verify(code);
                         } else {
                             Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
                         }
@@ -273,7 +274,7 @@ public class OTP_Fragment extends Fragment {
     }
 
     //++++++++++++++++++++++++++++++++Signup verification of otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    private void Signup_otp_verfiy(String code) {
+    private void OTP_Verify(String code) {
 
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -281,19 +282,32 @@ public class OTP_Fragment extends Fragment {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     resendOtpTimer.cancel();
-                    signup_customer_Fragment fragment = new signup_customer_Fragment();
-                    Bundle passdata = new Bundle();
-                    passdata.putString("verfiy", "true");
-                    passdata.putString("f_name", f_name);
-                    passdata.putString("l_name", l_name);
-                    passdata.putString("email", email);
-                    passdata.putString("phone", signup_phone_no);
-                    fragment.setArguments(passdata);
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                    transaction.replace(R.id.login_RegFragmentContainer, fragment);
-                    transaction.addToBackStack(null); // If you want to add the transaction to the back stack
-                    transaction.commit();
 
+                    if(source == "login_customer") {
+
+                        if (loginRole == "Customer") {
+                            Intent intent = new Intent(getContext(), Booking_Activity.class);
+                            startActivity(intent);
+                        } else if (loginRole == "Driver") {
+                            Intent driver = new Intent(getContext(), driver_homepage.class);
+                            startActivity(driver);
+                        }
+                    }
+                    else {
+                        signup_customer_Fragment fragment = new signup_customer_Fragment();
+                        Bundle passdata = new Bundle();
+                        passdata.putString("verfiy", "true");
+                        passdata.putString("Roles", Role);
+                        passdata.putString("f_name", f_name);
+                        passdata.putString("l_name", l_name);
+                        passdata.putString("email", email);
+                        passdata.putString("phone", signup_phone_no);
+                        fragment.setArguments(passdata);
+                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                        transaction.replace(R.id.login_RegFragmentContainer, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
                 } else {
                     Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
 
@@ -301,27 +315,6 @@ public class OTP_Fragment extends Fragment {
             }
         });
 
-    }
-
-    //++++++++++++++++++++++++++++++++Login verification of otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-    private void Login_otp_verification(String code) {
-
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verfication_login, code);
-        mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    //Toast.makeText(getContext(), "welcome", Toast.LENGTH_SHORT).show();
-                    fetchUserDataFromDatabase(login_contact);
-                    resendOtpTimer.cancel();
-
-                } else {
-                    Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-        });
     }
 
 

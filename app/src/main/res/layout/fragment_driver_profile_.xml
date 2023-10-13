@@ -29,253 +29,258 @@
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_menu" />
 
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/btn__color">
-
-            <!-- Left Image -->
-            <ImageView
-                android:id="@+id/drive_profile_back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:padding="16dp"
-                android:src="@drawable/baseline_arrow_back_ios_24" />
-
-            <!-- Center Text -->
-            <TextView
-                android:id="@+id/centerText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:padding="4dp"
-                android:text="Profile"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_15ssp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-
-        <!-- Profile Layout -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_150sdp"
-            android:background="@color/btn__color"
-            android:padding="20dp">
-
-            <!-- Profile border -->
-            <ImageView
-                android:id="@+id/profile_border"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/circle_background" />
-
-            <!-- Profile image -->
-            <ImageView
-                android:id="@+id/profile_image"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_centerVertical="true"
-                android:src="@drawable/person_2" />
-
-            <!-- Text boxes and button -->
-            <LinearLayout
-                android:id="@+id/rightContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="50dp"
-                android:layout_toRightOf="@+id/profile_image"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/editText1"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="@dimen/_15ssp"
-                    android:text="Yashfa Azhar"
-                    android:textColor="@color/white" />
-
-
-                <Button
-                    android:id="@+id/driver_edit_profile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="@color/black"
-                    android:text="Edit Profile" />
-            </LinearLayout>
-        </RelativeLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="-40dp"
-            android:padding="@dimen/_10sdp">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_80sdp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/btn__color"
-                app:cardElevation="10dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-                    <TextView
-                        android:id="@+id/rating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/bungee"
-                        android:includeFontPadding="false"
-                        android:text="$123"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/payment_desc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/rating"
-                        android:layout_centerHorizontal="true"
-                        android:includeFontPadding="false"
-                        android:text="Balance"
-                        android:textSize="20sp" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="0dp"
-                android:layout_height="@dimen/_80sdp"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                app:cardBackgroundColor="@color/btn__color"
-                app:cardElevation="10dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="5dp">
-
-                    <TextView
-                        android:id="@+id/experience"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:fontFamily="@font/bungee"
-                        android:includeFontPadding="false"
-                        android:text="$123"
-                        android:textSize="20sp" />
-
-                    <TextView
-                        android:id="@+id/experince_year"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/experience"
-                        android:layout_centerHorizontal="true"
-                        android:includeFontPadding="false"
-                        android:text="Balance"
-                        android:textSize="20sp" />
-                </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-
-
-        </LinearLayout>
-
-
-        <!-- Text Fields and Button Layout -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_20sdp"
-            android:layout_marginRight="@dimen/_20sdp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
             android:orientation="vertical">
 
-            <!-- Text Input Fields -->
-
-            <!-- Text Input Field 1 -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="First Name">
+                android:background="@color/white">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
+                <!-- Left Image -->
+                <ImageView
+                    android:id="@+id/drive_profile_back"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/person_"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="text"
-                    android:text="Yashfa" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:layout_alignParentStart="true"
+                    android:padding="16dp"
+                    android:src="@drawable/baseline_arrow_back_ios_24" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/last_name"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                <!-- Center Text -->
+                <TextView
+                    android:id="@+id/centerText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:padding="4dp"
+                    android:text="Profile"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_15ssp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <!-- Profile Layout -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_150sdp"
+                android:background="@drawable/blackborder"
+                android:padding="20dp">
+
+                <!-- Profile border -->
+                <ImageView
+                    android:id="@+id/profile_border"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_100sdp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/circle_background" />
+
+                <!-- Profile image -->
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="@dimen/_100sdp"
+                    android:layout_height="@dimen/_90sdp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/person_" />
+
+                <!-- Text boxes and button -->
+                <LinearLayout
+                    android:id="@+id/rightContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="50dp"
+                    android:layout_toRightOf="@+id/profile_image"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/editText1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Yashfa Azhar"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_15ssp" />
+
+
+                    <Button
+                        android:id="@+id/driver_edit_profile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/btns_color"
+                        android:text="Edit Profile" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Last Name">
+                android:layout_marginTop="-40dp"
+                android:padding="@dimen/_10sdp">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/person_"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="text"
-                    android:text="Azhar" />
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/btns_color"
+                    app:cardElevation="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/rating"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/bungee"
+                            android:includeFontPadding="false"
+                            android:text="2 YEARS"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/payment_desc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/rating"
+                            android:layout_centerHorizontal="true"
+                            android:includeFontPadding="false"
+                            android:text="EXPERIENCE"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_80sdp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/btns_color"
+                    app:cardElevation="10dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="5dp">
+
+                        <TextView
+                            android:id="@+id/experience"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:fontFamily="@font/bungee"
+                            android:includeFontPadding="false"
+                            android:text="4.3 STARS"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:id="@+id/experince_year"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/experience"
+                            android:layout_centerHorizontal="true"
+                            android:includeFontPadding="false"
+                            android:text="RATING"
+                            android:textSize="20sp" />
+                    </RelativeLayout>
+                </com.google.android.material.card.MaterialCardView>
 
 
-            <!-- Text Input Field 3 -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_email"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            </LinearLayout>
+
+
+            <!-- Text Fields and Button Layout -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email">
+                android:layout_marginLeft="@dimen/_20sdp"
+                android:layout_marginRight="@dimen/_20sdp"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
+                <!-- Text Input Fields -->
+
+                <!-- Text Input Field 1 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/reg_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/email"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="textEmailAddress"
-                    android:text="Yashii@gmail.com" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="First Name">
 
-            <!-- Text Input Field 4 -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/reg_password"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Phone No"
-                android:transitionName="password_tran">
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/person_"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:inputType="text"
+                        android:text="Yashfa" />
+                </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputEditText
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/last_name"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/call_icon"
-                    android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="number"
-                    android:text="+923129809112" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="Last Name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/person_"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:inputType="text"
+                        android:text="Azhar" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <!-- Text Input Field 3 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/reg_email"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/email"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:inputType="textEmailAddress"
+                        android:text="Yashii@gmail.com" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Text Input Field 4 -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/reg_password"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone No"
+                    android:transitionName="password_tran">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/call_icon"
+                        android:drawablePadding="@dimen/_10sdp"
+                        android:inputType="number"
+                        android:text="+923129809112" />
+                </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </FrameLayout>

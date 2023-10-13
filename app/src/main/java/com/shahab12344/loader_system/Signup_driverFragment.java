@@ -35,7 +35,6 @@ public class Signup_driverFragment extends Fragment {
         btn_vehicle_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Fragment fragment = new driver_vehicle_informationFragment();
                 getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
             }

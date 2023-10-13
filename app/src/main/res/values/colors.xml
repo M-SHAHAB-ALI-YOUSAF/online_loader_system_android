@@ -11,8 +11,11 @@
     <color name="btn_color">#6A0FAC</color>
 
     <color name="btncolor">#F3903D</color>
-    <color name="btns_color">#Ff886a</color>
+    <color name="btns_color">#6D60C6</color>
 
-    <color name="btn__color">#1E90FF</color>
+    <color name="btn__color">#6D60C6</color>
+
+
+    <color name="final__color">#1E90FF</color>
 
 </resources>

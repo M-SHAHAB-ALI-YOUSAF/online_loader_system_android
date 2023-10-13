@@ -21,9 +21,6 @@
             android:name=".PaymentMethod"
             android:exported="false" />
         <activity
-            android:name=".driver_or_customer"
-            android:exported="false" />
-        <activity
             android:name=".Booking_Activity"
             android:exported="false" />
         <activity

@@ -56,30 +56,30 @@
                 android:id="@+id/textViewHeading"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="More Information"
-                android:textStyle="bold"
-                android:textSize="@dimen/_16ssp"
-                android:textColor="@color/black"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_16sdp"
-                android:layout_marginBottom="@dimen/_16sdp"/>
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:text="More Information"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16ssp"
+                android:textStyle="bold" />
 
             <!-- Edit Text -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/vehicle_name"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_below="@id/textViewHeading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/textViewHeading"
                 android:hint="Vehicle Number">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/number"
-                    android:text="CHK7936"
                     android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="text" />
+                    android:inputType="text"
+                    android:text="CHK7936" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
@@ -88,13 +88,14 @@
                 android:layout_below="@id/vehicle_name"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:text="Select Vehicle Type"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
+
             <LinearLayout
                 android:id="@+id/linear_layout"
-                android:layout_below="@id/vehicle_name"
-                android:layout_marginTop="@dimen/_20sdp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vehicle_name"
+                android:layout_marginTop="@dimen/_20sdp">
 
                 <HorizontalScrollView
                     android:id="@+id/select_vehicle"
@@ -124,18 +125,20 @@
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
-                                    android:src="@drawable/truck"
-                                    android:scaleType="fitCenter"/>
+                                    android:scaleType="fitCenter"
+                                    android:layout_gravity="center_vertical"
+                                    android:src="@drawable/small" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Image 1"
+                                    android:text="Small"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_10ssp"
-                                    android:textAlignment="center"/>
+                                    android:textSize="@dimen/_13ssp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
+
                         <androidx.cardview.widget.CardView
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
@@ -151,18 +154,19 @@
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
-                                    android:src="@drawable/truck"
-                                    android:scaleType="fitCenter"/>
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/medium" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Image 1"
+                                    android:text="Medium"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_10ssp"
-                                    android:textAlignment="center"/>
+                                    android:textSize="@dimen/_13ssp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
+
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -178,18 +182,19 @@
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
-                                    android:src="@drawable/truck"
-                                    android:scaleType="fitCenter"/>
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/large" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Image 1"
+                                    android:text="Large"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_10ssp"
-                                    android:textAlignment="center"/>
+                                    android:textSize="@dimen/_13ssp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
+
                         <androidx.cardview.widget.CardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -205,19 +210,18 @@
                                 <ImageView
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
-                                    android:src="@drawable/truck"
-                                    android:scaleType="fitCenter"/>
+                                    android:scaleType="fitCenter"
+                                    android:src="@drawable/extra_large" />
 
                                 <TextView
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Image 1"
+                                    android:text="Extra Large"
+                                    android:textAlignment="center"
                                     android:textColor="@color/black"
-                                    android:textSize="@dimen/_10ssp"
-                                    android:textAlignment="center"/>
+                                    android:textSize="@dimen/_13ssp" />
                             </LinearLayout>
                         </androidx.cardview.widget.CardView>
-
 
 
                     </LinearLayout>
@@ -239,18 +243,19 @@
                     android:layout_width="@dimen/_148sdp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/btn__color"
-                    android:text="Pick CNIC"/>
+                    android:text="Pick CNIC" />
 
                 <TextView
                     android:id="@+id/cnic_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload Cnic Pic"
-
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"/>
+
+                    android:layout_marginStart="8dp"
+                    android:text="Upload Cnic Pic" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/licence"
                 android:layout_width="match_parent"
@@ -262,20 +267,21 @@
                 <Button
                     android:id="@+id/btn_licence"
                     android:layout_width="@dimen/_148sdp"
-                    android:backgroundTint="@color/btn__color"
                     android:layout_height="wrap_content"
-                    android:text="Pick Licence"/>
+                    android:backgroundTint="@color/btn__color"
+                    android:text="Pick Licence" />
 
                 <TextView
                     android:id="@+id/license_textview"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload Licence Pic"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"/>
+                    android:layout_marginStart="8dp"
+                    android:text="Upload Licence Pic" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -284,28 +290,24 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:backgroundTint="@color/btn__color"
                     android:id="@+id/btn_vehicle_copy"
                     android:layout_width="@dimen/_148sdp"
                     android:layout_height="wrap_content"
-                    android:text="Pick Vehicle Copy"/>
+                    android:backgroundTint="@color/btn__color"
+                    android:text="Pick Vehicle Copy" />
 
                 <TextView
                     android:id="@+id/vehicle_copy_textview"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upload Vehicle Copy Pic"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"/>
+                    android:layout_marginStart="8dp"
+                    android:text="Upload Vehicle Copy Pic" />
 
             </LinearLayout>
 
         </RelativeLayout>
-
-
-
-
 
 
     </LinearLayout>

@@ -19,9 +19,7 @@ import android.widget.TextView;
 public class MainActivity extends AppCompatActivity {
 
     //+++++++++++++++++++++variables++++++++++++++++++++++++++++++++++++++
-    Animation topAnim, bottomAnim;
     ImageView image;
-    TextView logo, slogan;
     private SessionManager sessionManager;
 
     @Override
@@ -37,19 +35,12 @@ public class MainActivity extends AppCompatActivity {
     //+++++++++++++++++++++Session for customer+++++++++++++++++++++++++++++++++++++++++
         sessionManager = new SessionManager(this);
 
-    //+++++++++++++++++++++++++++hetting ids++++++++++++++++++++++++++++++++++++++++++++
+    //+++++++++++++++++++++++++++getting ids++++++++++++++++++++++++++++++++++++++++++++
         image = findViewById(R.id.logo_image);
-        logo = findViewById(R.id.book_loader);
-        slogan = findViewById(R.id.slogan);
 
-    //+++++++++++++++++++++Animation+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-        topAnim = AnimationUtils.loadAnimation(this, R.anim.top_animation);
-        bottomAnim = AnimationUtils.loadAnimation(this, R.anim.bottom_animation);
+
 
     //+++++++++++++++++++++setting animation to elements++++++++++++++++++++++++++++++++++++++
-        image.setAnimation(topAnim);
-        logo.setAnimation(bottomAnim);
-        slogan.setAnimation(bottomAnim);
 
 
     //+++++++++++++++++++++Handle for going to login+++++++++++++++++++++++++++++++++++++++++++++
@@ -68,15 +59,8 @@ public class MainActivity extends AppCompatActivity {
                 else {
                 Intent intent = new Intent(MainActivity.this, Login_Registration.class);
                 // Attach all the elements those you want to animate in design
-                Pair[] pairs = new Pair[2];
-                pairs[0] = new Pair<View, String>(image, "logo_image");
-                pairs[1] = new Pair<View, String>(logo, "logo_text");
-                //wrap the call in API level 21 or higher
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                    ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(MainActivity.this, pairs);
-                    startActivity(intent, options.toBundle());
-                }
-                finish();
+                    startActivity(intent);
+
             }
             }
         }, 3000);

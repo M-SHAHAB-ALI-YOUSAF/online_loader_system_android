@@ -29,16 +29,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <TextView
-                    android:id="@+id/cancel_ride"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="@dimen/_10sdp"
-                    android:text="Cancel"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_20ssp" />
             </FrameLayout>
 
         </LinearLayout>
@@ -54,7 +44,8 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/bungee"
+                android:textStyle="bold"
+                android:textColor="@color/black"
                 android:text="Ride Detail"
                 android:textAlignment="center"
                 android:textSize="@dimen/_20ssp"></TextView>

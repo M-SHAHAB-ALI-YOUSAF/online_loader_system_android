@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="@dimen/spacing_large"
-            android:backgroundTint="@color/btn__color"
+            android:backgroundTint="#6D60C6"
             android:text="Submit Complaint" />
 
     </LinearLayout>

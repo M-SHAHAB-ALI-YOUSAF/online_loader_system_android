@@ -18,6 +18,7 @@ public class Show_Profile_customerFragment extends Fragment {
 
     Button btn_edit_profile;
     ImageView back_to_dashboard;
+    TextView name;
 
     private SessionManager sessionManager;
     public Show_Profile_customerFragment() {
@@ -72,6 +73,8 @@ public class Show_Profile_customerFragment extends Fragment {
         lastNameTabTextView.getEditText().setText(lastName);
         emailTabTextView.getEditText().setText(email);
         phoneTabTextView.getEditText().setText(phoneNumber);
+        name = view.findViewById(R.id.editText1);
+        name.setText(firstName + " " + lastName );
         return view;
     }
 }

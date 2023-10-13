@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -43,13 +44,14 @@ public class Login_customers extends Fragment {
 
     //+++++++++++++++++++++++++Variables+++++++++++++++++++++++++++++++++++++++++++
     private TextInputLayout textInputPhonenologin;
-    String phone;
+    String phone, Role;
     private ProgressDialog progressDialog;
     Button btn_otp, btn_go_singup;
 
     //+++++++++++++++++++++++++Firebase variables+++++++++++++++++++++++++++++++++++++++++++
     private FirebaseAuth mAuth;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+
 
 
     public Login_customers() {
@@ -89,6 +91,32 @@ public class Login_customers extends Fragment {
                 getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, signup_page).commit();
             }
         });
+
+
+        //customer or driver
+        CardView customerCardView = view.findViewById(R.id.customerCardView);
+        CardView driverCardView = view.findViewById(R.id.driverCardView);
+
+        customerCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerCardView.setSelected(true);
+                driverCardView.setSelected(false);
+                Role = "Customer";
+            }
+        });
+
+        driverCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customerCardView.setSelected(false);
+                driverCardView.setSelected(true);
+                Role = "Driver";
+
+            }
+        });
+
+
         return view;
     }
 
@@ -119,6 +147,7 @@ public class Login_customers extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putString("source", "login_customer");
                 bundle.putString("phone_login", phone);
+                bundle.putString("Rolefromlogin", Role);
                 bundle.putString("verificationid_login", verificationId);
                 otp.setArguments(bundle);
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -199,7 +228,7 @@ public class Login_customers extends Fragment {
 
         //++++++++++++++++++++++++++++++++++Checking phone no is register or not++++++++++++++++++++++++++++++++++++++++++++
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_LOGIN,
+                "http://10.0.2.2/Cargo_Go/v1/login.php",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -211,7 +240,7 @@ public class Login_customers extends Fragment {
                                 if (message.equals("Phone number is already registered, please choose a different one.")) {
                                     otpsend();
                                 } else {
-                                    textInputPhonenologin.setError("Phone number is not registered");
+                                    textInputPhonenologin.setError("Phone number is not registered with selected" + Role);
                                 }
                             }
                         } catch (JSONException e) {
@@ -234,7 +263,7 @@ public class Login_customers extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("phoneno", phone);
+                params.put("Phone_No", phone);
                 return params;
             }
         };
