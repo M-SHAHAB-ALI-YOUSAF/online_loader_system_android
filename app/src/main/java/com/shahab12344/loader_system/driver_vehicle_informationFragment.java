@@ -3,6 +3,8 @@ package com.shahab12344.loader_system;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -32,7 +34,7 @@ public class driver_vehicle_informationFragment extends Fragment {
     private TextView textViewFileName3;
     private Button buttonSelectImage1;
     private Button buttonSelectImage2;
-    private Button buttonSelectImage3 ;
+    private Button buttonSelectImage3;
     ImageView back_to_driver_detail, signup_done;
 
     public driver_vehicle_informationFragment() {
@@ -51,6 +53,21 @@ public class driver_vehicle_informationFragment extends Fragment {
         buttonSelectImage2 = view.findViewById(R.id.btn_licence);
         buttonSelectImage3 = view.findViewById(R.id.btn_vehicle_copy);
 
+        // Create a method to load and scale an image
+
+
+    // Inside your onCreate or wherever you need to load and display the images
+        ImageView image1 = view.findViewById(R.id.small);
+        ImageView image2 = view.findViewById(R.id.medium);
+        ImageView  image3 = view.findViewById(R.id.large);
+        ImageView image4 = view.findViewById(R.id.extra_large);
+
+        // Load and set the images
+        image1.setImageBitmap(loadAndScaleImage(R.drawable.small));
+        image2.setImageBitmap(loadAndScaleImage(R.drawable.medium));
+        image3.setImageBitmap(loadAndScaleImage(R.drawable.large));
+        image4.setImageBitmap(loadAndScaleImage(R.drawable.extra_large));
+
 
         back_to_driver_detail = view.findViewById(R.id.signup_done);
         back_to_driver_detail.setOnClickListener(new View.OnClickListener() {
@@ -58,7 +75,7 @@ public class driver_vehicle_informationFragment extends Fragment {
             public void onClick(View view) {
                 Intent driver_dashboard = new Intent(getContext(), driver_homepage.class);
                 startActivity(driver_dashboard);
-                  }
+            }
         });
 
         signup_done = view.findViewById(R.id.back_to_signupdetail);
@@ -141,6 +158,14 @@ public class driver_vehicle_informationFragment extends Fragment {
         }
 
         return fileName;
+    }
+
+
+    private Bitmap loadAndScaleImage ( int resId){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2; // Adjust the sample size as needed
+
+        return BitmapFactory.decodeResource(getResources(), resId, options);
     }
 
 }

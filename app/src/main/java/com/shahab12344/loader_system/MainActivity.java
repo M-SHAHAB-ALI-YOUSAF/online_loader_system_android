@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Pair;
@@ -37,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
 
     //+++++++++++++++++++++++++++getting ids++++++++++++++++++++++++++++++++++++++++++++
         image = findViewById(R.id.logo_image);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logofina, options);
+
+        image.setImageBitmap(bitmap);
 
 
 

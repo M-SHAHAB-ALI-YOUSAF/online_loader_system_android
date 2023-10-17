@@ -1,15 +1,8 @@
 package com.shahab12344.loader_system;
 
-import android.app.Activity;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -37,37 +31,28 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class OTP_Fragment extends Fragment {
 
-    //++++++++++++++++++++++++++++++++++Variables++++++++++++++++++++++++++++++++++++++++++++
     Button btn_otp_verify;
     TextView resent_otp, countdownText;
     ImageView back_to_login;
     EditText otp1, otp2, otp3, otp4, otp5, otp6;
-    String f_name,l_name, email, signup_phone_no,source,Role, loginRole;
+    String f_name, l_name, email, signup_phone_no, source, Role, loginRole, newVerificationId;
     private ProgressDialog progressDialog;
     private CountDownTimer resendOtpTimer;
     private boolean isResendOtpEnabled = true;
-    private static final int CREDENTIAL_PICKER_REQUEST =120 ;
 
-
-    //++++++++++++++++++++++++++++++++++Firebase Varaiables++++++++++++++++++++++++++++++++++++++++++++
     private FirebaseAuth mAuth;
     private String verificationId, login_contact;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
-    //++++++++++++++++++++++++++++++++++Session for customer++++++++++++++++++++++++++++++++++++++++++++
-
     private SessionManager sessionManager;
-
 
     public OTP_Fragment() {
         // Required empty public constructor
@@ -77,32 +62,27 @@ public class OTP_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_o_t_p_, container, false);
 
-        //++++++++++++++++++++++++++++++++++Firebase and session++++++++++++++++++++++++++++++++++++++++++++
         mAuth = FirebaseAuth.getInstance();
         sessionManager = new SessionManager(getContext());
         progressDialog = new ProgressDialog(getContext());
 
-        //++++++++++++++++++++++++++++++++++values coming from login and signup++++++++++++++++++++++++++++++++++++++++++++
         Bundle bundle = getArguments();
         if (bundle != null) {
-            //++++++++++++++++++++++++++++++++++Login data++++++++++++++++++++++++++++++++++++++++++++
             source = bundle.getString("source");
             verificationId = bundle.getString("verificationid_login");
             login_contact = bundle.getString("phone_login");
             loginRole = bundle.getString("Rolefromlogin");
 
-            //++++++++++++++++++++++++++++++++++SignUp data++++++++++++++++++++++++++++++++++++++++++++
             f_name = bundle.getString("f_name");
             l_name = bundle.getString("l_name");
             email = bundle.getString("email");
             signup_phone_no = bundle.getString("phone");
             Role = bundle.getString("Role");
-            if(source!="login_customer") {
+            if (!"login_customer".equals(source)) {
                 verificationId = bundle.getString("verificationid");
             }
         }
 
-        //++++++++++++++++++++++++++++++++++Six box for otp++++++++++++++++++++++++++++++++++++++++++++
         otp1 = view.findViewById(R.id.otp1);
         otp2 = view.findViewById(R.id.otp2);
         otp3 = view.findViewById(R.id.otp3);
@@ -110,7 +90,6 @@ public class OTP_Fragment extends Fragment {
         otp5 = view.findViewById(R.id.otp5);
         otp6 = view.findViewById(R.id.otp6);
 
-        //++++++++++++++++++++++++++++++++Set TextChangedListener for each EditText+++++++++++++++++++++++++++++++++++
         otp1.addTextChangedListener(new GenericTextWatcher(otp1, otp2));
         otp2.addTextChangedListener(new GenericTextWatcher(otp2, otp3));
         otp3.addTextChangedListener(new GenericTextWatcher(otp3, otp4));
@@ -118,12 +97,10 @@ public class OTP_Fragment extends Fragment {
         otp5.addTextChangedListener(new GenericTextWatcher(otp5, otp6));
         otp6.addTextChangedListener(new GenericTextWatcher(otp6, null));
 
-        //++++++++++++++++++++++++++++++++Button to verify otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         btn_otp_verify = view.findViewById(R.id.btn_submit);
         btn_otp_verify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Combine the OTP from all EditText fields
                 String code = otp1.getText().toString() +
                         otp2.getText().toString() +
                         otp3.getText().toString() +
@@ -132,32 +109,25 @@ public class OTP_Fragment extends Fragment {
                         otp6.getText().toString();
 
                 if (code.length() == 6) {
-
-                    //++++++++++++++++++++++++++++++++If customer coming from login screen+++++++++++++++++++++++++++++++++++
                     if ("login_customer".equals(source)) {
                         if (!verificationId.isEmpty()) {
-                            OTP_Verify(code);
+                            OTP_Verify(code, false, newVerificationId);
                         } else {
                             Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
                         }
-                    }
-
-                    //++++++++++++++++++++++++++++++++Coming from signup+++++++++++++++++++++++++++++++++++++++++++++++++++++
-                    else {
+                    } else {
                         if (!verificationId.isEmpty()) {
-                            OTP_Verify(code);
+                            OTP_Verify(code, false, newVerificationId);
                         } else {
                             Toast.makeText(getContext(), "Network Error", Toast.LENGTH_SHORT).show();
                         }
                     }
-
                 } else {
                     Toast.makeText(getContext(), "Please enter a valid 6-digit OTP", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        //++++++++++++++++++++++++++++++++Going back to login++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         back_to_login = view.findViewById(R.id.otp_back);
         back_to_login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,7 +137,6 @@ public class OTP_Fragment extends Fragment {
             }
         });
 
-        //++++++++++++++++++++++++++++++++Resend otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         resent_otp = view.findViewById(R.id.resent_otp);
         countdownText = view.findViewById(R.id.countdown_text);
         updateResendOtpButtonState();
@@ -175,71 +144,57 @@ public class OTP_Fragment extends Fragment {
         resent_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Resend OTP logic goes here
                 Toast.makeText(getContext(), "Resending OTP...", Toast.LENGTH_SHORT).show();
-                if("login_customer".equals(source)){
+                if ("login_customer".equals(source)) {
                     resend_otp(login_contact);
-                }
-                else{
+                } else {
                     resend_otp(signup_phone_no);
                 }
-
             }
         });
 
         return view;
     }
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++Button state of resendotp+++++++++++++++++++++++++++++++
     private void updateResendOtpButtonState() {
         if (isResendOtpEnabled) {
-            // Show the Resend OTP button and hide the countdown TextView
             resent_otp.setVisibility(View.VISIBLE);
             countdownText.setVisibility(View.GONE);
 
             resent_otp.setEnabled(true);
-            resent_otp.setTextColor(getResources().getColor(R.color.black)); // Change text color to indicate it's enabled
+            resent_otp.setTextColor(getResources().getColor(R.color.black));
         } else {
-            // Hide the Resend OTP button and show the countdown TextView
             resent_otp.setVisibility(View.GONE);
             countdownText.setVisibility(View.VISIBLE);
-            countdownText.setText("Resend OTP in 0 seconds"); // Set the text to indicate 0 seconds
+            countdownText.setText("Resend OTP in 0 seconds");
 
-            // You can also optionally disable the countdown TextView here
-            // countdownText.setEnabled(false);
+            countdownText.setEnabled(false);
         }
     }
 
-    //++++++++++++++++++++++++++++++++++++++++++++++++otp timer restart function+++++++++++++++++++++++++++++++
     private void startResendOtpTimer() {
-        // Show the countdown TextView
         countdownText.setVisibility(View.VISIBLE);
-        // Hide the Resend OTP button
         resent_otp.setVisibility(View.GONE);
-        resendOtpTimer = new CountDownTimer(60000, 1000) { // 60 seconds, with a tick interval of 1 second
+        resendOtpTimer = new CountDownTimer(60000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
-                // Update the countdown TextView with the remaining time
                 countdownText.setText("Resend OTP in " + millisUntilFinished / 1000 + " seconds");
             }
 
             @Override
             public void onFinish() {
-                // Timer finished, enable the Resend OTP button and hide the countdown TextView
                 isResendOtpEnabled = true;
                 updateResendOtpButtonState();
             }
         }.start();
 
-        // Disable the Resend OTP button during the countdown
         isResendOtpEnabled = false;
         updateResendOtpButtonState();
     }
 
-    //++++++++++++++++++++++++++++++++++++++++++++Resend OTP customer done TODO FOR DRIVER++++++++++++++++++++++++++++++++++++++++++
     private void resend_otp(String phone_no) {
-        progressDialog.setMessage("OTP is Resending..."); // Set the message for the progress dialog
-        progressDialog.show(); // Show the progress dialog
+        progressDialog.setMessage("OTP is Resending...");
+        progressDialog.show();
         mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
             @Override
@@ -256,44 +211,46 @@ public class OTP_Fragment extends Fragment {
             @Override
             public void onCodeSent(@NonNull String verificationId,
                                    @NonNull PhoneAuthProvider.ForceResendingToken token) {
-
                 progressDialog.dismiss();
+                newVerificationId = verificationId;
                 startResendOtpTimer();
             }
         };
 
-        //+++++++++++++++++++++++++Firebase Send OTP function+++++++++++++++++++++++++++++++++++++++++++
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(phone_no)       // Phone number to verify
-                        .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                        .setActivity(getActivity())                 // (optional) Activity for callback binding
-                        .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                        .setPhoneNumber(phone_no)
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(getActivity())
+                        .setCallbacks(mCallbacks)
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
-    //++++++++++++++++++++++++++++++++Signup verification of otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    private void OTP_Verify(String code) {
+    private void OTP_Verify(String code, boolean isReverification, String newVerificationId) {
+        PhoneAuthCredential credential;
 
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationId, code);
+        if (isReverification) {
+            credential = PhoneAuthProvider.getCredential(newVerificationId, code);
+        } else {
+            credential = PhoneAuthProvider.getCredential(verificationId, code);
+        }
+
         mAuth.signInWithCredential(credential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     resendOtpTimer.cancel();
 
-                    if(source == "login_customer") {
-
-                        if (loginRole == "Customer") {
+                    if ("login_customer".equals(source)) {
+                        if ("Customer".equals(loginRole)) {
                             Intent intent = new Intent(getContext(), Booking_Activity.class);
                             startActivity(intent);
-                        } else if (loginRole == "Driver") {
+                        } else if ("Driver".equals(loginRole)) {
                             Intent driver = new Intent(getContext(), driver_homepage.class);
                             startActivity(driver);
                         }
-                    }
-                    else {
+                    } else {
                         signup_customer_Fragment fragment = new signup_customer_Fragment();
                         Bundle passdata = new Bundle();
                         passdata.putString("verfiy", "true");
@@ -310,81 +267,10 @@ public class OTP_Fragment extends Fragment {
                     }
                 } else {
                     Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
-
                 }
             }
         });
-
     }
-
-
-    //++++++++++++++++++++++++++++++++Fetching logged in user data from DB to create a session++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    private void fetchUserDataFromDatabase(String login_contact) {
-
-        progressDialog.setMessage("Logging In..."); // Set the message for the progress dialog
-        progressDialog.show(); // Show the progress dialog
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_USER_DATA,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-
-                            if (!jsonObject.getBoolean("error")) {
-                                // User data is successfully retrieved from the database
-                                JSONObject userData = jsonObject.getJSONObject("users");
-
-                                // Create a User object and store the fetched data
-                                User_Data user = new User_Data();
-                                user.setUserId(userData.getString("customer_id"));
-                                user.setFirstName(userData.getString("firstname"));
-                                user.setLastName(userData.getString("lastname"));
-                                user.setEmail(userData.getString("email"));
-                                user.setPhoneNumber(userData.getString("phoneno"));
-                                user.setProfileImage(userData.getString("profileimage"));
-
-                                // Create a user session and store the user's data
-                                sessionManager.createUserSession(
-                                        userData.getString("customer_id"),
-                                        userData.getString("firstname"),
-                                        userData.getString("lastname"),
-                                        userData.getString("email"),
-                                        userData.getString("phoneno")
-                                );
-                                progressDialog.dismiss();
-                                Intent intent = new Intent(getContext(), Booking_Activity.class);
-                                startActivity(intent);
-                            } else {
-                                // Handle the case where user data retrieval from the database fails
-                                Toast.makeText(getContext(), "User data not found.", Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // Handle the error
-                        error.printStackTrace();
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("phoneno", login_contact); // Send the phone number to the PHP script
-                return params;
-            }
-        };
-
-        // Add the request to the Volley request queue
-        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
-    }
-
-
-    //++++++++++++++++++++++++++++++++6 BOX functionality for otp++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
     private class GenericTextWatcher implements TextWatcher {
         private View currentView;
@@ -407,16 +293,13 @@ public class OTP_Fragment extends Fragment {
         public void afterTextChanged(Editable editable) {
             String text = editable.toString();
             if (text.length() > 1) {
-                // If more than one character is entered, keep only the first character
                 editable.clear();
                 editable.append(text.charAt(0));
             }
 
-            // Move focus to the next EditText field if available
             if (text.length() == 1 && nextView != null) {
                 nextView.requestFocus();
             } else if (text.length() == 0 && currentView != null) {
-                // If the current EditText is empty, move focus to the previous EditText
                 View previousView = getPreviousView(currentView);
                 if (previousView != null) {
                     previousView.requestFocus();
@@ -424,15 +307,13 @@ public class OTP_Fragment extends Fragment {
             }
         }
 
-        // Helper method to get the previous EditText field
         private View getPreviousView(View currentView) {
             if (currentView == otp2) return otp1;
             if (currentView == otp3) return otp2;
             if (currentView == otp4) return otp3;
             if (currentView == otp5) return otp4;
             if (currentView == otp6) return otp5;
-            return null; // If currentView is otp1 or an unknown view
+            return null;
         }
     }
-
 }

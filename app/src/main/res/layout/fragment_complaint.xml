@@ -79,6 +79,7 @@
 
                 <!-- Other Form Fields (Repeat similar TextInputLayouts) -->
                 <Spinner
+                    android:id="@+id/complaint_type"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/app_name"
@@ -87,7 +88,7 @@
                 </Spinner>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lastname"
+                    android:id="@+id/complaint_text"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,11 +97,11 @@
                     app:counterMaxLength="15">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/complaintDescriptionEditText"
                         android:layout_width="match_parent"
                         android:layout_height="61dp"
                         android:inputType="textMultiLine|textCapSentences"
-                        android:scrollbars="vertical"
-                        android:text="enter complaint" />
+                        android:scrollbars="vertical"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
 

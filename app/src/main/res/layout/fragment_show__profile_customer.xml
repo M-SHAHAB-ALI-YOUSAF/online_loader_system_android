@@ -77,9 +77,10 @@
                     android:id="@+id/editText1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/bungee"
                     android:gravity="center"
                     android:hint="Yashfa Azhar"
+                    android:textSize="@dimen/_20ssp"
+                    android:textStyle="bold"
                     android:textColor="@color/black" />
 
                 <TextView

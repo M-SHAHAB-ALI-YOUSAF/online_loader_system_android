@@ -18,12 +18,20 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
 
 
-    <string-array name="vehicle_types">
-        <item>Select Vehicle Type</item>
-        <item>Car</item>
-        <item>Motorcycle</item>
-        <item>Truck</item>
-        <!-- Add more vehicle types here -->
+    <string-array name="driver_complaints">
+        <item>Unsafe Driving</item>
+        <item>Late Arrival</item>
+        <item>Rude Behavior</item>
+        <item>Mishandling of Goods</item>
+        <item>Driving without Care</item>
+        <item>Failure to Follow Instructions</item>
+        <item>No-Show Driver</item>
+        <item>Wrong Route Taken</item>
+        <item>Refusal to Help with Loading/Unloading</item>
+        <item>Other</item>
     </string-array>
+
+
+
 
 </resources>

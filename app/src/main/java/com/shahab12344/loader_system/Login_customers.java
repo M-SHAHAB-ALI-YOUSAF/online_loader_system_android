@@ -77,7 +77,11 @@ public class Login_customers extends Fragment {
         btn_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SendOtp();
+                if (Role == null) {
+                    Toast.makeText(getContext(), "Select Role Customer/Driver", Toast.LENGTH_SHORT).show();
+                } else {
+                    SendOtp();
+                }
             }
         });
 
@@ -171,7 +175,7 @@ public class Login_customers extends Fragment {
 
     //+++++++++++++++++++++++++Pakistani Phone no validation+++++++++++++++++++++++++++++++++++++++++++
     private boolean isValidPakistanPhoneNumber(String phoneNumber) {
-        String pakistanPhoneNumberPattern = "^(\\+92|0)[1-9]{1}[0-9]{9}$";
+        String pakistanPhoneNumberPattern = "^(\\+92|0)[3]{1}[0-4]{1}[0-9]{8}$";
         Pattern pattern = Pattern.compile(pakistanPhoneNumberPattern);
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
@@ -191,13 +195,13 @@ public class Login_customers extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                validatePhoneno(s.toString().trim());
+                validatePhoneno("+92"+s.toString().trim());
             }
         });
 
         textInputPhonenologin.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                validatePhoneno(textInputPhonenologin.getEditText().getText().toString().trim());
+                validatePhoneno("+92"+textInputPhonenologin.getEditText().getText().toString().trim());
             }
         });
     }
@@ -215,7 +219,7 @@ public class Login_customers extends Fragment {
 
     //++++++++++++++++++++++++++++++++++Validation of phone no++++++++++++++++++++++++++++++++++++++++++++
     private void SendOtp() {
-        phone = textInputPhonenologin.getEditText().getText().toString().trim();
+        phone = "+92" +textInputPhonenologin.getEditText().getText().toString().trim();
         validatePhoneno(phone);
 
         if (textInputPhonenologin.getError() != null ){

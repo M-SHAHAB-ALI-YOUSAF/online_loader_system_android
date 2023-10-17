@@ -1,11 +1,15 @@
 package com.shahab12344.loader_system;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -46,18 +50,40 @@ public class PaymentMethod extends AppCompatActivity {
 
     private void onPaymentResult(final PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Canceled) {
-            Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+            showPaymentOptionsDialog("Payment Canceled");
         }
         if (paymentSheetResult instanceof PaymentSheetResult.Failed) {
-            Toast.makeText(this, "Failed", Toast.LENGTH_SHORT).show();
+            showPaymentOptionsDialog("Payment Failed");
         }
         if (paymentSheetResult instanceof PaymentSheetResult.Completed) {
-            Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
             review_and_rating fragment = new review_and_rating();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.feedbackarea, fragment);
             transaction.commit();
         }
+    }
+
+    private void showPaymentOptionsDialog(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(message)
+                .setMessage("Choose a Payment Option:")
+                .setPositiveButton("Pay Online", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        fetchapi();
+                    }
+                })
+                .setNegativeButton("Pay by Cash", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        review_and_rating fragment = new review_and_rating();
+                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.feedbackarea, fragment);
+                        transaction.commit();
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
 
     public void fetchapi() {
@@ -89,6 +115,7 @@ public class PaymentMethod extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                progressDialog.dismiss();
                 Toast.makeText(getApplication(), error.toString(), Toast.LENGTH_SHORT).show();
             }
         }) {
@@ -99,6 +126,13 @@ public class PaymentMethod extends AppCompatActivity {
                 return paramV;
             }
         };
+
+        int timeout = 30000; // 30 seconds (adjust as needed)
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                timeout,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        ));
         queue.add(stringRequest);
     }
 }

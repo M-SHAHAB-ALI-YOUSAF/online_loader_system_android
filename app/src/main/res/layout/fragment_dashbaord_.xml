@@ -10,8 +10,7 @@
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        >
+        android:fitsSystemWindows="true">
 
 
         <!-- NavigationView -->
@@ -59,6 +58,16 @@
                         android:src="@drawable/hamburger_circle"
                         android:elevation="20dp"/>
 
+                    <ImageView
+                        android:id="@+id/current"
+                        android:layout_width="@dimen/_20sdp"
+                        android:layout_height="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_230sdp"
+                        android:layout_marginLeft="@dimen/_290sdp"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/current_location"
+                        android:elevation="20dp"/>
+
                 </FrameLayout>
 
                 <!--        &lt;!&ndash; Fragment Container &ndash;&gt;-->
@@ -99,10 +108,11 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/small"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_50sdp"
                                     android:scaleType="fitCenter"
-                                    android:src="@drawable/truck" />
+                                    android:src="@drawable/small" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -127,10 +137,11 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/medium"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_50sdp"
                                     android:scaleType="fitCenter"
-                                    android:src="@drawable/truck" />
+                                    android:src="@drawable/medium" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -155,10 +166,11 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/large"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_50sdp"
                                     android:scaleType="fitCenter"
-                                    android:src="@drawable/truck" />
+                                    android:src="@drawable/large" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -183,10 +195,11 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/extra_large"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_50sdp"
                                     android:scaleType="fitCenter"
-                                    android:src="@drawable/truck" />
+                                    android:src="@drawable/extra_large" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -224,8 +237,8 @@
                     android:id="@+id/editTextPassengers"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/location_24"
                     android:hint="Fare Rate"
+                    android:layout_marginLeft="@dimen/_10sdp"
                     android:minHeight="48dp"
                     android:padding="@dimen/_5sdp" />
 

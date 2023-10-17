@@ -285,7 +285,7 @@ public class signup_customer_Fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                validatePhoneno(s.toString().trim());
+                validatePhoneno("+92"+s.toString().trim());
             }
         });
 
@@ -309,7 +309,7 @@ public class signup_customer_Fragment extends Fragment {
 
         textInputPhoneno.getEditText().setOnFocusChangeListener((v, hasFocus) -> {
             if (!hasFocus) {
-                validatePhoneno(textInputPhoneno.getEditText().getText().toString().trim());
+                validatePhoneno("+92"+textInputPhoneno.getEditText().getText().toString().trim());
             }
         });
     }
@@ -413,7 +413,7 @@ public class signup_customer_Fragment extends Fragment {
 
     //++++++++++++++++++++++++++++++++Pakistani phone no validation++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private boolean isValidPakistanPhoneNumber(String phoneNumber) {
-        String pakistanPhoneNumberPattern = "^(\\+92|0)[1-9]{1}[0-9]{9}$";
+        String pakistanPhoneNumberPattern = "^(\\+92|0)[3]{1}[0-4]{1}[0-9]{8}$";
         Pattern pattern = Pattern.compile(pakistanPhoneNumberPattern);
         Matcher matcher = pattern.matcher(phoneNumber);
         return matcher.matches();
@@ -424,7 +424,7 @@ public class signup_customer_Fragment extends Fragment {
         firstname = textInputFirstname.getEditText().getText().toString().trim();
         lastname = textInputLastname.getEditText().getText().toString().trim();
         email = textInputEmail.getEditText().getText().toString().trim();
-        phoneno = textInputPhoneno.getEditText().getText().toString().trim();
+        phoneno = "+92" +textInputPhoneno.getEditText().getText().toString().trim();
 
         validateFirstname(firstname);
         validateLastname(lastname);

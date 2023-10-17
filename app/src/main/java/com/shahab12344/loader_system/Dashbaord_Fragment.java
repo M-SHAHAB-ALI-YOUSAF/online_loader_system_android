@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -78,6 +80,18 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         if (!isLocationEnabled()) {
             showLocationSettingsAlert();
         }
+
+        // Inside your onCreate or wherever you need to load and display the images
+        ImageView image1 = view.findViewById(R.id.small);
+        ImageView image2 = view.findViewById(R.id.medium);
+        ImageView  image3 = view.findViewById(R.id.large);
+        ImageView image4 = view.findViewById(R.id.extra_large);
+
+        // Load and set the images
+        image1.setImageBitmap(loadAndScaleImage(R.drawable.small));
+        image2.setImageBitmap(loadAndScaleImage(R.drawable.medium));
+        image3.setImageBitmap(loadAndScaleImage(R.drawable.large));
+        image4.setImageBitmap(loadAndScaleImage(R.drawable.extra_large));
 
         //showing trip detail
         editTextPickup = view.findViewById(R.id.editTextPickup);
@@ -170,6 +184,24 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         }
 
         mapFragment.getMapAsync(this);
+        // Add this code inside your onCreateView method
+        ImageView currentLocationButton = view.findViewById(R.id.current);
+
+        currentLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Check if location permissions are granted
+                if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // Permissions not granted, request them
+                    requestLocationPermissions();
+                } else {
+                    // Permissions are granted, get the current location
+                    getLastLocation();
+                }
+            }
+        });
+
 
 
         return view;
@@ -267,5 +299,12 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
 
+    }
+
+    private Bitmap loadAndScaleImage (int resId){
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 2;
+
+        return BitmapFactory.decodeResource(getResources(), resId, options);
     }
 }

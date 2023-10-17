@@ -123,6 +123,7 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/small"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
                                     android:scaleType="fitCenter"
@@ -152,6 +153,7 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/medium"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
                                     android:scaleType="fitCenter"
@@ -180,6 +182,7 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/large"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
                                     android:scaleType="fitCenter"
@@ -208,6 +211,7 @@
                                 android:padding="8dp">
 
                                 <ImageView
+                                    android:id="@+id/extra_large"
                                     android:layout_width="match_parent"
                                     android:layout_height="@dimen/_80sdp"
                                     android:scaleType="fitCenter"
