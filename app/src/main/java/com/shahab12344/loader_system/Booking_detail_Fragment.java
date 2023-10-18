@@ -26,6 +26,13 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.TimeoutError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +43,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallback {
@@ -194,7 +207,7 @@ public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallb
             buttonOption1.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    showToast("Option 1 clicked");
+                    Send_payment_to_db(requireContext());
                     dismiss();
                 }
             });
@@ -216,5 +229,56 @@ public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallb
         private void showToast(String message) {
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public static void Send_payment_to_db(Context context){
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    "http://10.0.2.2/Cargo_Go/v1/Payment.php",
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Handle the response here
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+                                if (jsonObject.has("message")) {
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+                                } else {
+                                    // If the response does not contain a "message" key, you can display a generic success message
+                                    Toast.makeText(context, "Payment Done.", Toast.LENGTH_LONG).show();
+
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                                // Handle connection error here
+                                Toast.makeText(context, "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            } else {
+                                // Handle other errors
+                                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    int price = 10000;
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Booking_ID", "2");
+                    params.put("Customer_ID", "2");
+                    params.put("Amount", String.valueOf(price));
+                    params.put("Payment_Method", "Cash");
+                    return params;
+                }
+            };
+
+            // Add the request to the Volley request queue
+            RequestHandler.getInstance(context).addToRequestQueue(stringRequest);
+
     }
 }
