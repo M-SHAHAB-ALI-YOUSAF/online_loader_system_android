@@ -54,12 +54,12 @@
             android:padding="20dp">
 
             <!-- Profile border -->
-<!--            <ImageView-->
-<!--                android:id="@+id/profile_border"-->
-<!--                android:layout_width="@dimen/_100sdp"-->
-<!--                android:layout_height="@dimen/_100sdp"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:src="@drawable/circle_background" />-->
+            <ImageView
+                android:id="@+id/profile_border"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/circle_background" />
 
             <!-- Profile image -->
             <ImageView
@@ -68,7 +68,7 @@
                 android:layout_height="@dimen/_90sdp"
                 android:layout_centerHorizontal="true"
                 android:scaleType="fitCenter"
-                android:src="@drawable/person_2" />
+                android:src="@drawable/person_" />
 
             <!-- Text boxes and button -->
         </RelativeLayout>

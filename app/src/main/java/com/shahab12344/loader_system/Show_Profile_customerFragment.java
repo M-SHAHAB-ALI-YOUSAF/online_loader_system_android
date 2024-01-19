@@ -69,12 +69,12 @@ public class Show_Profile_customerFragment extends Fragment {
         String phoneNumber = sessionManager.getPhoneNumber();
 
 // Set the retrieved user data to TextViews
-        firstNameEditText.getEditText().setText(firstName);
-        lastNameTabTextView.getEditText().setText(lastName);
-        emailTabTextView.getEditText().setText(email);
-        phoneTabTextView.getEditText().setText(phoneNumber);
+        firstNameEditText.getEditText().setText("Yashfa");
+        lastNameTabTextView.getEditText().setText("Azhar");
+        emailTabTextView.getEditText().setText("Yashfa@gmail.com");
+        phoneTabTextView.getEditText().setText("+923111111111");
         name = view.findViewById(R.id.editText1);
-        name.setText(firstName + " " + lastName );
+        name.setText("Yashfa" + " " + "Azhar" );
         return view;
     }
 }

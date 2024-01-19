@@ -403,7 +403,7 @@ public class signup_customer_Fragment extends Fragment {
 
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(mAuth)
-                        .setPhoneNumber(textInputPhoneno.getEditText().getText().toString())       // Phone number to verify
+                        .setPhoneNumber("+92"+textInputPhoneno.getEditText().getText().toString())       // Phone number to verify
                         .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
                         .setActivity(getActivity())                 // (optional) Activity for callback binding
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks

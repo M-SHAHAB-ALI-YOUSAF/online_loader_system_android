@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.android.volley.AuthFailureError;
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -33,6 +37,8 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.Console;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -244,6 +250,9 @@ public class OTP_Fragment extends Fragment {
 
                     if ("login_customer".equals(source)) {
                         if ("Customer".equals(loginRole)) {
+//                            Log.d("MyApp", "getUserDataByPhone will be called");
+//                            getUserDataByPhone(login_contact);
+//                            Toast.makeText(getContext(), "Working", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getContext(), Booking_Activity.class);
                             startActivity(intent);
                         } else if ("Driver".equals(loginRole)) {
@@ -251,6 +260,22 @@ public class OTP_Fragment extends Fragment {
                             startActivity(driver);
                         }
                     } else {
+                        if(Role == "Driver"){
+                            Signup_driverFragment fragment = new Signup_driverFragment();
+                            Bundle passdata = new Bundle();
+                            passdata.putString("verfiy", "true");
+                            passdata.putString("Roles", Role);
+                            passdata.putString("f_name", f_name);
+                            passdata.putString("l_name", l_name);
+                            passdata.putString("email", email);
+                            passdata.putString("phone", signup_phone_no);
+                            fragment.setArguments(passdata);
+                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                            transaction.replace(R.id.login_RegFragmentContainer, fragment);
+                            transaction.addToBackStack(null);
+                            transaction.commit();
+                        }
+                        else{
                         signup_customer_Fragment fragment = new signup_customer_Fragment();
                         Bundle passdata = new Bundle();
                         passdata.putString("verfiy", "true");
@@ -265,12 +290,80 @@ public class OTP_Fragment extends Fragment {
                         transaction.addToBackStack(null);
                         transaction.commit();
                     }
+                    }
                 } else {
                     Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
+
+    private void getUserDataByPhone(String phoneNumber) {
+        // Perform a network request to fetch user data from your backend
+        // Use your preferred networking library (e.g., Retrofit, Volley) to make the request
+
+        // Example using Volley
+        StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                "http://10.0.2.2/Cargo_Go/v1/alluserbyphoneno.php",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            if (jsonObject.has("Customer_ID")) {
+                                // Parse the JSON response
+                                String customerId = jsonObject.getString("Customer_ID");
+                                String firstName = jsonObject.getString("FIrst_Name");
+                                String lastName = jsonObject.getString("Last_Name");
+                                String email = jsonObject.getString("Email");
+                                String phone = phoneNumber;
+                                String profileImage = jsonObject.getString("Profile_Image");
+
+                                // Save user data to SharedPreferences using SessionManager
+                                SessionManager sessionManager = new SessionManager(getContext());
+                                sessionManager.createUserSession(customerId, firstName, lastName, email, phone);
+                                sessionManager.saveProfileImageUri(profileImage);
+                                Log.d("MyApp", "Session created.");
+                                Toast.makeText(getContext(), "Session created.", Toast.LENGTH_SHORT).show();
+
+                                // Continue with your navigation logic...
+                                Log.d("MyApp", "Navigating to Booking_Activity.");
+                                // or
+                                Toast.makeText(getContext(), "Navigating to Booking_Activity.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Handle the case where the response doesn't contain user data
+                              //  textInputPhonenologin.setError("Phone number is not registered with selected" + Role);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Handle JSON parsing error
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                            // Handle connection error here
+                            Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                        } else {
+                            // Handle other errors
+                            Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("Phone_No", login_contact);
+                return params;
+            }
+        };
+        RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
+
+    }
+
 
     private class GenericTextWatcher implements TextWatcher {
         private View currentView;

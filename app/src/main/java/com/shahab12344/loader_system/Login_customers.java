@@ -44,7 +44,7 @@ public class Login_customers extends Fragment {
 
     //+++++++++++++++++++++++++Variables+++++++++++++++++++++++++++++++++++++++++++
     private TextInputLayout textInputPhonenologin;
-    String phone, Role;
+    String phone, Role, url,columnname;
     private ProgressDialog progressDialog;
     Button btn_otp, btn_go_singup;
 
@@ -55,7 +55,7 @@ public class Login_customers extends Fragment {
 
 
     public Login_customers() {
-        // Required empty public constructor
+
     }
 
 
@@ -230,9 +230,19 @@ public class Login_customers extends Fragment {
         progressDialog.setMessage("Checking User Details...");
         progressDialog.show();
 
+        if(Role == "Customer"){
+            url = "http://10.0.2.2/Cargo_Go/v1/login.php";
+            columnname = "Phone_No";
+         }
+        else{
+            url = "http://10.0.2.2/Cargo_Go/v1/driverlogin.php";
+            columnname = "Driver_Phone_No";
+
+        }
+
         //++++++++++++++++++++++++++++++++++Checking phone no is register or not++++++++++++++++++++++++++++++++++++++++++++
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "http://10.0.2.2/Cargo_Go/v1/login.php",
+                url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -244,7 +254,7 @@ public class Login_customers extends Fragment {
                                 if (message.equals("Phone number is already registered, please choose a different one.")) {
                                     otpsend();
                                 } else {
-                                    textInputPhonenologin.setError("Phone number is not registered with selected" + Role);
+                                    textInputPhonenologin.setError("Phone number is not registered with selected " + Role);
                                 }
                             }
                         } catch (JSONException e) {
@@ -267,7 +277,7 @@ public class Login_customers extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("Phone_No", phone);
+                params.put(columnname, phone);
                 return params;
             }
         };

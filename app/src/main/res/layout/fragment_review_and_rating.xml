@@ -21,9 +21,10 @@
 
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_120sdp"
-                android:src="@drawable/person_2"/>
+                android:src="@drawable/person_"
+                android:layout_marginHorizontal="@dimen/_107sdp"/>
 
             <TextView
                 android:layout_width="wrap_content"

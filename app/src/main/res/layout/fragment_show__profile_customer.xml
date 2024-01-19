@@ -138,8 +138,7 @@
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="text"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:text="First Name" />
+                    android:focusableInTouchMode="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -156,8 +155,7 @@
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="text"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:text="Last Name" />
+                    android:focusableInTouchMode="false" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -175,7 +173,6 @@
                     android:drawableLeft="@drawable/email"
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="textEmailAddress"
-                    android:text="Example123@gmail.com"
                     android:focusable="false"
                     android:focusableInTouchMode="false"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -196,8 +193,7 @@
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="phone"
                     android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:text="++92XXXXXXXXXX" />
+                    android:focusableInTouchMode="false" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 

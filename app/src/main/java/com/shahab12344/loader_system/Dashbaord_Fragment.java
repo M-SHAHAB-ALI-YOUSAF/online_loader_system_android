@@ -1,7 +1,9 @@
 package com.shahab12344.loader_system;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,7 +13,9 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -32,6 +36,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,6 +53,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, NavigationView.OnNavigationItemSelectedListener {
 
     DrawerLayout drawerLayout;
@@ -53,6 +68,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     private Spinner spinnerCount;
     private Button buttonFindDriver;
     NavigationView navigationView;
+    ProgressDialog progressDialog;
 
     //session
     private SessionManager sessionManager;
@@ -74,6 +90,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
         //session
         sessionManager = new SessionManager(getContext());
+        progressDialog = new ProgressDialog(getActivity());
 
 
         //location must on
@@ -159,7 +176,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         String firstName = sessionManager.getFirstName();
 
         // Set the first name in the TextView
-        headerTextView.setText(firstName);
+        headerTextView.setText("Yashfa Azhar");
         navigationView.bringToFront();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -292,13 +309,105 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 startActivity(intent);
                 break;
             case R.id.History:
-                Fragment review = new review_and_rating();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, review).commit();
+//                Fragment review = new review_and_rating();
+//                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, review).commit();
+                break;
+
+            case R.id.delete:
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Remove Account");
+                builder.setMessage("Are you sure you want to remove your account?");
+
+
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        removeAccount();
+
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Toast.makeText(getActivity(), "Account NOT removed!", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+
                 break;
         }
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
 
+    }
+
+
+    //+++++++++++++++++++++++++++++++++++++++remove account+++++++++++++++++++++++++++++++++++++++++++++++++
+    private void removeAccount() {
+        progressDialog.setMessage("Removing User Account...");
+        progressDialog.show();
+
+        // Create a StringRequest with POST method
+        StringRequest stringRequest = new StringRequest(
+                Request.Method.POST,
+                Constants.URL_DELETE_ACCOUNT,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        progressDialog.dismiss();
+
+                        try {
+                            // Parse the JSON response
+                            JSONObject jsonObject = new JSONObject(response);
+
+                            if (jsonObject.getString("message").matches("true")) {
+
+//                                SharedPrefManager.getInstance(getActivity()).logout();
+
+                                startActivity(new Intent(getActivity(), Login_Registration.class));
+
+                                Toast.makeText(getActivity(), "User removed successfully", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // Display a message indicating failure
+                                String message = jsonObject.getString("message");
+                                Toast.makeText(getActivity(), "Error: " + message, Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            // Handle JSON parsing error
+                            Toast.makeText(getActivity(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        progressDialog.dismiss();
+                        // Handle error cases
+                        Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+        ) {
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Email", "khalid@g.c");
+                return params;
+            }
+        };
+
+        // Add the request to the request queue
+        RequestHandler.getInstance(getActivity()).addToRequestQueue(stringRequest);
     }
 
     private Bitmap loadAndScaleImage (int resId){

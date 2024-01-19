@@ -18,6 +18,11 @@
             android:id="@+id/FAQ"
             android:icon="@drawable/faq"
             android:title="FAQ" />
+
+        <item
+            android:id="@+id/delete"
+            android:icon="@drawable/remove"
+            android:title="Remove Account" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/baseline_logout_24"

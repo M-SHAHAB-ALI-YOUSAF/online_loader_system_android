@@ -90,10 +90,10 @@ public class Edit_customer_profileFragment extends Fragment {
         String phoneNumber = sessionManager.getPhoneNumber();
 
         // Set the retrieved user data to TextInputLayouts
-        fNameInput.getEditText().setText(firstName);
-        lastNameInput.getEditText().setText(lastName);
-        emailInput.getEditText().setText(email);
-        phoneInput.getEditText().setText(phoneNumber);
+        fNameInput.getEditText().setText("Yashfa");
+        lastNameInput.getEditText().setText("Azhar");
+        emailInput.getEditText().setText("Yashfa@gmail.com");
+        phoneInput.getEditText().setText("+923111111111");
 
         imageView = view.findViewById(R.id.profile_image);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -104,17 +104,17 @@ public class Edit_customer_profileFragment extends Fragment {
                         .start();
             }
         });
-
-        String profileImageUri = sessionManager.getProfileImageUri();
-        Log.d("ProfileImage", "Profile Image URI (before loading): " + profileImageUri);
-
-        if (profileImageUri != null) {
-            // Load the profile image using Picasso or Glide
-            Picasso.get().load(profileImageUri).into(imageView);
-        } else {
-            // Load a default image if the URI is null
-            Picasso.get().load(R.drawable.person_2).into(imageView);
-        }
+//        Picasso.get().load(R.drawable.person_).into(imageView);
+//        String profileImageUri = sessionManager.getProfileImageUri();
+//        Log.d("ProfileImage", "Profile Image URI (before loading): " + profileImageUri);
+//
+//        if (profileImageUri != null) {
+//            // Load the profile image using Picasso or Glide
+//            Picasso.get().load(profileImageUri).into(imageView);
+//        } else {
+//            // Load a default image if the URI is null
+//            Picasso.get().load(R.drawable.person_).into(imageView);
+//        }
 
 
         return view;
