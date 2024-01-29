@@ -211,7 +211,7 @@
 
                 <!-- Text Input Field 1 -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/reg_name"
+                    android:id="@+id/reg_d_name"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/last_name"
+                    android:id="@+id/last_d_name"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -245,7 +245,7 @@
 
                 <!-- Text Input Field 3 -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/reg_email"
+                    android:id="@+id/reg_d_email"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -262,7 +262,7 @@
 
                 <!-- Text Input Field 4 -->
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/reg_password"
+                    android:id="@+id/reg_d_Phone"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

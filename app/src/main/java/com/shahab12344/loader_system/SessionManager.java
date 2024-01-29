@@ -10,7 +10,7 @@ public class SessionManager {
     private static final String KEY_LAST_NAME = "last_name";
     private static final String KEY_EMAIL = "email";
     private static final String KEY_PHONE_NUMBER = "phone_number";
-
+    private static final String KEY_ROLE = "role";
     private static final String KEY_PROFILE_IMAGE_URI = "profile_image_uri";
 
     private SharedPreferences sharedPreferences;
@@ -23,12 +23,13 @@ public class SessionManager {
         editor = sharedPreferences.edit();
     }
 
-    public void createUserSession(String userId, String firstName, String lastName, String email, String phoneNumber) {
+    public void createUserSession(String userId, String firstName, String lastName, String email, String phoneNumber, String role) {
         editor.putString(KEY_USER_ID, userId);
         editor.putString(KEY_FIRST_NAME, firstName);
         editor.putString(KEY_LAST_NAME, lastName);
         editor.putString(KEY_EMAIL, email);
         editor.putString(KEY_PHONE_NUMBER, phoneNumber);
+        editor.putString(KEY_ROLE, role);
         editor.apply();
     }
 
@@ -61,6 +62,9 @@ public class SessionManager {
         return sharedPreferences.getString(KEY_PHONE_NUMBER, "");
     }
 
+    public String getRole() {
+        return sharedPreferences.getString(KEY_ROLE, "");
+    }
     public void saveProfileImageUri(String uri) {
         editor.putString(KEY_PROFILE_IMAGE_URI, uri);
         editor.apply();

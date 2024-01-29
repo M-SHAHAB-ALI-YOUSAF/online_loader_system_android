@@ -49,7 +49,7 @@ public class OTP_Fragment extends Fragment {
     TextView resent_otp, countdownText;
     ImageView back_to_login;
     EditText otp1, otp2, otp3, otp4, otp5, otp6;
-    String f_name, l_name, email, signup_phone_no, source, Role, loginRole, newVerificationId;
+    String f_name, l_name, email, signup_phone_no, source, Role,phone_no_column, loginRole, newVerificationId, getalluser_url;
     private ProgressDialog progressDialog;
     private CountDownTimer resendOtpTimer;
     private boolean isResendOtpEnabled = true;
@@ -251,11 +251,12 @@ public class OTP_Fragment extends Fragment {
                     if ("login_customer".equals(source)) {
                         if ("Customer".equals(loginRole)) {
 //                            Log.d("MyApp", "getUserDataByPhone will be called");
-//                            getUserDataByPhone(login_contact);
+                            getUserDataByPhone(login_contact);
 //                            Toast.makeText(getContext(), "Working", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getContext(), Booking_Activity.class);
                             startActivity(intent);
                         } else if ("Driver".equals(loginRole)) {
+                            getUserDataByPhone(login_contact);
                             Intent driver = new Intent(getContext(), driver_homepage.class);
                             startActivity(driver);
                         }
@@ -299,41 +300,63 @@ public class OTP_Fragment extends Fragment {
     }
 
     private void getUserDataByPhone(String phoneNumber) {
-        // Perform a network request to fetch user data from your backend
-        // Use your preferred networking library (e.g., Retrofit, Volley) to make the request
-
+        if ("Customer".equals(loginRole)) {
+            getalluser_url = "http://10.0.2.2/Cargo_Go/v1/alluserbyphoneno.php";
+            phone_no_column = "Phone_No";
+        } else if ("Driver".equals(loginRole)) {
+            getalluser_url = "http://10.0.2.2/Cargo_Go/v1/alldriverbyphoneno.php";
+            phone_no_column = "Driver_Phone_No";
+        } else {
+            Toast.makeText(getContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
+            return;  // Return early to avoid making an invalid request
+        }
         // Example using Volley
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "http://10.0.2.2/Cargo_Go/v1/alluserbyphoneno.php",
+                getalluser_url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.has("Customer_ID")) {
+                            if(loginRole == "Customer"){
+                            if (!jsonObject.getBoolean("error")) {
                                 // Parse the JSON response
                                 String customerId = jsonObject.getString("Customer_ID");
-                                String firstName = jsonObject.getString("FIrst_Name");
+                                String firstName = jsonObject.getString("First_Name");
                                 String lastName = jsonObject.getString("Last_Name");
                                 String email = jsonObject.getString("Email");
-                                String phone = phoneNumber;
+                                String phone = jsonObject.getString("Phone_No");
                                 String profileImage = jsonObject.getString("Profile_Image");
 
                                 // Save user data to SharedPreferences using SessionManager
                                 SessionManager sessionManager = new SessionManager(getContext());
-                                sessionManager.createUserSession(customerId, firstName, lastName, email, phone);
+                                    sessionManager.createUserSession(customerId, firstName, lastName, email, phone, loginRole);
                                 sessionManager.saveProfileImageUri(profileImage);
-                                Log.d("MyApp", "Session created.");
-                                Toast.makeText(getContext(), "Session created.", Toast.LENGTH_SHORT).show();
 
-                                // Continue with your navigation logic...
-                                Log.d("MyApp", "Navigating to Booking_Activity.");
-                                // or
-                                Toast.makeText(getContext(), "Navigating to Booking_Activity.", Toast.LENGTH_SHORT).show();
                             } else {
-                                // Handle the case where the response doesn't contain user data
-                              //  textInputPhonenologin.setError("Phone number is not registered with selected" + Role);
+                                String errorMessage = jsonObject.getString("message");
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                            } else if (loginRole =="Driver") {
+                                if (!jsonObject.getBoolean("error")) {
+                                    // Parse the JSON response
+                                    String customerId = jsonObject.getString("Driver_ID");
+                                    String firstName = jsonObject.getString("Driver_First_Name");
+                                    String lastName = jsonObject.getString("Driver_Last_Name");
+                                    String email = jsonObject.getString("Driver_Email");
+                                    String phone = jsonObject.getString("Driver_Phone_No");
+                                    String profileImage = jsonObject.getString("Driver_Profile_Image");
+
+                                    // Save user data to SharedPreferences using SessionManager
+                                    SessionManager sessionManager = new SessionManager(getContext());
+                                    sessionManager.createUserSession(customerId, firstName, lastName, email, phone, loginRole);
+                                    sessionManager.saveProfileImageUri(profileImage);
+
+                                } else {
+                                    String errorMessage = jsonObject.getString("message");
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -356,7 +379,7 @@ public class OTP_Fragment extends Fragment {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put("Phone_No", login_contact);
+                params.put(phone_no_column, phoneNumber);
                 return params;
             }
         };

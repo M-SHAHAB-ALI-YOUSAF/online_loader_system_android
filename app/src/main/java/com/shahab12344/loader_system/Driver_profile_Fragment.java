@@ -9,8 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.textfield.TextInputLayout;
 
 
 public class Driver_profile_Fragment extends Fragment {
@@ -18,6 +20,8 @@ public class Driver_profile_Fragment extends Fragment {
 
     Button btn_edit_profile;
     ImageView back_to_dashboard;
+    private SessionManager sessionManager;
+    TextView name;
 
     public Driver_profile_Fragment() {
         // Required empty public constructor
@@ -28,6 +32,9 @@ public class Driver_profile_Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_driver_profile_, container, false);
 
+
+        //session
+        sessionManager = new SessionManager(getContext());
 
 
         //navigation
@@ -83,6 +90,26 @@ public class Driver_profile_Fragment extends Fragment {
             }
         });
 
+
+        //setting data from session ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TextInputLayout firstNameEditText = view.findViewById(R.id.reg_d_name);
+        TextInputLayout lastNameTabTextView = view.findViewById(R.id.last_d_name);
+        TextInputLayout emailTabTextView = view.findViewById(R.id.reg_d_email);
+        TextInputLayout phoneTabTextView = view.findViewById(R.id.reg_d_Phone);
+
+        // Retrieve user data from SessionManager
+        String firstName = sessionManager.getFirstName();
+        String lastName = sessionManager.getLastName();
+        String email = sessionManager.getEmail();
+        String phoneNumber = sessionManager.getPhoneNumber();
+
+        // Set the retrieved user data to TextViews
+        firstNameEditText.getEditText().setText(firstName);
+        lastNameTabTextView.getEditText().setText(lastName);
+        emailTabTextView.getEditText().setText(email);
+        phoneTabTextView.getEditText().setText(phoneNumber);
+        name = view.findViewById(R.id.editText1);
+        name.setText(firstName + " " + lastName);
 
         return view;
     }

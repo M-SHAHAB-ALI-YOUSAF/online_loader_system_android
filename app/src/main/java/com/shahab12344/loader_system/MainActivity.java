@@ -20,59 +20,55 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    //+++++++++++++++++++++variables++++++++++++++++++++++++++++++++++++++
-    ImageView image;
+    private static final int SPLASH_DURATION = 3000; // 3 seconds
+    private ImageView image;
     private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-    //+++++++++++++++++++++Full screen no top bar++++++++++++++++++++++++++++++++++++++
+        // Full screen, no top bar
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-
-    //+++++++++++++++++++++Session for customer+++++++++++++++++++++++++++++++++++++++++
+        // Session for customer
         sessionManager = new SessionManager(this);
 
-    //+++++++++++++++++++++++++++getting ids++++++++++++++++++++++++++++++++++++++++++++
+        // Getting ids
         image = findViewById(R.id.logo_image);
+
+        // Bitmap handling (consider using Glide or Picasso for more efficient image loading)
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 2;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logofina, options);
-
         image.setImageBitmap(bitmap);
 
+        // Setting animation to elements (add your animation code here)
 
-
-    //+++++++++++++++++++++setting animation to elements++++++++++++++++++++++++++++++++++++++
-
-
-    //+++++++++++++++++++++Handle for going to login+++++++++++++++++++++++++++++++++++++++++++++
+        // Handle for going to login
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
-   //+++++++++++++++++++++if customer has logged in before and don't logout++++++++++++++++++++++++++++++++++++++
                 if (sessionManager.isLoggedIn()) {
-                    // User is logged in, navigate to the dashboard activity
-                    Intent intent = new Intent(MainActivity.this, Booking_Activity.class);
+                    // User is logged in, navigate based on the role
+                    String role = sessionManager.getRole(); // Assuming you have a method to get the user's role
+                    if ("Customer".equals(role)) {
+                        // Navigate to the customer dashboard
+                        Intent intent = new Intent(MainActivity.this, Booking_Activity.class);
+                        startActivity(intent);
+                    } else if ("Driver".equals(role)) {
+                        // Navigate to the driver dashboard
+                        Intent intent = new Intent(MainActivity.this, driver_homepage.class);
+                        startActivity(intent);
+                    }
+                } else {
+                    Intent intent = new Intent(MainActivity.this, Login_Registration.class);
+                    // Attach all the elements those you want to animate in design
                     startActivity(intent);
                 }
-
-     //+++++++++++++++++++++new customer or customer logout when last use++++++++++++++++++++++++++++++++++++++
-                else {
-                Intent intent = new Intent(MainActivity.this, Login_Registration.class);
-                // Attach all the elements those you want to animate in design
-                    startActivity(intent);
-
             }
-            }
-        }, 3000);
+        }, SPLASH_DURATION);
     }
-
-
-
 }

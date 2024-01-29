@@ -62,19 +62,19 @@ public class Show_Profile_customerFragment extends Fragment {
         TextInputLayout emailTabTextView = view.findViewById(R.id.et_email_customer);
         TextInputLayout phoneTabTextView = view.findViewById(R.id.et_phone_customer);
 
-// Retrieve user data from SessionManager
+        // Retrieve user data from SessionManager
         String firstName = sessionManager.getFirstName();
         String lastName = sessionManager.getLastName();
         String email = sessionManager.getEmail();
         String phoneNumber = sessionManager.getPhoneNumber();
 
-// Set the retrieved user data to TextViews
-        firstNameEditText.getEditText().setText("Yashfa");
-        lastNameTabTextView.getEditText().setText("Azhar");
-        emailTabTextView.getEditText().setText("Yashfa@gmail.com");
-        phoneTabTextView.getEditText().setText("+923111111111");
+        // Set the retrieved user data to TextViews
+        firstNameEditText.getEditText().setText(firstName);
+        lastNameTabTextView.getEditText().setText(lastName);
+        emailTabTextView.getEditText().setText(email);
+        phoneTabTextView.getEditText().setText(phoneNumber);
         name = view.findViewById(R.id.editText1);
-        name.setText("Yashfa" + " " + "Azhar" );
+        name.setText(firstName + " " + lastName);
         return view;
     }
 }

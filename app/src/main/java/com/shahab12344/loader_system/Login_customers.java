@@ -237,7 +237,6 @@ public class Login_customers extends Fragment {
         else{
             url = "http://10.0.2.2/Cargo_Go/v1/driverlogin.php";
             columnname = "Driver_Phone_No";
-
         }
 
         //++++++++++++++++++++++++++++++++++Checking phone no is register or not++++++++++++++++++++++++++++++++++++++++++++

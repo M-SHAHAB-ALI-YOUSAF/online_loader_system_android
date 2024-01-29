@@ -176,7 +176,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         String firstName = sessionManager.getFirstName();
 
         // Set the first name in the TextView
-        headerTextView.setText("Yashfa Azhar");
+        headerTextView.setText(firstName);
         navigationView.bringToFront();
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(getActivity(), drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

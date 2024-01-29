@@ -90,10 +90,10 @@ public class Edit_customer_profileFragment extends Fragment {
         String phoneNumber = sessionManager.getPhoneNumber();
 
         // Set the retrieved user data to TextInputLayouts
-        fNameInput.getEditText().setText("Yashfa");
-        lastNameInput.getEditText().setText("Azhar");
-        emailInput.getEditText().setText("Yashfa@gmail.com");
-        phoneInput.getEditText().setText("+923111111111");
+        fNameInput.getEditText().setText(firstName);
+        lastNameInput.getEditText().setText(lastName);
+        emailInput.getEditText().setText(email);
+        phoneInput.getEditText().setText(phoneNumber);
 
         imageView = view.findViewById(R.id.profile_image);
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -105,13 +105,14 @@ public class Edit_customer_profileFragment extends Fragment {
             }
         });
 //        Picasso.get().load(R.drawable.person_).into(imageView);
-//        String profileImageUri = sessionManager.getProfileImageUri();
-//        Log.d("ProfileImage", "Profile Image URI (before loading): " + profileImageUri);
-//
-//        if (profileImageUri != null) {
-//            // Load the profile image using Picasso or Glide
-//            Picasso.get().load(profileImageUri).into(imageView);
-//        } else {
+        String profileImageUri = sessionManager.getProfileImageUri();
+        Log.d("ProfileImage", "Profile Image URI (before loading): " + profileImageUri);
+
+        if (profileImageUri != null) {
+            // Load the profile image using Picasso or Glide
+            Picasso.get().load("http://10.0.2.2/Cargo_Go/v1/"+profileImageUri).into(imageView);
+        }
+//        else {
 //            // Load a default image if the URI is null
 //            Picasso.get().load(R.drawable.person_).into(imageView);
 //        }
@@ -140,21 +141,21 @@ public class Edit_customer_profileFragment extends Fragment {
 
         // Create a HashMap to hold the updated user data
         Map<String, String> params = new HashMap<>();
-        params.put("customer_id", userId);
-        params.put("firstname", firstName);
-        params.put("lastname", lastName);
-        params.put("email", email);
-        params.put("phoneno", phone);
+        params.put("First_Name", firstName);
+        params.put("Last_Name", lastName);
+        params.put("Email", email);
+        params.put("Phone_No", phone);
 
+        // If a new image is selected, send the base64 representation to the server
         if (base64Image != null) {
-            params.put("profileimage", base64Image);
+            params.put("Profile_Image", base64Image);
         }
 
         // Send a POST request to your PHP server for updating the user profile
         RequestQueue queue = Volley.newRequestQueue(requireContext());
-        String url = "http://192.168.10.4/FYP/v1/updateUser.php"; // Replace with your server URL
+        String url = "http://10.0.2.2/Cargo_Go/v1/updateUser.php"; // Replace with your server URL
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                Constants.URL_UPDATE_RECORD,
+                url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -165,7 +166,8 @@ public class Edit_customer_profileFragment extends Fragment {
 
                             if (!error) {
                                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                                updateSessionData(firstName, lastName, email, phone, imageView.toString());
+                                // Update session with the image path
+                                updateSessionData(firstName, lastName, email, phone, jsonResponse.getString("image_path"));
                             } else {
                                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                             }
@@ -183,13 +185,13 @@ public class Edit_customer_profileFragment extends Fragment {
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-
                 return params;
             }
         };
 
         queue.add(stringRequest);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -218,10 +220,11 @@ public class Edit_customer_profileFragment extends Fragment {
         }
     }
 
-    ///update session
-    private void updateSessionData(String firstName, String lastName, String email, String phone, String profileImageUri) {
-        sessionManager.createUserSession(userId, firstName, lastName, email, phone);
-        sessionManager.saveProfileImageUri(profileImageUri);
+    // Update session
+    private void updateSessionData(String firstName, String lastName, String email, String phone, String profileImage) {
+        sessionManager.createUserSession(userId, firstName, lastName, email, phone, "Customer");
+        sessionManager.saveProfileImageUri(profileImage); // Save the image path in the session
     }
+
 
 }
