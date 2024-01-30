@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -35,6 +37,7 @@ public class Driver_profile_Fragment extends Fragment {
 
         //session
         sessionManager = new SessionManager(getContext());
+
 
 
         //navigation
@@ -102,6 +105,16 @@ public class Driver_profile_Fragment extends Fragment {
         String lastName = sessionManager.getLastName();
         String email = sessionManager.getEmail();
         String phoneNumber = sessionManager.getPhoneNumber();
+        String profileImageUri = sessionManager.getProfileImageUri();
+        ImageView imageView = view.findViewById(R.id.profile_image);
+        if (profileImageUri != null) {
+            // Load the profile image using Glide and transform it into a circle
+            Glide.with(this)
+                    .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imageView);
+        }
+
 
         // Set the retrieved user data to TextViews
         firstNameEditText.getEditText().setText(firstName);

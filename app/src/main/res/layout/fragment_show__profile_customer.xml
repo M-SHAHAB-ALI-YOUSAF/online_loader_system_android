@@ -45,21 +45,11 @@
             android:padding="20dp">
 
             <!-- Profile border -->
-            <ImageView
-                android:id="@+id/profile_border"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_alignParentLeft="true"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/circle_background" />
-
-            <!-- Profile image -->
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
                 android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_90sdp"
-                android:layout_alignParentLeft="true"
-                android:scaleType="fitCenter"
+                android:layout_height="@dimen/_100sdp"
+                android:layout_centerVertical="true"
                 android:src="@drawable/person_" />
 
             <!-- Text boxes and button -->

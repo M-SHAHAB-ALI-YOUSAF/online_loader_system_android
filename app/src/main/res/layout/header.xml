@@ -8,8 +8,9 @@
     android:orientation="vertical">
 
     <ImageView
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
+        android:id="@+id/userprofile"
+        android:layout_width="@dimen/_90sdp"
+        android:layout_height="@dimen/_90sdp"
         android:src="@drawable/person_" />
 
     <TextView

@@ -41,6 +41,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -72,7 +74,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
     //session
     private SessionManager sessionManager;
-
+    String email;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
@@ -171,6 +173,15 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
         // Find the TextView in the header layout by its ID
         TextView headerTextView = headerView.findViewById(R.id.User_name_in_header);
+        ImageView profile = headerView.findViewById(R.id.userprofile);
+        String profileImageUri = sessionManager.getProfileImageUri();
+        if (profileImageUri != null) {
+            // Load the profile image using Glide and transform it into a circle
+            Glide.with(this)
+                    .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profile);
+        }
 
         // Retrieve the user's first name from SessionManager
         String firstName = sessionManager.getFirstName();
@@ -303,7 +314,6 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
             case R.id.logout:
                 sessionManager.logoutUser();
-
                 // Navigate back to the login or splash screen
                 Intent intent = new Intent(requireActivity(), Login_Registration.class); // Replace with your login activity
                 startActivity(intent);
@@ -401,7 +411,13 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("Email", "khalid@g.c");
+                if(sessionManager.getRole()=="Driver"){
+                     email = "Driver_Email";
+                }
+                else{
+                    email = "Email";
+                }
+                params.put(email, sessionManager.getEmail());
                 return params;
             }
         };

@@ -54,21 +54,37 @@
             android:padding="20dp">
 
             <!-- Profile border -->
-            <ImageView
-                android:id="@+id/profile_border"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/circle_background" />
+<!--            <de.hdodenhof.circleimageview.CircleImageView-->
+<!--                android:id="@+id/profile_border"-->
+<!--                android:layout_width="@dimen/_100sdp"-->
+<!--                android:layout_height="@dimen/_100sdp"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:src="@drawable/circle_background" />-->
 
-            <!-- Profile image -->
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/profile_image"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_90sdp"
+                android:layout_width="@dimen/_130sdp"
+                android:layout_height="@dimen/_130sdp"
                 android:layout_centerHorizontal="true"
-                android:scaleType="fitCenter"
-                android:src="@drawable/person_" />
+                android:src="@drawable/person_"
+                app:civ_border_color="#FFFFFF"
+                app:civ_border_width="@dimen/_5sdp" />
+
+            <!--            <ImageView-->
+<!--                android:id="@+id/profile_border"-->
+<!--                android:layout_width="@dimen/_100sdp"-->
+<!--                android:layout_height="@dimen/_100sdp"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:src="@drawable/circle_background" />-->
+
+<!--            &lt;!&ndash; Profile image &ndash;&gt;-->
+<!--            <ImageView-->
+<!--                android:id="@+id/profile_image"-->
+<!--                android:layout_width="@dimen/_100sdp"-->
+<!--                android:layout_height="@dimen/_90sdp"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:src="@drawable/person_" />-->
 
             <!-- Text boxes and button -->
         </RelativeLayout>

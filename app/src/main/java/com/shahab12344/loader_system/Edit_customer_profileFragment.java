@@ -46,7 +46,7 @@ public class Edit_customer_profileFragment extends Fragment {
     private ImageView imageView;
     private TextInputLayout fNameInput, lastNameInput, emailInput, phoneInput;
 
-    private String userId;
+    private String userId, url, fname_db, lname_db, email_db, phone_db, image_db, role_db;
     private String base64Image = null;
 
     public Edit_customer_profileFragment() {
@@ -106,12 +106,19 @@ public class Edit_customer_profileFragment extends Fragment {
         });
 //        Picasso.get().load(R.drawable.person_).into(imageView);
         String profileImageUri = sessionManager.getProfileImageUri();
-        Log.d("ProfileImage", "Profile Image URI (before loading): " + profileImageUri);
 
+//        if (profileImageUri != null) {
+//            // Load the profile image using Picasso or Glide
+//            Picasso.get().load("http://10.0.2.2/Cargo_Go/v1/"+profileImageUri).into(imageView);
+//        }
         if (profileImageUri != null) {
-            // Load the profile image using Picasso or Glide
-            Picasso.get().load("http://10.0.2.2/Cargo_Go/v1/"+profileImageUri).into(imageView);
+            // Load the profile image using Glide and transform it into a circle
+            Glide.with(this)
+                    .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(imageView);
         }
+
 //        else {
 //            // Load a default image if the URI is null
 //            Picasso.get().load(R.drawable.person_).into(imageView);
@@ -139,21 +146,42 @@ public class Edit_customer_profileFragment extends Fragment {
             return;
         }
 
+        if(sessionManager.getRole() == "Driver"){
+            url = "http://10.0.2.2/Cargo_Go/v1/updateDriver.php";
+            fname_db = "Driver_First_Name";
+            lname_db = "Driver_Last_Name";
+            email_db = "Driver_Email";
+            phone_db = "Driver_Phone_No";
+            image_db = "Driver_Profile_Image";
+            role_db = "Driver";
+
+        }
+        else{
+            url = "http://10.0.2.2/Cargo_Go/v1/updateUser.php";
+            fname_db = "First_Name";
+            lname_db = "Last_Name";
+            email_db = "Email";
+            phone_db = "Phone_No";
+            image_db = "Profile_Image";
+            role_db = "Customer";
+
+        }
+
         // Create a HashMap to hold the updated user data
         Map<String, String> params = new HashMap<>();
-        params.put("First_Name", firstName);
-        params.put("Last_Name", lastName);
-        params.put("Email", email);
-        params.put("Phone_No", phone);
+        params.put(fname_db, firstName);
+        params.put(lname_db, lastName);
+        params.put(email_db, email);
+        params.put(phone_db, phone);
 
         // If a new image is selected, send the base64 representation to the server
         if (base64Image != null) {
-            params.put("Profile_Image", base64Image);
+            params.put(image_db, base64Image);
         }
 
         // Send a POST request to your PHP server for updating the user profile
         RequestQueue queue = Volley.newRequestQueue(requireContext());
-        String url = "http://10.0.2.2/Cargo_Go/v1/updateUser.php"; // Replace with your server URL
+//        String url = "http://10.0.2.2/Cargo_Go/v1/updateUser.php"; // Replace with your server URL
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
@@ -222,7 +250,7 @@ public class Edit_customer_profileFragment extends Fragment {
 
     // Update session
     private void updateSessionData(String firstName, String lastName, String email, String phone, String profileImage) {
-        sessionManager.createUserSession(userId, firstName, lastName, email, phone, "Customer");
+        sessionManager.createUserSession(userId, firstName, lastName, email, phone, role_db);
         sessionManager.saveProfileImageUri(profileImage); // Save the image path in the session
     }
 
