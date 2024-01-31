@@ -520,7 +520,7 @@ public class Signup_driverFragment extends Fragment {
                     params.put("Driver_Email", email);
                     params.put("Driver_Phone_No", phoneno);
                     params.put("Driver_Profile_Image", base64Image);
-                   // params.put("is_Active", "false");
+                    params.put("is_Active", "false");
                     return params;
                 }
             };

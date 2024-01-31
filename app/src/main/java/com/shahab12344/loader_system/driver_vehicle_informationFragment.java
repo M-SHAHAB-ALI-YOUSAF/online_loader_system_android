@@ -1,5 +1,7 @@
 package com.shahab12344.loader_system;
 
+import static android.opengl.ETC1.encodeImage;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,9 +10,11 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +25,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class driver_vehicle_informationFragment extends Fragment {
 
@@ -29,13 +49,19 @@ public class driver_vehicle_informationFragment extends Fragment {
     private static final int PICK_IMAGE_REQUEST_2 = 2;
     private static final int PICK_IMAGE_REQUEST_3 = 3;
 
+    private CardView selectedCard;
+    private TextView selectedText;
+
     private TextView textViewFileName1;
     private TextView textViewFileName2;
     private TextView textViewFileName3;
     private Button buttonSelectImage1;
     private Button buttonSelectImage2;
     private Button buttonSelectImage3;
+    private String base64Image1, base64Image2, base64Image3;
     ImageView back_to_driver_detail, signup_done;
+    private SessionManager sessionManager;
+
 
     public driver_vehicle_informationFragment() {
         // Required empty public constructor
@@ -53,10 +79,33 @@ public class driver_vehicle_informationFragment extends Fragment {
         buttonSelectImage2 = view.findViewById(R.id.btn_licence);
         buttonSelectImage3 = view.findViewById(R.id.btn_vehicle_copy);
 
-        // Create a method to load and scale an image
+        // Retrieve references to the TextInputEditText elements
+        TextInputLayout vehicleNumberLayout = view.findViewById(R.id.vehicle_number);
+        TextInputLayout vehicleModelLayout = view.findViewById(R.id.vehicle_model);
 
 
-    // Inside your onCreate or wherever you need to load and display the images
+         //session
+        sessionManager = new SessionManager(getContext());
+
+
+        //vehicle type+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        CardView smallCard = view.findViewById(R.id.small_card);
+        CardView mediumCard = view.findViewById(R.id.medium_card);
+        CardView largeCard = view.findViewById(R.id.l_large);
+        CardView extraLargeCard = view.findViewById(R.id.e_large);
+
+        //text++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        TextView smallText = view.findViewById(R.id.small_text);
+        TextView mediumText = view.findViewById(R.id.medium_text);
+        TextView largeText = view.findViewById(R.id.large_text);
+        TextView extraLargeText = view.findViewById(R.id.extra_large_text);
+
+        setCardClickListener(smallCard, smallText);
+        setCardClickListener(mediumCard, mediumText);
+        setCardClickListener(largeCard, largeText);
+        setCardClickListener(extraLargeCard, extraLargeText);
+
+        // Inside your onCreate or wherever you need to load and display the images
         ImageView image1 = view.findViewById(R.id.small);
         ImageView image2 = view.findViewById(R.id.medium);
         ImageView  image3 = view.findViewById(R.id.large);
@@ -73,8 +122,13 @@ public class driver_vehicle_informationFragment extends Fragment {
         back_to_driver_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent driver_dashboard = new Intent(getContext(), driver_homepage.class);
-                startActivity(driver_dashboard);
+                String vehicleNumber = vehicleNumberLayout.getEditText().getText().toString();
+                String vehicleModel = vehicleModelLayout.getEditText().getText().toString();
+
+                // Now you can use these values as needed (e.g., send them to the server)
+                sendDataToServer(vehicleNumber, vehicleModel);
+//                Intent driver_dashboard = new Intent(getContext(), driver_homepage.class);
+//                startActivity(driver_dashboard);
             }
         });
 
@@ -82,8 +136,14 @@ public class driver_vehicle_informationFragment extends Fragment {
         signup_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new Signup_driverFragment();
-                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
+
+                String vehicleNumber = vehicleNumberLayout.getEditText().getText().toString();
+                String vehicleModel = vehicleModelLayout.getEditText().getText().toString();
+
+                // Now you can use these values as needed (e.g., send them to the server)
+                sendDataToServer(vehicleNumber, vehicleModel);
+//                Fragment fragment = new Signup_driverFragment();
+//                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
             }
         });
 
@@ -122,16 +182,28 @@ public class driver_vehicle_informationFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == getActivity().RESULT_OK && data != null) {
+        if (resultCode == Activity.RESULT_OK && data != null) {
             Uri imageUri = data.getData();
             String fileName = getFileNameFromUri(imageUri);
 
-            if (requestCode == PICK_IMAGE_REQUEST_1) {
-                textViewFileName1.setText(fileName);
-            } else if (requestCode == PICK_IMAGE_REQUEST_2) {
-                textViewFileName2.setText(fileName);
-            } else if (requestCode == PICK_IMAGE_REQUEST_3) {
-                textViewFileName3.setText(fileName);
+            try {
+                Bitmap bitmap = BitmapFactory.decodeStream(getActivity().getContentResolver().openInputStream(imageUri));
+                String base64Image = encodeImage(bitmap);
+
+                if (requestCode == PICK_IMAGE_REQUEST_1) {
+                    textViewFileName1.setText(fileName);
+                    base64Image1 = base64Image;
+                } else if (requestCode == PICK_IMAGE_REQUEST_2) {
+                    textViewFileName2.setText(fileName);
+                    base64Image2 = base64Image;
+                } else if (requestCode == PICK_IMAGE_REQUEST_3) {
+                    textViewFileName3.setText(fileName);
+                    base64Image3 = base64Image;
+                }
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(), "File not found!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -167,5 +239,92 @@ public class driver_vehicle_informationFragment extends Fragment {
 
         return BitmapFactory.decodeResource(getResources(), resId, options);
     }
+
+
+    //.......................................encode images....................
+    private String encodeImage(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT);
+    }
+
+
+    //++++++++++++++++++++++++++++++++++++++++Vehicle table insertion+++++++++++++++++++++++++++++++++++++++++++++++
+    private void sendDataToServer(String vehicleNumber, String vehicleModel) {
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String url = "http://10.0.2.2/Cargo_Go/v1/vehicle_Information.php";  // Replace with your server URL
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonResponse = new JSONObject(response);
+                            boolean error = jsonResponse.getBoolean("error");
+                            String message = jsonResponse.getString("message");
+
+                            if (!error) {
+                                // Data sent successfully
+                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                                Intent driver_dashboard = new Intent(getContext(), driver_homepage.class);
+                                startActivity(driver_dashboard);
+                            } else {
+                                // Error sending data to server
+                                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "JSON parsing error", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                // Handle errors
+                Toast.makeText(getContext(), "Error sending data to server!", Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                // Parameters to be sent to the server
+                Map<String, String> params = new HashMap<>();
+                params.put("Vehicle_Model", vehicleModel);
+                params.put("Vehicle_type", selectedText.getText().toString());
+                params.put("CNIC", base64Image1);
+                params.put("Licence", base64Image2);
+                params.put("Registration_Number", base64Image3);
+                params.put("Driver_ID", sessionManager.getUserId());
+                params.put("Vehicle_number", vehicleNumber);
+                return params;
+            }
+        };
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+    //+++++++++++++++++++++++++++++TYpe++++++++++++++++++++++++++++++++++++++++++=
+    private void setCardClickListener(CardView cardView, TextView textView) {
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedCard != null) {
+                    // Reset the color of the previously selected card
+                    selectedCard.setSelected(false);
+                }
+
+                // Set the color of the clicked card
+                cardView.setSelected(true);
+                // Update the selected card and text
+                selectedCard = cardView;
+                selectedText = textView;
+            }
+        });
+    }
+
 
 }

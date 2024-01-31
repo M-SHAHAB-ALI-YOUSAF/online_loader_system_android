@@ -66,7 +66,7 @@
 
             <!-- Edit Text -->
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/vehicle_name"
+                android:id="@+id/vehicle_number"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -78,14 +78,29 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/number"
                     android:drawablePadding="@dimen/_10sdp"
-                    android:inputType="text"
-                    android:text="CHK7936" />
+                    android:inputType="text" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Edit Text -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/vehicle_model"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/vehicle_number"
+                android:hint="Vehicle Model">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_10sdp"
+                    android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/vehicle_name"
+                android:layout_below="@id/vehicle_model"
                 android:layout_marginTop="@dimen/_20sdp"
                 android:text="Select Vehicle Type"
                 android:textColor="@color/black" />
@@ -94,7 +109,7 @@
                 android:id="@+id/linear_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/vehicle_name"
+                android:layout_below="@id/vehicle_model"
                 android:layout_marginTop="@dimen/_20sdp">
 
                 <HorizontalScrollView
@@ -111,7 +126,8 @@
 
                         <!-- CardView 1 -->
                         <androidx.cardview.widget.CardView
-                            android:layout_width="@dimen/_80sdp"
+                            android:id="@+id/small_card"
+                            android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
                             app:cardCornerRadius="8dp">
@@ -120,6 +136,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
+                                android:background="@drawable/card_selector"
                                 android:padding="8dp">
 
                                 <ImageView
@@ -131,6 +148,7 @@
                                     android:src="@drawable/small" />
 
                                 <TextView
+                                    android:id="@+id/small_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Small"
@@ -141,6 +159,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/medium_card"
                             android:layout_width="@dimen/_100sdp"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
@@ -150,6 +169,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
+                                android:background="@drawable/card_selector"
                                 android:padding="8dp">
 
                                 <ImageView
@@ -160,6 +180,7 @@
                                     android:src="@drawable/medium" />
 
                                 <TextView
+                                    android:id="@+id/medium_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Medium"
@@ -170,6 +191,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/l_large"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
@@ -179,6 +201,8 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
+                                android:background="@drawable/card_selector"
+
                                 android:padding="8dp">
 
                                 <ImageView
@@ -189,6 +213,7 @@
                                     android:src="@drawable/large" />
 
                                 <TextView
+                                    android:id="@+id/large_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Large"
@@ -199,6 +224,7 @@
                         </androidx.cardview.widget.CardView>
 
                         <androidx.cardview.widget.CardView
+                            android:id="@+id/e_large"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="8dp"
@@ -208,6 +234,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
+                                android:background="@drawable/card_selector"
                                 android:padding="8dp">
 
                                 <ImageView
@@ -218,6 +245,7 @@
                                     android:src="@drawable/extra_large" />
 
                                 <TextView
+                                    android:id="@+id/extra_large_text"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:text="Extra Large"

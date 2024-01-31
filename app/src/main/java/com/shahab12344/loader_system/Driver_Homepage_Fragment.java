@@ -56,7 +56,7 @@ public class Driver_Homepage_Fragment extends Fragment {
                     return true;
 
                 case R.id.bottom_profile:
-                    Fragment profile = new Driver_profile_Fragment();
+                    Fragment profile = new driver_vehicle_informationFragment();
                     getFragmentManager().beginTransaction()
                             .replace(R.id.driver_fragment, profile)
                             .addToBackStack(null).commit();
