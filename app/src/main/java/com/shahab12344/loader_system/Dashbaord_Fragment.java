@@ -119,13 +119,13 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         spinnerCount = view.findViewById(R.id.spinnerCount);
         buttonFindDriver = view.findViewById(R.id.buttonFindDriver);
 
-// Create an adapter with numbers 0 to 4 and the hint as the first item
+        // Create an adapter with numbers 0 to 4 and the hint as the first item
         Integer[] numbers = new Integer[]{1, 2, 3, 4};
         String[] displayValues = new String[]{"Select No of Helpers", "1", "2", "3", "4"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, displayValues);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-// Set the adapter to the spinner
+        // Set the adapter to the spinner
         spinnerCount.setAdapter(spinnerAdapter);
         spinnerCount.setSelection(0); // Set the hint as the selected item
 
