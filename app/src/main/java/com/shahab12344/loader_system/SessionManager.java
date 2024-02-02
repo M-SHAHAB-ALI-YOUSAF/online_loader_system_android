@@ -73,4 +73,10 @@ public class SessionManager {
     public String getProfileImageUri() {
         return sharedPreferences.getString(KEY_PROFILE_IMAGE_URI, null);
     }
+
+    public void updatePhoneNumber(String newPhoneNumber) {
+        // Assuming you have a key like "PHONE_NUMBER" to store the phone number
+        editor.putString("phone_number", newPhoneNumber);
+        editor.apply();
+    }
 }

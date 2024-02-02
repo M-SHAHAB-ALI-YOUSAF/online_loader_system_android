@@ -307,6 +307,11 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
                 break;
 
+            case R.id.phoneChange:
+                Fragment changenumber = new Chnage_Phone_No();
+                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, changenumber).commit();
+                break;
+
             case R.id.FAQ:
                 Fragment fragment2 = new FaqFragment();
                 getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment2).commit();

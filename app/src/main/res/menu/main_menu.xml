@@ -15,6 +15,10 @@
             android:icon="@drawable/history"
             android:title="History" />
         <item
+            android:id="@+id/phoneChange"
+            android:icon="@drawable/change_phone_no"
+            android:title="Change Phone Number" />
+        <item
             android:id="@+id/FAQ"
             android:icon="@drawable/faq"
             android:title="FAQ" />

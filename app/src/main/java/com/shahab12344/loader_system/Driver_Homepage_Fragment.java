@@ -252,6 +252,11 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
                     getFragmentManager().beginTransaction().replace(R.id.driver_fragment, fragment2).commit();
                     break;
 
+                case R.id.phoneChange:
+                    Fragment changephone = new Chnage_Phone_No();
+                    getFragmentManager().beginTransaction().replace(R.id.driver_fragment, changephone).commit();
+                    break;
+
                 case R.id.logout:
                     sessionManager.logoutUser();
                     // Navigate back to the login or splash screen
