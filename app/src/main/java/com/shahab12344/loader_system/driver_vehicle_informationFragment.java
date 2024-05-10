@@ -12,6 +12,7 @@ import android.os.Bundle;
 
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.OpenableColumns;
 import android.util.Base64;
@@ -25,9 +26,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -58,7 +61,8 @@ public class driver_vehicle_informationFragment extends Fragment {
     private Button buttonSelectImage1;
     private Button buttonSelectImage2;
     private Button buttonSelectImage3;
-    private String base64Image1, base64Image2, base64Image3;
+    int driverID;
+    private String base64Image1, base64Image2, base64Image3, email ;
     ImageView back_to_driver_detail, signup_done;
     private SessionManager sessionManager;
 
@@ -86,7 +90,16 @@ public class driver_vehicle_informationFragment extends Fragment {
 
          //session
         sessionManager = new SessionManager(getContext());
+        driverifbyEmail();
 
+
+        //+++++++++++++++++++++bundle++++++++++++++
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            email = bundle.getString("emailKey");
+
+
+        }
 
         //vehicle type+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         CardView smallCard = view.findViewById(R.id.small_card);
@@ -269,8 +282,11 @@ public class driver_vehicle_informationFragment extends Fragment {
                             if (!error) {
                                 // Data sent successfully
                                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-                                Intent driver_dashboard = new Intent(getContext(), driver_homepage.class);
-                                startActivity(driver_dashboard);
+                                Login_customers otp = new Login_customers();
+                                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                transaction.replace(R.id.login_RegFragmentContainer, otp);
+                                transaction.addToBackStack(null);
+                                transaction.commit();
                             } else {
                                 // Error sending data to server
                                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
@@ -296,7 +312,7 @@ public class driver_vehicle_informationFragment extends Fragment {
                 params.put("CNIC", base64Image1);
                 params.put("Licence", base64Image2);
                 params.put("Registration_Number", base64Image3);
-                params.put("Driver_ID", sessionManager.getUserId());
+                params.put("Driver_ID", String.valueOf(driverID));
                 params.put("Vehicle_number", vehicleNumber);
                 return params;
             }
@@ -326,5 +342,60 @@ public class driver_vehicle_informationFragment extends Fragment {
         });
     }
 
+
+
+
+      ///+++++++++++++++++++++++++++++++++++++getting driver id bby email+++++++++++++++++++++++++
+    public void driverifbyEmail(){
+            // Example using Volley
+        String url = "http://10.0.2.2/Cargo_Go/v1/gettingDriverIDbyemail.php";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST,
+                    url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                JSONObject jsonObject = new JSONObject(response);
+
+                                    if (!jsonObject.getBoolean("error")) {
+                                        // Parse the JSON response
+                                       driverID = jsonObject.getInt("Driver_ID");
+                                        Toast.makeText(getActivity(), String.valueOf(driverID), Toast.LENGTH_SHORT).show();
+
+                                    } else {
+                                        String errorMessage = jsonObject.getString("message");
+                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                // Handle JSON parsing error
+                            }
+                        }
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            if (error instanceof NoConnectionError || error instanceof TimeoutError) {
+                                // Handle connection error here
+                                Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
+                            } else {
+                                // Handle other errors
+                                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("Driver_Email", email);
+                    return params;
+                }
+            };
+            RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
+
+
+    }
 
 }

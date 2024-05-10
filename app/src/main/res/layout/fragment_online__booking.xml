@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- TextView on top, centered -->
+    <TextView
+        android:id="@+id/textViewTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Payment Method"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"/>
+
+    <!-- RadioGroup containing RadioButtons -->
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textViewTitle"
+        android:layout_marginTop="20dp">
+
+        <!-- RadioButton 1 -->
+        <RadioButton
+            android:id="@+id/radioButtonCashOnDelivery"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_80sdp"
+            android:background="@drawable/border_background"
+            android:drawableLeft="@drawable/cod"
+            android:drawablePadding="10dp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:paddingStart="@dimen/_20ssp"
+            android:layout_marginBottom="@dimen/_20sdp"
+            android:text="Cash on Delivery"
+            android:textSize="@dimen/_20ssp"/>
+
+        <!-- RadioButton 2 -->
+        <RadioButton
+            android:id="@+id/radioButtonBank"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_80sdp"
+            android:background="@drawable/border_background"
+            android:drawableLeft="@drawable/baseline_account_balance_24"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:drawablePadding="10dp"
+            android:paddingStart="@dimen/_20ssp"
+            android:text="Bank"
+            android:textSize="@dimen/_20ssp"/>
+
+    </RadioGroup>
+
+    <!-- Confirm Payment Button at the bottom -->
+    <Button
+        android:id="@+id/buttonConfirmPayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="@color/btn__color"
+        android:text="Confirm Payment" />
+
+</RelativeLayout>

@@ -31,6 +31,7 @@ public class PaymentMethod extends AppCompatActivity {
 
     PaymentSheet paymentSheet;
     private ProgressDialog progressDialog;
+    private BookingSessionManager bookingSessionManager;
 
     String paymentintent, paymentmethod;
     PaymentSheet.CustomerConfiguration customerConfiguration;
@@ -43,6 +44,7 @@ public class PaymentMethod extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait..."); // Set the message for the progress dialog
         progressDialog.setCancelable(false); // Make it not cancellable
+        bookingSessionManager = new BookingSessionManager(getApplication());
 
 
         // Initialize the PaymentSheet
@@ -126,7 +128,7 @@ public class PaymentMethod extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
                 paramV.put("authkey", "abc");
-                paramV.put("paymentAmount", String.valueOf("10000")); // Add payment amount
+                paramV.put("paymentAmount", bookingSessionManager.getRideCost()); // Add payment amount
                 return paramV;
             }
         };
@@ -146,7 +148,7 @@ public class PaymentMethod extends AppCompatActivity {
         progressDialog.setMessage("Processing Please wait...");
         progressDialog.show();
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "http://10.0.2.2/Cargo_Go/v1/Payment.php",
+                Constants.URL_PAYMENT_CASH,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -183,11 +185,10 @@ public class PaymentMethod extends AppCompatActivity {
                 }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
-                int price = 10000;
                 Map<String, String> params = new HashMap<>();
-                params.put("Booking_ID", "2");
-                params.put("Customer_ID", "2");
-                params.put("Amount", String.valueOf(price));
+                params.put("Booking_ID", bookingSessionManager.getKeyBookingId());
+                params.put("Customer_ID", bookingSessionManager.getCustomerID());
+                params.put("Amount", bookingSessionManager.getRideCost());
                 params.put("Payment_Method", paymentmethod);
                 return params;
             }

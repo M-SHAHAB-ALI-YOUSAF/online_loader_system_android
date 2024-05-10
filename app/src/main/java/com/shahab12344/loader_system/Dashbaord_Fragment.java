@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -72,9 +73,8 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     NavigationView navigationView;
     ProgressDialog progressDialog;
 
-    //session
     private SessionManager sessionManager;
-    String email;
+    String email, type_of_vehicle;
     private GoogleMap mMap;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private Location currentLocation;
@@ -90,44 +90,97 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
         View view = inflater.inflate(R.layout.fragment_dashbaord_, container, false);
 
-        //session
+        //+++++++++++++++++++++++++++++++++session
         sessionManager = new SessionManager(getContext());
         progressDialog = new ProgressDialog(getActivity());
 
-
-        //location must on
         if (!isLocationEnabled()) {
             showLocationSettingsAlert();
         }
 
-        // Inside your onCreate or wherever you need to load and display the images
+        // +++++++++++++++++++Inside your onCreate or wherever you need to load and display the images
         ImageView image1 = view.findViewById(R.id.small);
         ImageView image2 = view.findViewById(R.id.medium);
         ImageView  image3 = view.findViewById(R.id.large);
         ImageView image4 = view.findViewById(R.id.extra_large);
 
-        // Load and set the images
+        //++++++++++++++++++++++ Load and set the images++++++++++++++++++++++++++++++++++
         image1.setImageBitmap(loadAndScaleImage(R.drawable.small));
         image2.setImageBitmap(loadAndScaleImage(R.drawable.medium));
         image3.setImageBitmap(loadAndScaleImage(R.drawable.large));
         image4.setImageBitmap(loadAndScaleImage(R.drawable.extra_large));
 
-        //showing trip detail
+        //+++++++++++++++++++showing trip detail++++++++++++++++++++++++++++++++
         editTextPickup = view.findViewById(R.id.editTextPickup);
         editTextDestination = view.findViewById(R.id.editTextDestination);
         editTextPassengers = view.findViewById(R.id.editTextPassengers);
         spinnerCount = view.findViewById(R.id.spinnerCount);
         buttonFindDriver = view.findViewById(R.id.buttonFindDriver);
 
-        // Create an adapter with numbers 0 to 4 and the hint as the first item
+        //++++++++++ Create an adapter with numbers 0 to 4 and the hint as the first +++++++++++++++++++++++
         Integer[] numbers = new Integer[]{1, 2, 3, 4};
         String[] displayValues = new String[]{"Select No of Helpers", "1", "2", "3", "4"};
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, displayValues);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // Set the adapter to the spinner
+        //+++++++++++++++++++ Set the adapter to the spinner+++++++++++++++++
         spinnerCount.setAdapter(spinnerAdapter);
-        spinnerCount.setSelection(0); // Set the hint as the selected item
+        spinnerCount.setSelection(0);
+
+        //truck size card views++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        CardView smalltruck = view.findViewById(R.id.smalltruck);
+        CardView mediumtruck = view.findViewById(R.id.mediumtruck);
+        CardView largetruck = view.findViewById(R.id.largetruck);
+        CardView elargetruck = view.findViewById(R.id.elargetruck);
+
+
+        smalltruck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                smalltruck.setSelected(true);
+                mediumtruck.setSelected(false);
+                largetruck.setSelected(false);
+                elargetruck.setSelected(false);
+                type_of_vehicle = "Small";
+                updateTotalCost();
+            }
+        });
+
+        mediumtruck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mediumtruck.setSelected(true);
+                largetruck.setSelected(false);
+                elargetruck.setSelected(false);
+                smalltruck.setSelected(false);
+                type_of_vehicle = "Medium";
+                updateTotalCost();
+            }
+        });
+
+        largetruck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                largetruck.setSelected(true);
+                smalltruck.setSelected(false);
+                elargetruck.setSelected(false);
+                mediumtruck.setSelected(false);
+                type_of_vehicle = "large";
+                updateTotalCost();
+            }
+        });
+
+        elargetruck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                elargetruck.setSelected(true);
+                smalltruck.setSelected(false);
+                mediumtruck.setSelected(false);
+                largetruck.setSelected(false);
+                type_of_vehicle = "extra_large";
+                updateTotalCost();
+            }
+        });
 
 
 
@@ -135,19 +188,37 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         buttonFindDriver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                // Retrieve values from EditText fields and Spinner
-//                String pickup = editTextPickup.getText().toString();
-//                String destination = editTextDestination.getText().toString();
-//                String passengers = editTextPassengers.getText().toString();
-//                int selectedCount = (int) spinnerCount.getSelectedItem();
-                //---- PreLogin Fragement ---
+                String pickup = editTextPickup.getText().toString();
+                String destination = editTextDestination.getText().toString();
+                String passengersStr = editTextPassengers.getText().toString();
+                String selectedCountStr = spinnerCount.getSelectedItem().toString();
+
+                if (selectedCountStr.equals("Select No of Helpers")) {
+                    Toast.makeText(getContext(), "Please select number of helpers", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                int selectedCount = Integer.parseInt(selectedCountStr);
+                if (pickup.isEmpty() || destination.isEmpty() || passengersStr.isEmpty()) {
+                    Toast.makeText(getContext(), "Please fill in all the fields", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putString("pickup", pickup);
+                bundle.putString("destination", destination);
+                bundle.putString("helpers", selectedCountStr);
+                bundle.putString("cost", passengersStr);
+                bundle.putString("vehicleType", type_of_vehicle);
 
                 fragment_driver_request fragment = new fragment_driver_request();
+                fragment.setArguments(bundle);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.bookingfragment, fragment);
-                fragmentTransaction.addToBackStack(null);// Replace with the container ID
+                fragmentTransaction.addToBackStack(null); // Replace with the container ID
                 fragmentTransaction.commit();
+
 
             }
         });
@@ -166,27 +237,21 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
             }
         });
 
-
         navigationView = view.findViewById(R.id.nav_view);
-        //adding textview header
         View headerView = navigationView.getHeaderView(0);
 
-        // Find the TextView in the header layout by its ID
         TextView headerTextView = headerView.findViewById(R.id.User_name_in_header);
         ImageView profile = headerView.findViewById(R.id.userprofile);
         String profileImageUri = sessionManager.getProfileImageUri();
         if (profileImageUri != null) {
-            // Load the profile image using Glide and transform it into a circle
             Glide.with(this)
                     .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
                     .apply(RequestOptions.circleCropTransform())
                     .into(profile);
         }
 
-        // Retrieve the user's first name from SessionManager
         String firstName = sessionManager.getFirstName();
 
-        // Set the first name in the TextView
         headerTextView.setText(firstName);
         navigationView.bringToFront();
 
@@ -198,10 +263,8 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
 
 
-        // Initialize FusedLocationProviderClient
+        //++++++++++++++++++++++++++ Initialize FusedLocationProviderClient++++++++++++++++++++++++++++++++++
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
-
-        // Get the SupportMapFragment and request the map asynchronously
         SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment == null) {
@@ -212,19 +275,16 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         }
 
         mapFragment.getMapAsync(this);
-        // Add this code inside your onCreateView method
         ImageView currentLocationButton = view.findViewById(R.id.current);
-
         currentLocationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Check if location permissions are granted
+
                 if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // Permissions not granted, request them
+
                     requestLocationPermissions();
                 } else {
-                    // Permissions are granted, get the current location
                     getLastLocation();
                 }
             }
@@ -235,6 +295,10 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         return view;
     }
 
+
+
+
+    //++++++++++++++++++++++++++++++++++++++++++++location+++++++++++++++++++++++++++++++++++++++
     private boolean isLocationEnabled() {
         LocationManager locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
         return locationManager != null && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -263,10 +327,8 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission granted, proceed with location-related tasks
                 getLastLocation();
             } else {
-                // Permission denied, handle accordingly (e.g., show a message)
             }
         }
     }
@@ -274,7 +336,6 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     private void getLastLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // Permissions not granted, request them
             requestLocationPermissions();
             return;
         }
@@ -285,8 +346,6 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
             public void onSuccess(Location location) {
                 if (location != null) {
                     currentLocation = location;
-
-                    // Display the current location on the map
                     LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(latLng).title("My Location"));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f));
@@ -300,39 +359,61 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         switch (item.getItemId()) {
-            // Handle other navigation items
-
             case R.id.Profile:
-                Fragment fragment = new Show_Profile_customerFragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
+                Show_Profile_customerFragment Profile = new Show_Profile_customerFragment();
+                FragmentManager profileManager = getFragmentManager();
+                FragmentTransaction Profiletransaction = profileManager.beginTransaction();
+                Profiletransaction.replace(R.id.bookingfragment, Profile);
+                Profiletransaction.addToBackStack(null);
+                Profiletransaction.commit();
                 break;
 
             case R.id.phoneChange:
                 Fragment changenumber = new Chnage_Phone_No();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, changenumber).commit();
+                FragmentManager ChnaagephoneManager = getFragmentManager();
+                FragmentTransaction Chnaagephonetransaction = ChnaagephoneManager.beginTransaction();
+                Chnaagephonetransaction.replace(R.id.bookingfragment, changenumber);
+                Chnaagephonetransaction.addToBackStack(null);
+                Chnaagephonetransaction.commit();
                 break;
 
             case R.id.FAQ:
-                Fragment fragment2 = new FaqFragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment2).commit();
+                Fragment faq = new FaqFragment();
+                FragmentManager faqManager = getFragmentManager();
+                FragmentTransaction faqtransaction = faqManager.beginTransaction();
+                faqtransaction.replace(R.id.bookingfragment, faq);
+                faqtransaction.addToBackStack(null);
+                faqtransaction.commit();
                 break;
 
             case R.id.logout:
                 sessionManager.logoutUser();
-                // Navigate back to the login or splash screen
                 Intent intent = new Intent(requireActivity(), Login_Registration.class); // Replace with your login activity
                 startActivity(intent);
                 break;
+
             case R.id.History:
-//                Fragment review = new review_and_rating();
-//                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, review).commit();
+                Fragment History = new Driver_History_Fragment();
+                FragmentManager HistoryManager = getFragmentManager();
+                FragmentTransaction Historytransaction = HistoryManager.beginTransaction();
+                Historytransaction.replace(R.id.bookingfragment, History);
+                Historytransaction.addToBackStack(null);
+                Historytransaction.commit();
+                break;
+
+            case R.id.Wishlist:
+                Fragment wish = new WishlistFragment();
+                FragmentManager wishManager = getFragmentManager();
+                FragmentTransaction wishtransaction = wishManager.beginTransaction();
+                wishtransaction.replace(R.id.bookingfragment, wish);
+                wishtransaction.addToBackStack(null);
+                wishtransaction.commit();
                 break;
 
             case R.id.delete:
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle("Remove Account");
                 builder.setMessage("Are you sure you want to remove your account?");
-
 
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -380,25 +461,19 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                         progressDialog.dismiss();
 
                         try {
-                            // Parse the JSON response
                             JSONObject jsonObject = new JSONObject(response);
 
                             if (jsonObject.getString("message").matches("true")) {
-
-//                                SharedPrefManager.getInstance(getActivity()).logout();
-
                                 startActivity(new Intent(getActivity(), Login_Registration.class));
 
                                 Toast.makeText(getActivity(), "User removed successfully", Toast.LENGTH_SHORT).show();
                             } else {
-                                // Display a message indicating failure
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getActivity(), "Error: " + message, Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            // Handle JSON parsing error
                             Toast.makeText(getActivity(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -407,7 +482,6 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
-                        // Handle error cases
                         Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -437,4 +511,40 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
 
         return BitmapFactory.decodeResource(getResources(), resId, options);
     }
+
+
+    // +++++++++++++++++++++Method to update the total cost and display it in the edit passenger EditText
+    private void updateTotalCost() {
+        String selectedCountStr = spinnerCount.getSelectedItem().toString();
+        if (selectedCountStr.equals("Select No of Helpers")) {
+            return;
+        }
+
+        int selectedCount = Integer.parseInt(selectedCountStr);
+        int totalCost = 0;
+        switch (type_of_vehicle) {
+            case "Small":
+                totalCost = selectedCount * 5000;
+                break;
+            case "Medium":
+                totalCost = selectedCount * 6000;
+                break;
+            case "large":
+                totalCost = selectedCount * 7000;
+                break;
+            case "extra_large":
+                totalCost = selectedCount * 8000;
+                break;
+            default:
+                break;
+        }
+
+        editTextPassengers.setText(String.valueOf(totalCost));
+        int updated_cost = totalCost - 500;
+                if (totalCost < updated_cost) {
+                    Toast.makeText(getContext(), "Total cost cannot be less than " + updated_cost, Toast.LENGTH_SHORT).show();
+                    return;
+                }
+    }
+
 }

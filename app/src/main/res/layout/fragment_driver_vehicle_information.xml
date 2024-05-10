@@ -136,7 +136,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:background="@drawable/card_selector"
+                                android:background="@drawable/cardview_selector"
                                 android:padding="8dp">
 
                                 <ImageView
@@ -169,7 +169,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:background="@drawable/card_selector"
+                                android:background="@drawable/cardview_selector"
                                 android:padding="8dp">
 
                                 <ImageView
@@ -201,7 +201,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:background="@drawable/card_selector"
+                                android:background="@drawable/cardview_selector"
 
                                 android:padding="8dp">
 
@@ -234,7 +234,7 @@
                                 android:layout_width="@dimen/_100sdp"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical"
-                                android:background="@drawable/card_selector"
+                                android:background="@drawable/cardview_selector"
                                 android:padding="8dp">
 
                                 <ImageView

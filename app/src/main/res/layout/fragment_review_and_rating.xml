@@ -21,12 +21,14 @@
 
 
             <de.hdodenhof.circleimageview.CircleImageView
+              android:id="@+id/driverimage"
                 android:layout_width="@dimen/_120sdp"
                 android:layout_height="@dimen/_120sdp"
                 android:src="@drawable/person_"
                 android:layout_marginHorizontal="@dimen/_107sdp"/>
 
             <TextView
+                android:id="@+id/driver_name_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"

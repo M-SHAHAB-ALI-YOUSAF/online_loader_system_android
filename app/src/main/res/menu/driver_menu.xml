@@ -5,10 +5,6 @@
             android:id="@+id/Profile"
             android:icon="@drawable/person_"
             android:title="Profile" />
-        <item
-            android:id="@+id/Rating"
-            android:icon="@drawable/rating"
-            android:title="Rating" />
 
         <item
             android:id="@+id/History"
@@ -32,6 +28,4 @@
             android:icon="@drawable/baseline_logout_24"
             android:title="Logout" />
     </group>
-
-
 </menu>

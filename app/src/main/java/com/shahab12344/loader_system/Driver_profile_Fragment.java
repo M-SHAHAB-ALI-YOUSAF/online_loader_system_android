@@ -3,6 +3,7 @@ package com.shahab12344.loader_system;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,53 +35,18 @@ public class Driver_profile_Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_driver_profile_, container, false);
 
-
         //session
         sessionManager = new SessionManager(getContext());
-
-
-
-        //navigation
-        BottomNavigationView bottomNavigationView = view.findViewById(R.id.bottomNavigation);
-        bottomNavigationView.setSelectedItemId(R.id.bottom_profile);
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            switch (item.getItemId()) {
-                case R.id.bottom_home:
-                    Fragment profile = new Driver_Homepage_Fragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.driver_fragment, profile)
-                            .addToBackStack(null).commit();
-                    return true;
-                case R.id.bottom_rating:
-                    Fragment rating = new Driver_Rating_Fragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.driver_fragment, rating)
-                            .addToBackStack(null).commit();
-                    return true;
-
-                case R.id.bottom_history:
-                    Fragment history = new Driver_History_Fragment();
-                    getFragmentManager().beginTransaction()
-                            .replace(R.id.driver_fragment, history)
-                            .addToBackStack(null).commit();
-                     return true;
-
-                case R.id.bottom_profile:
-
-                    return true;
-
-            }
-            return false;
-        });
-
-        //click events'
 
         btn_edit_profile = view.findViewById(R.id.driver_edit_profile);
         btn_edit_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new Edit_customer_profileFragment();
-                getFragmentManager().beginTransaction().replace(R.id.driver_fragment, fragment).commit();
+                Fragment editprofile = new Edit_customer_profileFragment();
+                FragmentTransaction driver_edit_Profiletransaction = getFragmentManager().beginTransaction();
+                driver_edit_Profiletransaction.replace(R.id.driver_fragment, editprofile);
+                driver_edit_Profiletransaction.addToBackStack(null); // This line adds the transaction to the back stack
+                driver_edit_Profiletransaction.commit();
             }
         });
 
@@ -88,8 +54,11 @@ public class Driver_profile_Fragment extends Fragment {
         back_to_dashboard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment fragment = new Driver_Homepage_Fragment();
-                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
+                Fragment driver_show_Profile = new Driver_Homepage_Fragment();
+                FragmentTransaction driver_show_Profiletransaction = getFragmentManager().beginTransaction();
+                driver_show_Profiletransaction.replace(R.id.driver_fragment, driver_show_Profile);
+                driver_show_Profiletransaction.addToBackStack(null); // This line adds the transaction to the back stack
+                driver_show_Profiletransaction.commit();
             }
         });
 

@@ -3,6 +3,8 @@ package com.shahab12344.loader_system;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,7 +20,7 @@ import java.util.List;
 public class FaqFragment extends Fragment {
     private RecyclerView recyclerView;
 
-    ImageView bac_to_home;
+    private SessionManager sessionManager;
     private ParentAdapter parentAdapter;
     private List<QuestionAnswer> questionAnswers;
     public FaqFragment() {
@@ -34,6 +36,8 @@ public class FaqFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerViewforfaq);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        //sesion manager
+        sessionManager = new SessionManager(getContext());
         // Create sample question-answer pairs
         questionAnswers = new ArrayList<>();
         questionAnswers.add(new QuestionAnswer("How do I make a booking?", Arrays.asList("You can make a booking by selecting the desired service and date, then providing your details.")));
@@ -55,13 +59,28 @@ public class FaqFragment extends Fragment {
         parentAdapter = new ParentAdapter(questionAnswers);
         recyclerView.setAdapter(parentAdapter);
 
-        bac_to_home = view.findViewById(R.id.faqBack);
-        bac_to_home.setOnClickListener(new View.OnClickListener() {
+
+
+        //++++++++++++++++=back button++++++++++++++++++++++++++++++++++++++++++++
+        ImageView backbutton = view.findViewById(R.id.faqBack);
+        backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment dashboard = new Dashbaord_Fragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, dashboard).commit();
-
+                if(sessionManager.getRole().equals("Driver")){
+                    Fragment faq = new Driver_Homepage_Fragment();
+                    FragmentTransaction faqtransaction = getFragmentManager().beginTransaction();
+                    faqtransaction.replace(R.id.driver_fragment, faq);
+                    faqtransaction.addToBackStack(null); // This line adds the transaction to the back stack
+                    faqtransaction.commit();
+                }
+                else{
+                    Fragment faq = new Dashbaord_Fragment();
+                    FragmentManager faqManager = getFragmentManager();
+                    FragmentTransaction faqtransaction = faqManager.beginTransaction();
+                    faqtransaction.replace(R.id.bookingfragment, faq);
+                    faqtransaction.addToBackStack(null);
+                    faqtransaction.commit();
+                }
             }
         });
 

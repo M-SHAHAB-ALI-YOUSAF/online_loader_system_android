@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_with_border"
+    android:background="@drawable/question_background"
     android:orientation="horizontal"
     android:padding="16dp"
     android:layout_marginBottom="@dimen/_10sdp">
@@ -22,13 +22,7 @@
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp" />
-        <TextView
-            android:id="@+id/driverNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Driver's Name"
-            android:layout_marginTop="8dp" />
+
     </LinearLayout>
     <!-- Driver Information (Name, Car Model, Car Number, Ride Price) -->
     <LinearLayout
@@ -40,48 +34,31 @@
         android:gravity="center_horizontal">
 
         <!-- Driver Name -->
-
-
-        <!-- Car Model -->
         <TextView
-            android:id="@+id/carModelTextView"
+            android:id="@+id/DriverNameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Car Model"
+            android:text="Name"
+            android:textColor="@color/black"
             android:layout_marginTop="8dp" />
 
-        <!-- Car Number -->
+        <!-- Driver Contact -->
         <TextView
-            android:id="@+id/carNumberTextView"
+            android:id="@+id/DriverContactTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Car Number"
+            android:textColor="@color/black"
+            android:text="Phone no"
             android:layout_marginTop="8dp" />
 
-        <!-- Ride Price -->
+        <!-- Date -->
         <TextView
-            android:id="@+id/ridePriceTextView"
+            android:id="@+id/DateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ride Price"
+            android:textColor="@color/black"
+            android:text="Date"
             android:layout_marginTop="8dp" />
     </LinearLayout>
-
-    <!-- Accept and Reject Buttons (Right) -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center_vertical"> <!-- Set gravity to center_vertical -->
-
-        <!-- Accept Button -->
-        <Button
-            android:id="@+id/acceptButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:backgroundTint="@color/btn__color"
-            android:text="Request" />
-    </LinearLayout>
-
 </LinearLayout>
+

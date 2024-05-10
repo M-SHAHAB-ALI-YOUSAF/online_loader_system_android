@@ -16,6 +16,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,15 +62,7 @@ public class Edit_customer_profileFragment extends Fragment {
 
         sessionManager = new SessionManager(getContext());
 
-        //backbutton
-        back_to_show_profile = view.findViewById(R.id.back_to_profile);
-        back_to_show_profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Fragment fragment = new Show_Profile_customerFragment();
-                getFragmentManager().beginTransaction().replace(R.id.bookingfragment, fragment).commit();
-            }
-        });
+
 
         //update
         btn_edit_done = view.findViewById(R.id.btn_profile_edit_done);
@@ -107,10 +102,6 @@ public class Edit_customer_profileFragment extends Fragment {
 //        Picasso.get().load(R.drawable.person_).into(imageView);
         String profileImageUri = sessionManager.getProfileImageUri();
 
-//        if (profileImageUri != null) {
-//            // Load the profile image using Picasso or Glide
-//            Picasso.get().load("http://10.0.2.2/Cargo_Go/v1/"+profileImageUri).into(imageView);
-//        }
         if (profileImageUri != null) {
             // Load the profile image using Glide and transform it into a circle
             Glide.with(this)
@@ -118,20 +109,42 @@ public class Edit_customer_profileFragment extends Fragment {
                     .apply(RequestOptions.circleCropTransform())
                     .into(imageView);
         }
+        else {
+            // Load a default image if the URI is null
+            Picasso.get().load(R.drawable.person_).into(imageView);
+        }
 
-//        else {
-//            // Load a default image if the URI is null
-//            Picasso.get().load(R.drawable.person_).into(imageView);
-//        }
+
+
+        //++++++++++++++++=back button++++++++++++++++++++++++++++++++++++++++++++
+        ImageView backbutton = view.findViewById(R.id.back_edit_profile);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(sessionManager.getRole().equals("Driver")){
+                    Fragment editprofile = new Driver_profile_Fragment();
+                    FragmentTransaction editprofiletransaction = getFragmentManager().beginTransaction();
+                    editprofiletransaction.replace(R.id.driver_fragment, editprofile);
+                    editprofiletransaction.addToBackStack(null); // This line adds the transaction to the back stack
+                    editprofiletransaction.commit();
+                }
+                else{
+                    Fragment editprofile = new Dashbaord_Fragment();
+                    FragmentManager editprofileManager = getFragmentManager();
+                    FragmentTransaction faqtransaction = editprofileManager.beginTransaction();
+                    faqtransaction.replace(R.id.bookingfragment, editprofile);
+                    faqtransaction.addToBackStack(null);
+                    faqtransaction.commit();
+                }
+            }
+        });
+
 
 
         return view;
     }
 
 
-
-
-    // Inside your Edit_customer_profileFragment class
 
     // Update user profile
     private void updateProfile() {
@@ -178,10 +191,13 @@ public class Edit_customer_profileFragment extends Fragment {
         if (base64Image != null) {
             params.put(image_db, base64Image);
         }
+//        else {
+//            // If no new image is selected, send the existing profile image URL to the server
+//            params.put(image_db, sessionManager.getProfileImageUri());
+//        }
 
         // Send a POST request to your PHP server for updating the user profile
         RequestQueue queue = Volley.newRequestQueue(requireContext());
-//        String url = "http://10.0.2.2/Cargo_Go/v1/updateUser.php"; // Replace with your server URL
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
                 new Response.Listener<String>() {
@@ -194,8 +210,14 @@ public class Edit_customer_profileFragment extends Fragment {
 
                             if (!error) {
                                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                                // Update session with the image path
-                                updateSessionData(firstName, lastName, email, phone, jsonResponse.getString("image_path"));
+                                String imagePath = jsonResponse.optString("image_path"); // Use optString to handle null values
+                                if (imagePath != null && !imagePath.isEmpty()) {
+                                    updateSessionData(firstName, lastName, email, phone, imagePath);
+                                } else {
+                                    // If image path is null or empty, keep the existing image path in the session
+                                    String existingImagePath = sessionManager.getProfileImageUri();
+                                    updateSessionData(firstName, lastName, email, phone, existingImagePath);
+                                }
                             } else {
                                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                             }
@@ -219,6 +241,7 @@ public class Edit_customer_profileFragment extends Fragment {
 
         queue.add(stringRequest);
     }
+
 
 
     @Override

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.android.volley.NoConnectionError;
@@ -64,7 +66,7 @@ public class Chnage_Phone_No extends Fragment {
         //++++++++++++++++++++++++++++validate function+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         validation();
 
-        // Initialize Firebase Authentication
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++Initialize Firebase Authentication
         mAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(getContext());
         //session
@@ -75,8 +77,30 @@ public class Chnage_Phone_No extends Fragment {
         generateOtp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), sessionManager.getRole(), Toast.LENGTH_SHORT).show();
                 checkDetailandSendOTP();
+            }
+        });
+
+        //++++++++++++++++=back button++++++++++++++++++++++++++++++++++++++++++++
+        ImageView backbutton = view.findViewById(R.id.changephoneno_back);
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(sessionManager.getRole().equals("Driver")){
+                    Fragment changephone = new Driver_Homepage_Fragment();
+                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    transaction.replace(R.id.driver_fragment, changephone);
+                    transaction.addToBackStack(null); // This line adds the transaction to the back stack
+                    transaction.commit();
+                }
+                else{
+                    Fragment changenumber = new Dashbaord_Fragment();
+                    FragmentManager ChnaagephoneManager = getFragmentManager();
+                    FragmentTransaction Chnaagephonetransaction = ChnaagephoneManager.beginTransaction();
+                    Chnaagephonetransaction.replace(R.id.bookingfragment, changenumber);
+                    Chnaagephonetransaction.addToBackStack(null);
+                    Chnaagephonetransaction.commit();
+                }
             }
         });
 
@@ -92,16 +116,15 @@ public class Chnage_Phone_No extends Fragment {
             validatePhoneno(phoneno);
 
             if (textInputPhoneno.getError() != null) {
-                // There are errors in the fields, so don't proceed
                 return;
             }
 
             if("Driver".equals(sessionManager.getRole())) {
-                url = "http://10.0.2.2/Cargo_Go/v1/DriverChangePhoneNumber.php";
+                url = Constants.URL_Driver_phone_no_change;
                 coulumnName = "Driver_Phone_No";
             }
             else{
-                url = "http://10.0.2.2/Cargo_Go/v1/CustomerChangePhoneNumber.php";
+                url = Constants.URL_passenger_phone_no_change;
                 coulumnName = "Phone_No";
             }
 
@@ -111,7 +134,7 @@ public class Chnage_Phone_No extends Fragment {
 
             //++++++++++++++++++++++++++++++++Checking phone no is not register + email ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
             StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                    url, // Update the URL to include both phone number and email check
+                    url,
                     new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
@@ -136,11 +159,9 @@ public class Chnage_Phone_No extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                                // Handle connection error here
                                 progressDialog.dismiss();
                                 Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                             } else {
-                                // Handle other errors
                                 progressDialog.dismiss();
                                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                             }
@@ -158,8 +179,8 @@ public class Chnage_Phone_No extends Fragment {
 
         //+++++++++++++++++++++++++++++++++++++++++++++SendOTP+++++++++++++++++++++++++++++++++++++++++++
         private void otpsend() {
-            progressDialog.setMessage("Sending OTP..."); // Set the message for the progress dialog
-            progressDialog.show(); // Show the progress dialog
+            progressDialog.setMessage("Sending OTP...");
+            progressDialog.show();
             mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
                 @Override
@@ -188,7 +209,7 @@ public class Chnage_Phone_No extends Fragment {
                        otp.setArguments(bundle);
                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
                        transaction.replace(R.id.driver_fragment, otp);
-                       transaction.addToBackStack(null); // Optional, allows the user to navigate back to the previous fragment
+                       transaction.addToBackStack(null);
                        transaction.commit();
                    }
                    else if ("Customer".equals(sessionManager.getRole())){
@@ -199,7 +220,7 @@ public class Chnage_Phone_No extends Fragment {
                        otp.setArguments(bundle);
                        FragmentTransaction transaction = getFragmentManager().beginTransaction();
                        transaction.replace(R.id.bookingfragment, otp);
-                       transaction.addToBackStack(null); // Optional, allows the user to navigate back to the previous fragment
+                       transaction.addToBackStack(null);
                        transaction.commit();
                    }
                    else{
@@ -212,10 +233,10 @@ public class Chnage_Phone_No extends Fragment {
 
             PhoneAuthOptions options =
                     PhoneAuthOptions.newBuilder(mAuth)
-                            .setPhoneNumber("+92"+textInputPhoneno.getEditText().getText().toString())       // Phone number to verify
-                            .setTimeout(60L, TimeUnit.SECONDS) // Timeout and unit
-                            .setActivity(getActivity())                 // (optional) Activity for callback binding
-                            .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
+                            .setPhoneNumber("+92"+textInputPhoneno.getEditText().getText().toString())
+                            .setTimeout(60L, TimeUnit.SECONDS)
+                            .setActivity(getActivity())
+                            .setCallbacks(mCallbacks)
                             .build();
             PhoneAuthProvider.verifyPhoneNumber(options);
         }

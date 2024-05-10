@@ -3,8 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Driver_History_Fragment">
+    tools:context=".WishlistFragment">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -12,24 +11,26 @@
 
         <!-- History heading layout -->
         <LinearLayout
-            android:id="@+id/faqs_id"
+            android:id="@+id/wishlist_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center"
             android:layout_alignParentTop="true">
 
+            <!-- Back Button -->
             <ImageView
-                android:id="@+id/historyBack"
+                android:id="@+id/wishBack"
                 android:layout_width="@dimen/_23sdp"
                 android:layout_height="@dimen/_21sdp"
                 android:layout_marginTop="@dimen/_10sdp"
-                android:layout_marginStart="@dimen/_15sdp"
+                android:layout_marginStart="@dimen/_12sdp"
                 android:scaleType="fitCenter"
                 android:layout_weight="0.1"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:src="@drawable/baseline_arrow_back_ios_24" />
 
+            <!-- Title -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -38,7 +39,7 @@
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:layout_weight="0.9"
                 android:gravity="center"
-                android:text="History"
+                android:text="WishList"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_15ssp" />
@@ -50,11 +51,11 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/faqs_id"
+            android:layout_below="@id/wishlist_id"
             android:clipToPadding="false"
             android:padding="8dp"
             android:scrollbars="vertical"
-            tools:listitem="@layout/booking_history_item" />
+            tools:listitem="@layout/wishlist_item" />
 
     </RelativeLayout>
 

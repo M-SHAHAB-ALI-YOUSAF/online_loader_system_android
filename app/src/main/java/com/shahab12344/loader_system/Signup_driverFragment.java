@@ -135,11 +135,14 @@ public class Signup_driverFragment extends Fragment {
             public void onClick(View v) {
 
                 dialog.dismiss();
-                Login_customers otp = new Login_customers();
-                FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.replace(R.id.login_RegFragmentContainer, otp);
-                transaction.addToBackStack(null);
-                transaction.commit();
+
+                driver_vehicle_informationFragment vehicle_info = new driver_vehicle_informationFragment();
+                bundle.putString("emailKey", email);
+                vehicle_info.setArguments(bundle);
+                FragmentTransaction vehicle = getFragmentManager().beginTransaction();
+                vehicle.replace(R.id.login_RegFragmentContainer, vehicle_info);
+                vehicle.addToBackStack(null);
+                vehicle.commit();
             }
         });
 
@@ -171,22 +174,22 @@ public class Signup_driverFragment extends Fragment {
         });
 
         //image setting
-        selectimage = view.findViewById(R.id.addphoto);
-        imageView = view.findViewById(R.id.imageView);
+//        selectimage = view.findViewById(R.id.addphoto);
+//        imageView = view.findViewById(R.id.imageView);
 
         //image picker
 
-        selectimage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                ImagePicker.with(Signup_driverFragment.this)
-                        //	//Final image resolution will be less than 1080 x 1080(Optional)
-                        .crop()
-                        .start();
-                //openImagePicker();
-            }
-        });
+//        selectimage.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                ImagePicker.with(Signup_driverFragment.this)
+//                        //	//Final image resolution will be less than 1080 x 1080(Optional)
+//                        .crop()
+//                        .start();
+//                //openImagePicker();
+//            }
+//        });
 
         return view;
     }

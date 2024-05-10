@@ -1,0 +1,55 @@
+<!-- booking_history_item.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/question_background"
+    android:layout_marginBottom="@dimen/_10sdp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/black"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/textViewPickUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/black"
+        android:drawableLeft="@drawable/location"/>
+
+    <TextView
+        android:id="@+id/textViewDropOff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/black"
+        android:drawableLeft="@drawable/location"/>
+
+    <TextView
+        android:id="@+id/textViewPrice"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/black"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#03DA18"
+        android:textSize="@dimen/_10ssp"
+        android:textStyle="bold" />
+
+</LinearLayout>

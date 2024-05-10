@@ -18,7 +18,7 @@
             android:gravity="center">
 
             <ImageView
-                android:id="@+id/signup_back"
+                android:id="@+id/changephoneno_back"
                 android:layout_width="@dimen/_23sdp"
                 android:layout_height="@dimen/_21sdp"
                 android:layout_marginTop="@dimen/_10sdp"

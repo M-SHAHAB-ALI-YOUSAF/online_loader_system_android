@@ -34,6 +34,7 @@ public class ComplaintFragment extends Fragment {
 
     Button btn_submit_complaint;
     TextInputLayout complaintDescriptionLayout;
+    private BookingSessionManager bookingSessionManager;
     TextInputEditText complaintDescriptionEditText;
     ImageView back_to_home;
     String complaintDescription;
@@ -47,7 +48,7 @@ public class ComplaintFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_complaint, container, false);
 
-        // Initialize views and components
+        // ++++++++++++++++++++++++++++++++++++++++++++++++++++++Initialize views and components
         Spinner spinner = view.findViewById(R.id.complaint_type);
         String[] complaintTypes = getResources().getStringArray(R.array.driver_complaints);
 
@@ -55,21 +56,20 @@ public class ComplaintFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        // Initialize TextInputLayout and EditText
+        // +++++++++++++++++++++++++++++++++++++++++++++Initialize TextInputLayout and EditText
         complaintDescriptionLayout = view.findViewById(R.id.complaint_text);
         complaintDescriptionEditText = view.findViewById(R.id.complaintDescriptionEditText);
+        bookingSessionManager = new BookingSessionManager(getContext());
 
-        // Button click listener
+        // ++++++++++++++++++++++++++++++++++Button click listener+++++++++++++++++++++++++++
         btn_submit_complaint = view.findViewById(R.id.btn_complaint);
         btn_submit_complaint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // Get the values of the EditText and Spinner
                 complaintDescription = complaintDescriptionEditText.getText().toString();
                 selectedComplaintType = spinner.getSelectedItem().toString();
 
                 if (isValidInput()) {
-                    // Input is valid, send data to the database
                     Register_Complaint();
                 }
             }
@@ -88,20 +88,18 @@ public class ComplaintFragment extends Fragment {
     }
 
     public void Register_Complaint() {
-        // Create a StringRequest to send data to your server
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                "http://10.0.2.2/Cargo_Go/v1/Complaint.php",
+                Constants.URL_COMPLAINT,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Handle the response here
+
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.has("message")) {
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
                             } else {
-                                // If the response does not contain a "message" key, you can display a generic success message
                                 Toast.makeText(getContext(), "Complaint Registered.", Toast.LENGTH_LONG).show();
 
                             }
@@ -114,10 +112,8 @@ public class ComplaintFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            // Handle connection error here
                             Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                         } else {
-                            // Handle other errors
                             Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -128,19 +124,17 @@ public class ComplaintFragment extends Fragment {
                 params.put("Complaint_Description", complaintDescription);
                 params.put("Complaint_Type", selectedComplaintType);
                 params.put("Complaint_status", "Pending");
-                params.put("Booking_ID", "1");
+                params.put("Booking_ID", bookingSessionManager.getKeyBookingId());
                 return params;
             }
         };
 
-        // Add the request to the Volley request queue
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
-    // Function to validate the input
+    //++++++++++++++++++++++++++++++++++ Function to validate the input++++++++++++++++++++++++++++++++++++++++++
     private boolean isValidInput() {
         if (complaintDescription.isEmpty()) {
-            // Show an error message for the description
             complaintDescriptionLayout.setError("Description cannot be empty");
             return false;
         } else {

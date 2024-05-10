@@ -12,11 +12,8 @@ public class driver_homepage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driver_homepage);
 
-        //---- PreLogin Fragement ---
 
         Fragment fragment = new Driver_Homepage_Fragment();
-
-        // Replace the fragment in the container
         getSupportFragmentManager().beginTransaction().replace(R.id.driver_fragment, fragment).commit();
     }
 }

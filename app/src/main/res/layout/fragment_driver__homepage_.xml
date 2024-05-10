@@ -1,175 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Driver_Homepage_Fragment">
+    android:fitsSystemWindows="true">
 
-    <androidx.drawerlayout.widget.DrawerLayout
-        android:id="@+id/drawerLayout"
-        android:layout_width="match_parent"
+    <!-- NavigationView -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_gravity="start"
+        app:headerLayout="@layout/header"
+        app:menu="@menu/driver_menu" />
 
+    <!-- Main Content Container -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <!-- NavigationView -->
-
-        <com.google.android.material.navigation.NavigationView
-            android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            app:headerLayout="@layout/header"
-            app:menu="@menu/driver_menu">
-
-        </com.google.android.material.navigation.NavigationView>
-
-        <!-- Main Content Container -->
-
-        <RelativeLayout
+        <!-- Content View -->
+        <FrameLayout
+            android:id="@+id/map"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+            <!-- Add your map view or other content here -->
 
-                <FrameLayout
-                    android:id="@+id/map"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
-                    <ToggleButton
-                        android:id="@+id/toggleButtonStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:checked="false"
-                        android:layout_marginTop="@dimen/_5sdp"
-                        android:textOff="Offline"
-                        android:textOn="Online" />
+            <ToggleButton
+                android:id="@+id/toggleButtonStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:checked="false"
+                android:textOff="Offline"
+                android:textOn="Online" />
 
-                    <!-- The TextView will be drawn on top of the map -->
-                    <ImageView
-                        android:id="@+id/hamburger_icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/_10sdp"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/hamburger_circle"
-                        android:elevation="20dp"/>
+            <!-- Hamburger Icon -->
+            <ImageView
+                android:id="@+id/hamburger_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:contentDescription="@string/app_name"
+                android:src="@drawable/hamburger_circle"
+                android:elevation="20dp" />
 
+        </FrameLayout>
 
-                </FrameLayout>
-
-            </LinearLayout>
-
-        </RelativeLayout>
+        <!-- LinearLayout for offline status -->
         <LinearLayout
             android:id="@+id/linearLayoutOffline"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:padding="16dp">
 
             <ImageView
                 android:id="@+id/imageViewStatus"
-                android:layout_width="@dimen/_200sdp"
-                android:layout_height="@dimen/_200sdp"
-                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:src="@drawable/offline"
-                />
+                android:contentDescription="Offline Status" />
 
             <TextView
                 android:id="@+id/textViewOffline"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textSize="@dimen/_24ssp"
+                android:text="You are offline."
+                android:textSize="24sp"
                 android:textColor="@color/black"
-                android:text="You are offline." />
+                android:layout_marginTop="8dp"/>
+
             <TextView
+                android:id="@+id/textViewOfflineMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:text="To get rides please turn on your status to ONLINE."
+                android:textSize="16sp"
                 android:textColor="@color/black"
-                android:text="To get rides please turn on your status to ONLINE." />
+                android:layout_marginTop="8dp"/>
 
         </LinearLayout>
 
 
 
-    </androidx.drawerlayout.widget.DrawerLayout>
 
-<!--    <RelativeLayout-->
+        <!-- RecyclerView for list items -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_custom_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/map"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
 
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+    </RelativeLayout>
 
-<!--        <ToggleButton-->
-<!--            android:id="@+id/toggleButtonStatus"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:checked="false"-->
-<!--            android:textOff="Offline"-->
-<!--            android:textOn="Online" />-->
-
-<!--        <LinearLayout-->
-<!--            android:id="@+id/linearLayoutOffline"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_centerVertical="true"-->
-<!--            android:orientation="vertical"-->
-<!--            android:visibility="gone">-->
-
-<!--            <ImageView-->
-<!--                android:id="@+id/imageViewStatus"-->
-<!--                android:layout_width="@dimen/_200sdp"-->
-<!--                android:layout_height="@dimen/_200sdp"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:src="@drawable/offline"-->
-<!--               />-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/textViewOffline"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:textSize="@dimen/_24ssp"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:text="You are offline." />-->
-<!--            <TextView-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center"-->
-<!--                android:textColor="@color/black"-->
-<!--                android:text="To get rides please turn on your status to ONLINE." />-->
-
-<!--        </LinearLayout>-->
-
-
-<!--        <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--            android:id="@+id/bottomNavigation"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_marginStart="20dp"-->
-<!--            android:layout_marginTop="330dp"-->
-<!--            android:layout_marginEnd="20dp"-->
-<!--            android:layout_marginBottom="30dp"-->
-<!--            android:background="@drawable/bottom_background"-->
-<!--            android:elevation="2dp"-->
-<!--            app:itemIconSize="30dp"-->
-<!--            app:itemIconTint="@drawable/item_selector"-->
-<!--            app:itemRippleColor="@android:color/transparent"-->
-<!--            app:labelVisibilityMode="unlabeled"-->
-<!--            app:menu="@menu/bottom_menu" />-->
-
-<!--    </RelativeLayout>-->
-
-</FrameLayout>
+</androidx.drawerlayout.widget.DrawerLayout>
