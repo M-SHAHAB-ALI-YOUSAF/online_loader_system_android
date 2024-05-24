@@ -120,6 +120,7 @@
                 android:hint="First Name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fnameedit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/person_"
@@ -135,6 +136,7 @@
                 android:hint="Last Name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lnameedit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/person_"
@@ -153,6 +155,7 @@
                 android:hint="Email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailedit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/email"
@@ -170,13 +173,14 @@
                 android:transitionName="password_tran">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phonedit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/call_icon"
                     android:drawablePadding="@dimen/_10sdp"
                     android:inputType="phone"
                     android:editable="false"
-                    android:focusable="false"
+                    android:focusable="true"
                     android:text="+923129809112" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>

@@ -41,7 +41,7 @@ import android.util.Base64;
 
 public class Edit_customer_profileFragment extends Fragment {
 
-    ImageView back_to_show_profile, btn_edit_done;
+    ImageView  btn_edit_done;
     private final int PICK_IMAGE_REQUEST = 71;
 
     private SessionManager sessionManager;
@@ -64,7 +64,7 @@ public class Edit_customer_profileFragment extends Fragment {
 
 
 
-        //update
+        //------------------------------update button-----------------------------------------
         btn_edit_done = view.findViewById(R.id.btn_profile_edit_done);
         btn_edit_done.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +84,7 @@ public class Edit_customer_profileFragment extends Fragment {
         String email = sessionManager.getEmail();
         String phoneNumber = sessionManager.getPhoneNumber();
 
-        // Set the retrieved user data to TextInputLayouts
+        //------------------------------------------ Set the retrieved user data to TextInputLayouts
         fNameInput.getEditText().setText(firstName);
         lastNameInput.getEditText().setText(lastName);
         emailInput.getEditText().setText(email);
@@ -99,24 +99,21 @@ public class Edit_customer_profileFragment extends Fragment {
                         .start();
             }
         });
-//        Picasso.get().load(R.drawable.person_).into(imageView);
         String profileImageUri = sessionManager.getProfileImageUri();
 
         if (profileImageUri != null) {
-            // Load the profile image using Glide and transform it into a circle
             Glide.with(this)
                     .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
                     .apply(RequestOptions.circleCropTransform())
                     .into(imageView);
         }
         else {
-            // Load a default image if the URI is null
             Picasso.get().load(R.drawable.person_).into(imageView);
         }
 
 
 
-        //++++++++++++++++=back button++++++++++++++++++++++++++++++++++++++++++++
+        //+++++++++++++----------------+++=back button++++++++++++++++++++++++++++++++++++++++++++
         ImageView backbutton = view.findViewById(R.id.back_edit_profile);
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,14 +143,14 @@ public class Edit_customer_profileFragment extends Fragment {
 
 
 
-    // Update user profile
+    //---------------------------------------------- Update user profile -------------------------------
     private void updateProfile() {
         String firstName = fNameInput.getEditText().getText().toString().trim();
         String lastName = lastNameInput.getEditText().getText().toString().trim();
         String email = emailInput.getEditText().getText().toString().trim();
         String phone = phoneInput.getEditText().getText().toString().trim();
 
-        // Validate input fields, and you can add more validation as needed
+        //-------------------------------- Validate input fields, and you can add more validation as needed
         if (firstName.isEmpty() || lastName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
             Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show();
             return;
@@ -180,23 +177,18 @@ public class Edit_customer_profileFragment extends Fragment {
 
         }
 
-        // Create a HashMap to hold the updated user data
+        //--------------------------------- Create a HashMap to hold the updated user data----------------
         Map<String, String> params = new HashMap<>();
         params.put(fname_db, firstName);
         params.put(lname_db, lastName);
         params.put(email_db, email);
         params.put(phone_db, phone);
 
-        // If a new image is selected, send the base64 representation to the server
         if (base64Image != null) {
             params.put(image_db, base64Image);
         }
-//        else {
-//            // If no new image is selected, send the existing profile image URL to the server
-//            params.put(image_db, sessionManager.getProfileImageUri());
-//        }
 
-        // Send a POST request to your PHP server for updating the user profile
+
         RequestQueue queue = Volley.newRequestQueue(requireContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
@@ -210,11 +202,11 @@ public class Edit_customer_profileFragment extends Fragment {
 
                             if (!error) {
                                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                                String imagePath = jsonResponse.optString("image_path"); // Use optString to handle null values
+                                String imagePath = jsonResponse.optString("image_path");
                                 if (imagePath != null && !imagePath.isEmpty()) {
                                     updateSessionData(firstName, lastName, email, phone, imagePath);
                                 } else {
-                                    // If image path is null or empty, keep the existing image path in the session
+                                    // --------If image path is null or empty, keep the existing image path in the session
                                     String existingImagePath = sessionManager.getProfileImageUri();
                                     updateSessionData(firstName, lastName, email, phone, existingImagePath);
                                 }
@@ -271,7 +263,7 @@ public class Edit_customer_profileFragment extends Fragment {
         }
     }
 
-    // Update session
+    //---------------------------------------- Update session -----------------------------------------
     private void updateSessionData(String firstName, String lastName, String email, String phone, String profileImage) {
         sessionManager.createUserSession(userId, firstName, lastName, email, phone, role_db);
         sessionManager.saveProfileImageUri(profileImage); // Save the image path in the session

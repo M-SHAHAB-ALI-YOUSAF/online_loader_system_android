@@ -68,7 +68,6 @@ public class NewPhoneOTP extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View  view = inflater.inflate(R.layout.fragment_new_phone_o_t_p, container, false);
 
         //+++++++++++++++++++++++++++++firebase session++++++++++++++++++++++++++
@@ -149,6 +148,7 @@ public class NewPhoneOTP extends Fragment {
     }
 
 
+    //++++++++++++++++++++++++++uodate resend otp button+++++++++++++++++++++++++++++++++++++++
     private void updateResendOtpButtonState() {
         if (isResendOtpEnabled) {
             resent_otp.setVisibility(View.VISIBLE);
@@ -281,16 +281,7 @@ public class NewPhoneOTP extends Fragment {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     resendOtpTimer.cancel();
-//                        if ("Customer".equals(sessionManager.getRole())) {
-//                          //  getUserDataByPhone(change_contact);
-//                            Intent intent = new Intent(getContext(), Booking_Activity.class);
-//                            startActivity(intent);
-//                        } else if ("Driver".equals(sessionManager.getRole())) {
-//                            //getUserDataByPhone(change_contact);
-//                            Intent driver = new Intent(getContext(), driver_homepage.class);
-//                            startActivity(driver);
-//                        }
-                            UpdateNumber();
+                    UpdateNumber();
                 } else {
                     Toast.makeText(getContext(), "Invalid OTP", Toast.LENGTH_SHORT).show();
                 }
@@ -298,6 +289,8 @@ public class NewPhoneOTP extends Fragment {
         });
     }
 
+
+    //------------------------------------update number method------------------------------------------
     private void UpdateNumber() {
         if ("Customer".equals(sessionManager.getRole())){
             url = "http://10.0.2.2/Cargo_Go/v1/updateCustomerPhoneNo.php";
@@ -310,12 +303,10 @@ public class NewPhoneOTP extends Fragment {
             coulumnphonenumber = "Driver_Phone_No";
         }
 
-        // Create a HashMap to hold the updated user data
         Map<String, String> params = new HashMap<>();
         params.put(coulumnphonenumber, change_contact);
         params.put(coulumnemail, sessionManager.getEmail());
 
-        // Send a POST request to your PHP server for updating the user profile
         RequestQueue queue = Volley.newRequestQueue(requireContext());
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 url,
@@ -331,7 +322,6 @@ public class NewPhoneOTP extends Fragment {
                                 sessionManager.updatePhoneNumber(change_contact);
                                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                                 if("Driver".equals(sessionManager.getRole())){
-                                    // Assuming you are inside an Activity or a Fragment
                                     Driver_Homepage_Fragment otp = new Driver_Homepage_Fragment();
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                                     transaction.replace(R.id.driver_fragment, otp);

@@ -56,7 +56,17 @@
             android:padding="8dp"
             android:scrollbars="vertical"
             tools:listitem="@layout/wishlist_item" />
-
+        <!-- TextView to display "No data found" message -->
+        <TextView
+            android:id="@+id/noDataTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/wishlist_id"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="No data found"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </FrameLayout>

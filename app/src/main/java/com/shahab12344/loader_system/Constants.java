@@ -50,5 +50,8 @@ public class Constants {
 
 
 
+    public static final String URL_VEHICLE_INFO = ROOT_URL+"vehicle_Information.php";
+
+
 
 }

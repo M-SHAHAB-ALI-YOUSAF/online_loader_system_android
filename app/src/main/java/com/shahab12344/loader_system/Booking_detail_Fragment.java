@@ -186,7 +186,11 @@ public class Booking_detail_Fragment extends Fragment implements OnMapReadyCallb
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            if (error instanceof NoConnectionError) {
+                                Toast.makeText(getContext(), "No internet connection", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
             ) {

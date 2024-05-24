@@ -57,7 +57,7 @@ public class signup_customer_Fragment extends Fragment {
     //++++++++++++++++++++++++++++++++Variables Signup++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     Button btn_register, btn_go_login;
     ImageView back_to_login;
-    String firstname;
+    String firstname, trimmedPhoneNumber;
     private SessionManager sessionManager;
     String lastname;
     String email;
@@ -101,6 +101,8 @@ public class signup_customer_Fragment extends Fragment {
             email = bundle.getString("email");
             returnrole = bundle.getString("Roles");
             phoneno = bundle.getString("phone");
+            trimmedPhoneNumber = phoneno.replace("+92", "");
+
         }
 
 
@@ -111,7 +113,7 @@ public class signup_customer_Fragment extends Fragment {
             textInputFirstname.getEditText().setText(firstname);
             textInputLastname.getEditText().setText(lastname);
             textInputEmail.getEditText().setText(email);
-            textInputPhoneno.getEditText().setText(phoneno);
+            textInputPhoneno.getEditText().setText(trimmedPhoneNumber);
 
             senddatatodatabase();
         }
@@ -496,7 +498,7 @@ public class signup_customer_Fragment extends Fragment {
 
     //+++++++++++++++++++++++++++++++After OTP VERIFICATION DATA IS SEND TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void senddatatodatabase() {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.person_2);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.profile_default);
         Bitmap bitmap = bitmapDrawable.getBitmap();
         ByteArrayOutputStream byteArrayOutputStream;
         byteArrayOutputStream = new ByteArrayOutputStream();

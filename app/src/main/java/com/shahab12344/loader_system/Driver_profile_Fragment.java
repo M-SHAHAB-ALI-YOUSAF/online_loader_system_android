@@ -35,7 +35,7 @@ public class Driver_profile_Fragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_driver_profile_, container, false);
 
-        //session
+        //---------------------------------session manager---------------------------------------
         sessionManager = new SessionManager(getContext());
 
         btn_edit_profile = view.findViewById(R.id.driver_edit_profile);
@@ -63,13 +63,13 @@ public class Driver_profile_Fragment extends Fragment {
         });
 
 
-        //setting data from session ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+        //-----------------------------------setting data from session ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
         TextInputLayout firstNameEditText = view.findViewById(R.id.reg_d_name);
         TextInputLayout lastNameTabTextView = view.findViewById(R.id.last_d_name);
         TextInputLayout emailTabTextView = view.findViewById(R.id.reg_d_email);
         TextInputLayout phoneTabTextView = view.findViewById(R.id.reg_d_Phone);
 
-        // Retrieve user data from SessionManager
+        //----------------------------------- Retrieve user data from SessionManager---------------------------------
         String firstName = sessionManager.getFirstName();
         String lastName = sessionManager.getLastName();
         String email = sessionManager.getEmail();
@@ -77,7 +77,6 @@ public class Driver_profile_Fragment extends Fragment {
         String profileImageUri = sessionManager.getProfileImageUri();
         ImageView imageView = view.findViewById(R.id.profile_image);
         if (profileImageUri != null) {
-            // Load the profile image using Glide and transform it into a circle
             Glide.with(this)
                     .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
                     .apply(RequestOptions.circleCropTransform())
@@ -85,7 +84,7 @@ public class Driver_profile_Fragment extends Fragment {
         }
 
 
-        // Set the retrieved user data to TextViews
+        //-------------------- Set the retrieved user data to TextViews------------------------------
         firstNameEditText.getEditText().setText(firstName);
         lastNameTabTextView.getEditText().setText(lastName);
         emailTabTextView.getEditText().setText(email);

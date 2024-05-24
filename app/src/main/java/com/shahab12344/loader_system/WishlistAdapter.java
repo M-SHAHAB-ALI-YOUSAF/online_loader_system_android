@@ -32,7 +32,6 @@ public class WishlistAdapter extends RecyclerView.Adapter<WishlistAdapter.Wishli
     public void onBindViewHolder(@NonNull WishlistViewHolder holder, int position) {
         WishlistItem item = wishlistItems.get(position);
 
-        // Set driver name, contact, and date
         holder.driverNameTextView.setText("Name: " +item.getDriverName());
         holder.driverContactTextView.setText("Contact: " +item.getDriverContact());
         holder.dateTextView.setText("Date: " +item.getDate());

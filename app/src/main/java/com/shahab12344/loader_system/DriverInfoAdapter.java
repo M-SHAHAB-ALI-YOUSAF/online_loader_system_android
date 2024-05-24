@@ -40,8 +40,8 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
     private Bundle mBundle;
     private String bookingId;
 
-    private boolean isRequestSent = false; // Flag to track if request is sent
-    private boolean isRequestAccepted = false; // Flag to track if request is accepted
+    private boolean isRequestSent = false;
+    private boolean isRequestAccepted = false;
 
     public DriverInfoAdapter(Context context, List<DriverRequstModel> driverList, FragmentManager fragmentManager, Bundle bundle) {
         this.context = context;
@@ -62,7 +62,6 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         DriverRequstModel driverInfo = driverList.get(position);
 
-        // Load image using Glide
         Glide.with(context)
                 .load("http://10.0.2.2/Cargo_Go/v1/" + driverInfo.getDriverPictureResource())
                 .apply(RequestOptions.circleCropTransform())
@@ -72,41 +71,37 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
         holder.carModelTextView.setText("Type: " + driverInfo.getCarModel());
         holder.carNumberTextView.setText("Number: " + driverInfo.getCarNumber());
         holder.ridePriceTextView.setText("Model: " + driverInfo.getRidePrice());
-        String driverId = driverInfo.getDriverId(); // Get driver id for this specific item
+        String driverId = driverInfo.getDriverId();
 
-        // Check if the driver is in the wishlist and change the background color accordingly
+        //---------------- Check if the driver is in the wishlist and change the background color accordingly
         holder.itemView.setSelected(driverInfo.isInWishlist());
         holder.itemView.setBackground(ContextCompat.getDrawable(context, R.drawable.border_with_color));
 
-        // Set click listener for the accept button
+        //----------------------- Set click listener for the request button
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (!isRequestSent) {
-                    // Move the initialization of pickup, destination, helpers, cost, and vehicleType here
                     String pickup = mBundle.getString("pickup");
                     String destination = mBundle.getString("destination");
                     String helpers = mBundle.getString("helpers");
                     String cost = mBundle.getString("cost");
                     String vehicleType = mBundle.getString("vehicleType");
-                    // Send booking request
-                    bookingRequest(pickup, destination, helpers, cost, vehicleType, driverId); // Pass driverId to bookingRequest method
 
-                    // Disable sending requests for 30 seconds
+                    //------------------------------------------------------ Send booking request
+                    bookingRequest(pickup, destination, helpers, cost, vehicleType, driverId);
                     isRequestSent = true;
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             isRequestSent = false;
-                            // Remove the driver from the list after 30 seconds if no response is received
                             int adapterPosition = holder.getAdapterPosition();
                             if (adapterPosition != RecyclerView.NO_POSITION) {
                                 driverList.remove(adapterPosition);
                                 notifyItemRemoved(adapterPosition);
-                                // Here you can also remove the driver from the database if needed
                             }
                         }
-                    }, 30000); // 30 seconds
+                    }, 30000);
 
                 } else {
                     Toast.makeText(context, "Please wait for 30 seconds before sending another request.", Toast.LENGTH_SHORT).show();
@@ -139,12 +134,12 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
         }
     }
 
-    // Method to retrieve the driver list
+    //--------------------------------------------------- Method to retrieve the driver list
     public List<DriverRequstModel> getDriverList() {
         return driverList;
     }
 
-    // Method to send booking request
+    // ----------------------------------------------------Method to send booking request
     private void bookingRequest(String pickup, String destination, String helpers, String cost, String vehicleType, String driverId) {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
@@ -165,7 +160,6 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            // Handle JSON parsing error
                             Toast.makeText(context.getApplicationContext(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -173,7 +167,6 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle error cases
                         Toast.makeText(context.getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -182,25 +175,23 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("Customer_ID", sessionManager.getUserId()); // Replace "" with the actual Customer ID
-                params.put("Driver_ID", driverId); // Replace "" with the actual Driver ID
-                params.put("Pickup_Location", pickup); // Replace "" with the actual Pickup Location
-                params.put("Dropoff_Location", destination); // Replace "" with the actual Drop-off Location
-                params.put("Helpers", helpers); // Replace "" with the actual Helpers
-                params.put("Total_Cost", cost); // Replace "" with the actual Total Cost
-                params.put("vehicle_Type", vehicleType); // Replace "" with the actual Vehicle Type
-                params.put("Booking_Status", "Requested"); // Replace "" with the actual Booking Status
+                params.put("Customer_ID", sessionManager.getUserId());
+                params.put("Driver_ID", driverId);
+                params.put("Pickup_Location", pickup);
+                params.put("Dropoff_Location", destination);
+                params.put("Helpers", helpers);
+                params.put("Total_Cost", cost);
+                params.put("vehicle_Type", vehicleType);
+                params.put("Booking_Status", "Requested");
                 return params;
             }
         };
 
-        // Add the request to the request queue
         RequestHandler.getInstance(context).addToRequestQueue(stringRequest);
     }
 
-    // Method to check booking status
+    //------------------------------------------------------ Method to check booking status
     private void checkBookingStatus(String driverId, String bookingId) {
-        // Start a background thread to check the status
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -216,11 +207,11 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
         }).start();
     }
 
-    // Method to make status check request to the server
+    // -------------------------------------------Method to make status check request to the server
     private void makeStatusCheckRequest(String driverId, String bookingId) {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_check_status, // Update with your PHP endpoint for checking status
+                Constants.URL_check_status,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -228,21 +219,15 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.has("status") && jsonObject.has("booking_id")) {
                                 String status = jsonObject.getString("status");
-                                // Check the status
                                 if (status.equals("Accepted")) {
-                                    // Update UI or perform any action
                                     isRequestAccepted = true;
                                     Toast.makeText(context.getApplicationContext(), "Requested is accepted: ", Toast.LENGTH_SHORT).show();
-
-                                    // Navigate to the next fragment
                                     navigateToNextFragment(bookingId);
                                 } else if (status.equals("Rejected") && !isRequestSent) {
-                                    // Request is rejected, show toast message only if request was not already sent
                                     isRequestSent = false; // Allow sending another request
                                     Toast.makeText(context.getApplicationContext(), "Requested is rejected. Please request another driver.", Toast.LENGTH_SHORT).show();
 
                                 } else {
-                                    // Request is pending, do nothing
                                 }
                             }
                         } catch (JSONException e) {
@@ -253,7 +238,6 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        // Handle error cases
                         Toast.makeText(context.getApplicationContext(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -262,29 +246,23 @@ public class DriverInfoAdapter extends RecyclerView.Adapter<DriverInfoAdapter.Vi
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                // Pass the customer ID and driver ID as parameters
                 params.put("Customer_ID", sessionManager.getUserId());
                 params.put("Driver_ID", driverId);
                 params.put("Booking_ID", bookingId);
                 return params;
             }
         };
-
-        // Add the request to the request queue
         RequestHandler.getInstance(context).addToRequestQueue(stringRequest);
     }
 
-    // Method to navigate to the next fragment upon request acceptance
+    //------------------------- Method to navigate to the next fragment upon request acceptance
     private void navigateToNextFragment(String bookingId) {
-        // Create a bundle to pass the booking ID to the next fragment
         Bundle bundle = new Bundle();
         bundle.putString("booking_id", bookingId);
 
-        // Create an instance of the next fragment and set arguments
         Booking_detail_Fragment nextFragment = new Booking_detail_Fragment();
         nextFragment.setArguments(bundle);
 
-        // Navigate to the next fragment using FragmentManager
         fragmentManager.beginTransaction()
                 .replace(R.id.bookingfragment, nextFragment)
                 .addToBackStack(null)

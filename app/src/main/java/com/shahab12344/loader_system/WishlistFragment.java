@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ import java.util.Map;
 public class WishlistFragment extends Fragment {
 
     private RecyclerView recyclerView;
+    TextView  noDataTextView;
     private SessionManager sessionManager;
     private WishlistAdapter adapter;
     private ProgressDialog progressDialog;
@@ -49,6 +51,7 @@ public class WishlistFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         sessionManager = new SessionManager(getContext());
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        noDataTextView = view.findViewById(R.id.noDataTextView);
 
         wishlistItems = new ArrayList<>();
         adapter = new WishlistAdapter(getContext(), wishlistItems);
@@ -77,6 +80,8 @@ public class WishlistFragment extends Fragment {
         return view;
     }
 
+
+    //------------------------------------data from db-------------------------------------------------
     private void fetchDataFromServer() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
@@ -87,21 +92,15 @@ public class WishlistFragment extends Fragment {
                         progressDialog.dismiss();
 
                         try {
-                            // Check if the response is empty or null
                             if (response == null || response.isEmpty()) {
                                 Toast.makeText(getActivity(), "Empty response received", Toast.LENGTH_SHORT).show();
                                 return;
                             }
-
-                            // Parse the response as JSON
                             JSONObject jsonObject = new JSONObject(response);
 
-                            // Check if the response contains the "error" key
                             if (!jsonObject.getBoolean("error")) {
-                                // Retrieve the available drivers array from the JSON object
                                 JSONArray driversArray = jsonObject.getJSONArray("available_drivers");
 
-                                // Process the driver data
                                 List<WishlistItem> driverList = new ArrayList<>();
                                 for (int i = 0; i < driversArray.length(); i++) {
                                     JSONObject driverObject = driversArray.getJSONObject(i);
@@ -112,18 +111,18 @@ public class WishlistFragment extends Fragment {
 
                                     driverList.add(new WishlistItem(imageURL, name, vehicle, plateNumber));
                                 }
-
-                                // Update the wishlistItems list and notify the adapter
                                 wishlistItems.clear();
                                 wishlistItems.addAll(driverList);
                                 adapter.notifyDataSetChanged();
                             } else {
-                                // If the "error" key is present, display the error message
                                 String message = jsonObject.getString("message");
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+                                if (message.equals("No available drivers in Wishlist")) {
+                                    noDataTextView.setVisibility(View.VISIBLE);
+                                } else {
+                                    noDataTextView.setVisibility(View.GONE);
+                                }
                             }
                         } catch (JSONException e) {
-                            // If an exception occurs while parsing JSON, log the error and display a toast
                             e.printStackTrace();
                             Toast.makeText(getActivity(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
                         }
@@ -134,7 +133,6 @@ public class WishlistFragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
-                        // Handle error cases
                         Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -143,14 +141,11 @@ public class WishlistFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                // Add parameters to the request
-                params.put("Customer_ID", sessionManager.getUserId()); // Replace "" with the actual Vehicle Type
-                // Add other parameters as needed
+                params.put("Customer_ID", sessionManager.getUserId());
                 return params;
             }
         };
 
-        // Add the request to the request queue
         RequestHandler.getInstance(getActivity()).addToRequestQueue(stringRequest);
     }
 }

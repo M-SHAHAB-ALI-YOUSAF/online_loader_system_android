@@ -43,7 +43,6 @@ public class fragment_driver_request extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_driver_request, container, false);
 
-        // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.driverRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -53,7 +52,7 @@ public class fragment_driver_request extends Fragment {
         progressDialog.show();
         sessionManager = new SessionManager(getContext());
 
-        //bundle
+        //-----------------------------bundle--------------------------
         args = getArguments();
         if (args != null) {
             String pickup = args.getString("pickup");
@@ -63,21 +62,16 @@ public class fragment_driver_request extends Fragment {
 
             String vehicleType = args.getString("vehicleType");
 
-
-            // Now you have the data, you can use it to fetch the data from the server
-            fetchDataFromServer(vehicleType); // Pass the vehicle type here
+            fetchDataFromServer(vehicleType);
         } else {
             Toast.makeText(getActivity(),"Something went wrong", Toast.LENGTH_LONG).show();
         }
-
-        // Fetch data from server
-//        fetchDataFromServer("Medium"); // Pass the vehicle type here
 
         return view;
     }
 
     private void fetchDataFromServer(String vehicleType) {
-        fetchWishlistDataFromServer(sessionManager.getUserId()); // Corrected parameter name
+        fetchWishlistDataFromServer(sessionManager.getUserId());
 
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
@@ -88,21 +82,15 @@ public class fragment_driver_request extends Fragment {
                         progressDialog.dismiss();
 
                         try {
-                            // Check if the response is empty or null
                             if (response == null || response.isEmpty()) {
                                 Toast.makeText(getActivity(), "Empty response received", Toast.LENGTH_SHORT).show();
                                 return;
                             }
 
-                            // Parse the response as JSON
                             JSONObject jsonObject = new JSONObject(response);
 
-                            // Check if the response contains the "error" key
                             if (!jsonObject.getBoolean("error")) {
-                                // Retrieve the available drivers array from the JSON object
                                 JSONArray driversArray = jsonObject.getJSONArray("available_drivers");
-
-                                // Process the driver data
                                 List<DriverRequstModel> driverList = new ArrayList<>();
                                 for (int i = 0; i < driversArray.length(); i++) {
                                     JSONObject driverObject = driversArray.getJSONObject(i);
@@ -116,16 +104,13 @@ public class fragment_driver_request extends Fragment {
                                     driverList.add(new DriverRequstModel(driverId, imageURL, name, vehicle, plateNumber, cost));
                                 }
 
-                                // Create and set the adapter
                                 adapter = new DriverInfoAdapter(getContext(), driverList, getFragmentManager(), args);
                                 recyclerView.setAdapter(adapter);
                             } else {
-                                // If the "error" key is present, display the error message
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            // If an exception occurs while parsing JSON, log the error and display a toast
                             e.printStackTrace();
                             Toast.makeText(getActivity(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
                         }
@@ -136,7 +121,6 @@ public class fragment_driver_request extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
-                        // Handle error cases
                         Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -145,17 +129,16 @@ public class fragment_driver_request extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                // Add parameters to the request
                 params.put("vehicle_Type", vehicleType); // Replace "" with the actual Vehicle Type
-                // Add other parameters as needed
                 return params;
             }
         };
 
-        // Add the request to the request queue
         RequestHandler.getInstance(getActivity()).addToRequestQueue(stringRequest);
     }
 
+
+    //----------------wishlististed driverers--------------------------------------------------------
     private void fetchWishlistDataFromServer(String customerId) {
         StringRequest wishlistRequest = new StringRequest(
                 Request.Method.POST,
@@ -174,11 +157,8 @@ public class fragment_driver_request extends Fragment {
                                     markDriverAsWishlist(driverId);
                                 }
                                 if (adapter != null) {
-                                    adapter.notifyDataSetChanged(); // Notify adapter after marking drivers as wishlisted
+                                    adapter.notifyDataSetChanged();
                                 }
-                            } else {
-                                String message = jsonObject.getString("message");
-                                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -198,7 +178,7 @@ public class fragment_driver_request extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("Customer_ID", customerId); // Corrected parameter name
+                params.put("Customer_ID", customerId);
                 return params;
             }
         };

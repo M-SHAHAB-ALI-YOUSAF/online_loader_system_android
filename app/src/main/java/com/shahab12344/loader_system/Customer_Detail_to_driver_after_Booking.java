@@ -30,17 +30,18 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-
 public class Customer_Detail_to_driver_after_Booking extends Fragment {
     String bookingid, phoneNumber, customerid, pickupLocation, dropoffLocation, cost;
     ImageView callCustomerImageView, messageCustomerImageView;
     private static final long CHECK_INTERVAL = 30 * 1000;
     private Handler handler;
     private SessionManager sessionManager;
+    // Declare a boolean flag to track status change
+    private boolean isStatusChanged = false;
+
     public Customer_Detail_to_driver_after_Booking() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +57,6 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-            //++++++++++++++++++++++++++++++++++++++++++++++++++ Retrieve the values from the arguments
             String customerName = args.getString("customerName");
             pickupLocation = args.getString("pickupLocation");
             dropoffLocation = args.getString("dropoffLocation");
@@ -66,8 +66,6 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
             phoneNumber = args.getString("customerphoneno");
             customerid = args.getString("CustomerID");
 
-
-            //+++++++ Update TextView elements with the retrieved values+++++++++++++++++++++++++
             customerNameTextView.setText("Customer Name: " + customerName);
             pickupLocationTextView.setText("Pickup: " + pickupLocation);
             dropoffLocationTextView.setText("Dropoff: " + dropoffLocation);
@@ -86,7 +84,6 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
         callCustomerImageView = view.findViewById(R.id.callcustomer);
         messageCustomerImageView = view.findViewById(R.id.cudtomer_message);
 
-        // +++++++++++++++++Set click listeners for call and message icons++++++++++++++++++++++++++++
         callCustomerImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -103,16 +100,13 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
             }
         });
 
-
         handler = new Handler(Looper.getMainLooper());
-
-        //+++++++++++++++++++++++++++++++++++ Start periodic check+++++++++++++++++++++++++++++++++++++++++++++++++++++++
         startPeriodicCheck();
 
         return view;
     }
 
-    private void  updateBookingStatus(String bookingid, String newStatus ){
+    private void updateBookingStatus(String bookingid, String newStatus) {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 Constants.URL_UPDATE_BOOKING_STATUS,
@@ -127,6 +121,8 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
                                 if(newStatus.equals("Cancel")){
                                     sendtoDbRideHistory("Cancel");
                                 }
+                                // Set isStatusChanged to true when the status is updated
+                                isStatusChanged = true;
                             } else {
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
@@ -156,9 +152,7 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
-
-    //+++++++++++++++++++++++++++++++++++Send to sb ride history++++++++++++++++++++++++++
-    private void sendtoDbRideHistory(String newStatus){
+    private void sendtoDbRideHistory(String newStatus) {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 Constants.URL_ride_history,
@@ -170,14 +164,13 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
 
                             if (!jsonObject.getBoolean("error")) {
                                 String message = jsonObject.getString("message");
-                                Toast.makeText(getActivity(), "Booking "+newStatus+" successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Booking " + newStatus + " successfully", Toast.LENGTH_SHORT).show();
                                 Driver_Homepage_Fragment fragment = new Driver_Homepage_Fragment();
                                 FragmentManager fragmentManager = getFragmentManager();
                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.driver_fragment, fragment);
-                                fragmentTransaction.addToBackStack(null); // Replace with the container ID
+                                fragmentTransaction.addToBackStack(null);
                                 fragmentTransaction.commit();
-
                             } else {
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
@@ -212,7 +205,6 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
-    //+++++++++++++++++++++++++++++++++periodic change++++++++++++++++++++++++++++++++
     private void startPeriodicCheck() {
         handler.postDelayed(new Runnable() {
             @Override
@@ -223,8 +215,13 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
         }, CHECK_INTERVAL);
     }
 
-    //++++++++++++++++++++++++++checkstatus+++++++++++++++++++++++++++++++++++++++++++
-    private void checkBookingStatus(){
+    private void checkBookingStatus() {
+        if (isStatusChanged) {
+            // Stop the periodic check if the status has changed
+            handler.removeCallbacksAndMessages(null);
+            return;
+        }
+
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
                 Constants.URL_CHECKING_STATUS,
@@ -239,6 +236,9 @@ public class Customer_Detail_to_driver_after_Booking extends Fragment {
                                 if (bookingStatus.equals("Cancel") || bookingStatus.equals("Complete")) {
                                     sendtoDbRideHistory(bookingStatus);
                                     Toast.makeText(getActivity(), "Booking is " + bookingStatus, Toast.LENGTH_SHORT).show();
+                                    // Set isStatusChanged to true when the status is updated
+                                    isStatusChanged = true;
+                                    // Stop the periodic check if the status has changed
                                     handler.removeCallbacksAndMessages(null);
                                     Driver_Homepage_Fragment fragment = new Driver_Homepage_Fragment();
                                     FragmentManager fragmentManager = getFragmentManager();

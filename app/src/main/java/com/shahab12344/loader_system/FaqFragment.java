@@ -32,13 +32,13 @@ public class FaqFragment extends Fragment {
 
         View view =  inflater.inflate(R.layout.fragment_faq, container, false);
 
-        //faq
+        //--------------------------------------------------------recycler view-----------------------------
         recyclerView = view.findViewById(R.id.recyclerViewforfaq);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        //sesion manager
+        //----------------------------------------------------------sesion manager-------------------
         sessionManager = new SessionManager(getContext());
-        // Create sample question-answer pairs
+        //--------------------------------------------- Create sample question-answer pairs
         questionAnswers = new ArrayList<>();
         questionAnswers.add(new QuestionAnswer("How do I make a booking?", Arrays.asList("You can make a booking by selecting the desired service and date, then providing your details.")));
         questionAnswers.add(new QuestionAnswer("Can I modify my booking?", Arrays.asList("Yes, you can modify your booking through your account or by contacting customer support.")));
@@ -70,7 +70,7 @@ public class FaqFragment extends Fragment {
                     Fragment faq = new Driver_Homepage_Fragment();
                     FragmentTransaction faqtransaction = getFragmentManager().beginTransaction();
                     faqtransaction.replace(R.id.driver_fragment, faq);
-                    faqtransaction.addToBackStack(null); // This line adds the transaction to the back stack
+                    faqtransaction.addToBackStack(null);
                     faqtransaction.commit();
                 }
                 else{

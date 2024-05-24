@@ -99,14 +99,13 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        // Set initial visibility of RecyclerView based on toggle button state
+        //++++++++++ Set initial visibility of RecyclerView based on toggle button state+++++++++++++++++++++
         recyclerView.setVisibility(toggleButtonStatus.isChecked() ? View.VISIBLE : View.GONE);
 
-        // Set a listener for the toggle button
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++ Set a listener for the toggle button
         toggleButtonStatus.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                // Handle status change here
                 if (isChecked) {
                     UpdateStatusToActive("True");
                     linearLayoutOffline.setVisibility(View.GONE);
@@ -161,52 +160,40 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
     private Runnable fetchRunnable = new Runnable() {
         @Override
         public void run() {
-            // Call the fetch method
             fetchRequestFromDb();
-
-            // Schedule the next execution after 15 seconds
             handler.postDelayed(this, FETCH_INTERVAL);
         }
     };
 
+    //++++++++++++++++++++++++++++++++++fetch request from db to show driver+++++++++++++++++++++++++++++
+
     private void fetchRequestFromDb() {
         StringRequest stringRequest = new StringRequest(
                 Request.Method.POST,
-                Constants.URL_booking_to_driver, // Update the URL to match the PHP script
+                Constants.URL_booking_to_driver,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         progressDialog.dismiss();
 
                         try {
-                            // Check if the response is empty or null
                             if (response == null || response.isEmpty()) {
                                 Toast.makeText(getActivity(), "Empty response received", Toast.LENGTH_SHORT).show();
                                 return;
                             }
+                              JSONObject jsonObject = new JSONObject(response);
 
-                            // Parse the response as JSON
-                            JSONObject jsonObject = new JSONObject(response);
-
-                            // Check if the response contains the "error" key
                             if (!jsonObject.getBoolean("error")) {
-                                // Retrieve the booking and customer details array from the JSON object
                                 JSONArray bookingAndCustomerArray = jsonObject.getJSONArray("booking_and_customer_details");
-
-                                // Process the data
                                 List<CustomListItem> bookingAndCustomerList = new ArrayList<>();
                                 for (int i = 0; i < bookingAndCustomerArray.length(); i++) {
                                     JSONObject detailsObject = bookingAndCustomerArray.getJSONObject(i);
-
-                                    // Retrieve booking details
                                     String bookingId = detailsObject.getString("Booking_ID");
                                     String pickup = detailsObject.getString("Pickup_Location");
                                     String dropoff = detailsObject.getString("Dropoff_Location");
                                     String cost = detailsObject.getString("Total_Cost");
                                     String helper = detailsObject.getString("Helpers");
                                     String bookingid = detailsObject.getString("Booking_ID");
-
-//                                 // Retrieve customer details from the detailsObject
                                     String customerId = detailsObject.getString("Customer_ID");
                                     String customerFirstName = detailsObject.getString("First_Name");
                                     String customerLastName = detailsObject.getString("Last_Name");
@@ -214,17 +201,13 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
                                     String customerNumber = detailsObject.getString("Phone_No");
                                     bookingAndCustomerList.add(new CustomListItem( customerName, pickup, dropoff, cost, helper, bookingid, customerNumber, customerId));
                                 }
-
-                                // Create and set the adapter
                                 adapter = new CustomListAdapter(getContext(), bookingAndCustomerList, getFragmentManager());
                                 recyclerView.setAdapter(adapter);
                             } else {
-                                // If the "error" key is present, display the error message
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
-                            // If an exception occurs while parsing JSON, log the error and display a toast
                             e.printStackTrace();
                             Toast.makeText(getActivity(), "Error parsing JSON", Toast.LENGTH_SHORT).show();
                         }
@@ -235,7 +218,6 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         progressDialog.dismiss();
-                        // Handle error cases
                         Toast.makeText(getActivity(), "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -244,17 +226,16 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                // Add parameters to the request
                 params.put("Driver_ID", sessionManager.getUserId());
-                // Add other parameters as needed
                 return params;
             }
         };
 
-        // Add the request to the request queue
         RequestHandler.getInstance(getActivity()).addToRequestQueue(stringRequest);
     }
 
+
+    //++++++++++++++++++++++++++++++++++++++++++++update driver status offline to online_________________+++++++++++
     private void UpdateStatusToActive(String Status) {
         String url = "http://10.0.2.2/Cargo_Go/v1/updateActiveStatusOfDriver.php";
         Map<String, String> params = new HashMap<>();
@@ -276,8 +257,6 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
                                 if ("True".equals(Status)) {
                                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -363,6 +342,8 @@ public class Driver_Homepage_Fragment extends Fragment implements NavigationView
         return true;
     }
 
+
+    //-------------------------------------------------delete account--------------------------------------
     private void removeAccount() {
         progressDialog.setMessage("Removing User Account...");
         progressDialog.show();

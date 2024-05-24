@@ -59,6 +59,7 @@ public class review_and_rating extends Fragment {
         ImageView driverimg = view.findViewById(R.id.driverimage);
 
         nameview.setText(bookingSessionManager.getDriverName());
+
         String profileImageUri = bookingSessionManager.getImageURL();
         if (profileImageUri != null) {
             Glide.with(this)
@@ -86,7 +87,7 @@ public class review_and_rating extends Fragment {
                 if (rating < 2) {
 
                     reviewtoDb(String.valueOf(rating), review);
-                    // Show an AlertDialog for complaining
+              //------------------------------------- Show an AlertDialog for complaining
                     new AlertDialog.Builder(getContext())
                             .setTitle("Complaint")
                             .setMessage("Do you want to lodge a complaint?")
@@ -95,12 +96,12 @@ public class review_and_rating extends Fragment {
                                     // Navigate to ComplaintFragment
                                     ComplaintFragment fragment = new ComplaintFragment();
                                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                                    if(fragment2.equals("ComeFromFragment")){
+                                    if ("ComeFromFragment".equals(fragment2)) {
                                         transaction.replace(R.id.bookingfragment, fragment);
-                                    }
-                                    else{
+                                    } else {
                                         transaction.replace(R.id.feedbackarea, fragment);
                                     }
+
                                     transaction.addToBackStack(null);
                                     transaction.commit();
                                 }
@@ -110,13 +111,11 @@ public class review_and_rating extends Fragment {
                 } else if (rating >= 2) {
                     reviewtoDb(String.valueOf(rating), review);
 
-                    // Show an AlertDialog for adding to wishlist
                     new AlertDialog.Builder(getContext())
                             .setTitle("Add to Wishlist")
                             .setMessage("Do you want to add the driver to your wishlist?")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    // Call a function to add the driver to the wishlist
                                     addToWishlist();
                                 }
                             })
@@ -140,13 +139,13 @@ public class review_and_rating extends Fragment {
     }
 
 
+    //----------------------------------------------driver to wihslist------------------------
     private void addToWishlist(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_ADD_TO_WISHLIST,
                 new com.android.volley.Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Handle the response here
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -162,11 +161,8 @@ public class review_and_rating extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            // Handle connection error here
                             Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                         } else {
-                            // Handle other errors
-
                             Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -182,13 +178,15 @@ public class review_and_rating extends Fragment {
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
+
+    //---------------------------------review to db-------------------------------------------
+
     private void reviewtoDb(String rating, String review){
             StringRequest stringRequest = new StringRequest(Request.Method.POST,
                     Constants.URL_REVIEW_RATING,
                     new com.android.volley.Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
-                            // Handle the response here
                             try {
                                 JSONObject jsonObject = new JSONObject(response);
                                 Toast.makeText(getActivity(), jsonObject.getString("message"), Toast.LENGTH_SHORT).show();
@@ -202,11 +200,8 @@ public class review_and_rating extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                                // Handle connection error here
                                 Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                             } else {
-                                // Handle other errors
-
                                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }

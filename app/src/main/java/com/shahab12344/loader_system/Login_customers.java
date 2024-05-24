@@ -45,7 +45,7 @@ public class Login_customers extends Fragment {
     //+++++++++++++++++++++++++Variables+++++++++++++++++++++++++++++++++++++++++++
     private TextInputLayout textInputPhonenologin;
     String phone, Role, url,columnname;
-    private ProgressDialog progressDialog;
+    public ProgressDialog progressDialog;
     Button btn_otp, btn_go_singup;
 
     //+++++++++++++++++++++++++Firebase variables+++++++++++++++++++++++++++++++++++++++++++
@@ -61,7 +61,6 @@ public class Login_customers extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login_customers, container, false);
 
         //+++++++++++++++++++++++++getting id+++++++++++++++++++++++++++++++++++++++++++
@@ -147,6 +146,7 @@ public class Login_customers extends Fragment {
 
                 //+++++++++++++++++++++++++Bundle for data send and naviation to otp screen+++++++++++++++++++++++++++++++++++++++++++
                 progressDialog.dismiss();
+                Toast.makeText(getContext(),"OTP IS SEND", Toast.LENGTH_SHORT).show();
                 OTP_Fragment otp = new OTP_Fragment();
                 Bundle bundle = new Bundle();
                 bundle.putString("source", "login_customer");
@@ -217,13 +217,12 @@ public class Login_customers extends Fragment {
     }
 
 
-    //++++++++++++++++++++++++++++++++++Validation of phone no++++++++++++++++++++++++++++++++++++++++++++
+    //++++++++++++++++++++++++++++++++++Validation of phone no from db++++++++++++++++++++++++++++++++++++++++++++
     private void SendOtp() {
         phone = "+92" +textInputPhonenologin.getEditText().getText().toString().trim();
         validatePhoneno(phone);
 
         if (textInputPhonenologin.getError() != null ){
-            // There are errors in the fields, so don't proceed
             return;
         }
 
@@ -252,7 +251,18 @@ public class Login_customers extends Fragment {
                                 String message = jsonObject.getString("message");
                                 if (message.equals("Phone number is already registered, please choose a different one.")) {
                                     otpsend();
-                                } else {
+                                }
+                                else if(message.equals("Phone number is registered but not associated with a vehicle.")){
+                                    driver_vehicle_informationFragment vehicle_info = new driver_vehicle_informationFragment();
+                                    Bundle bundle =  new Bundle();
+                                    bundle.putString("phonekey", phone);
+                                    vehicle_info.setArguments(bundle);
+                                    FragmentTransaction vehicle = getFragmentManager().beginTransaction();
+                                    vehicle.replace(R.id.login_RegFragmentContainer, vehicle_info);
+                                    vehicle.addToBackStack(null);
+                                    vehicle.commit();
+                                }
+                                else {
                                     textInputPhonenologin.setError("Phone number is not registered with selected " + Role);
                                 }
                             }

@@ -63,7 +63,7 @@
                     android:id="@+id/loginascustomer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/card_selector"
+                    android:background="@drawable/cardview_selector"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -96,7 +96,7 @@
                     android:id="@+id/loginasdriver"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/card_selector"
+                    android:background="@drawable/cardview_selector"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -156,6 +156,7 @@
                 android:hint="First Name">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/fname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
@@ -172,6 +173,7 @@
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text" />
@@ -187,6 +189,7 @@
                 android:hint="Email">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textEmailAddress" />
@@ -219,6 +222,7 @@
                 android:hint="Phone No">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phonereg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone" />

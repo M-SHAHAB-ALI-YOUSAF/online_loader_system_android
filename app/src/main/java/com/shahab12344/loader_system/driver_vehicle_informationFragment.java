@@ -62,7 +62,7 @@ public class driver_vehicle_informationFragment extends Fragment {
     private Button buttonSelectImage2;
     private Button buttonSelectImage3;
     int driverID;
-    private String base64Image1, base64Image2, base64Image3, email ;
+    private String base64Image1, base64Image2, base64Image3, phone ;
     ImageView back_to_driver_detail, signup_done;
     private SessionManager sessionManager;
 
@@ -88,16 +88,15 @@ public class driver_vehicle_informationFragment extends Fragment {
         TextInputLayout vehicleModelLayout = view.findViewById(R.id.vehicle_model);
 
 
-         //session
+         //++++++++++++++++++++++++++++++++++++++++++session+++++++++++++++++++++++++++++
         sessionManager = new SessionManager(getContext());
-        driverifbyEmail();
+        driverifbyphoneno();
 
 
-        //+++++++++++++++++++++bundle++++++++++++++
+        //+++++++++++++++++++++bundle++++++++++++++++++++++++++++++++++++++++++++++++++
         Bundle bundle = getArguments();
         if (bundle != null) {
-            email = bundle.getString("emailKey");
-
+            phone = bundle.getString("phonekey");
 
         }
 
@@ -118,13 +117,13 @@ public class driver_vehicle_informationFragment extends Fragment {
         setCardClickListener(largeCard, largeText);
         setCardClickListener(extraLargeCard, extraLargeText);
 
-        // Inside your onCreate or wherever you need to load and display the images
+        //+++++++++++++++++++++++++++++nside your onCreate or wherever you need to load and display the images
         ImageView image1 = view.findViewById(R.id.small);
         ImageView image2 = view.findViewById(R.id.medium);
         ImageView  image3 = view.findViewById(R.id.large);
         ImageView image4 = view.findViewById(R.id.extra_large);
 
-        // Load and set the images
+        //++++++++++++++++++++++++++++++++++++++++++++++++++++ Load and set the images
         image1.setImageBitmap(loadAndScaleImage(R.drawable.small));
         image2.setImageBitmap(loadAndScaleImage(R.drawable.medium));
         image3.setImageBitmap(loadAndScaleImage(R.drawable.large));
@@ -135,13 +134,32 @@ public class driver_vehicle_informationFragment extends Fragment {
         back_to_driver_detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String vehicleNumber = vehicleNumberLayout.getEditText().getText().toString();
-                String vehicleModel = vehicleModelLayout.getEditText().getText().toString();
+                String vehicleNumber = vehicleNumberLayout.getEditText().getText().toString().trim();
+                String vehicleModel = vehicleModelLayout.getEditText().getText().toString().trim();
 
-                // Now you can use these values as needed (e.g., send them to the server)
+                vehicleNumberLayout.setError(null);
+                vehicleModelLayout.setError(null);
+
+
+                if (!vehicleNumber.matches("[A-Za-z]{1,3}[0-9]{2,4}")) {
+
+                    vehicleNumberLayout.setError("Invalid vehicle number. It should contain 1 to 3 letters followed by 2 to 4 numbers.");
+                    return;
+                }
+
+
+                if (vehicleModel.split("\\s+").length > 10) {
+
+                    vehicleModelLayout.setError("Invalid vehicle model. It should contain at most 10 words.");
+                    return;
+                }
+
+                if (!vehicleModel.matches("[A-Za-z ]+")) {
+                    vehicleModelLayout.setError("Invalid vehicle model. It should contain only alphabets and spaces.");
+                    return;
+                }
                 sendDataToServer(vehicleNumber, vehicleModel);
-//                Intent driver_dashboard = new Intent(getContext(), driver_homepage.class);
-//                startActivity(driver_dashboard);
+
             }
         });
 
@@ -153,11 +171,8 @@ public class driver_vehicle_informationFragment extends Fragment {
                 String vehicleNumber = vehicleNumberLayout.getEditText().getText().toString();
                 String vehicleModel = vehicleModelLayout.getEditText().getText().toString();
 
-                // Now you can use these values as needed (e.g., send them to the server)
                 sendDataToServer(vehicleNumber, vehicleModel);
-//                Fragment fragment = new Signup_driverFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
-            }
+          }
         });
 
         // Set click listeners for each button
@@ -221,6 +236,7 @@ public class driver_vehicle_informationFragment extends Fragment {
         }
     }
 
+    //--------------------------------------fetching image name---------------------------------------
     private String getFileNameFromUri(Uri uri) {
         String fileName = null;
         String scheme = uri.getScheme();
@@ -248,7 +264,7 @@ public class driver_vehicle_informationFragment extends Fragment {
 
     private Bitmap loadAndScaleImage ( int resId){
         BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inSampleSize = 2; // Adjust the sample size as needed
+        options.inSampleSize = 2;
 
         return BitmapFactory.decodeResource(getResources(), resId, options);
     }
@@ -267,9 +283,8 @@ public class driver_vehicle_informationFragment extends Fragment {
     private void sendDataToServer(String vehicleNumber, String vehicleModel) {
         // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = "http://10.0.2.2/Cargo_Go/v1/vehicle_Information.php";  // Replace with your server URL
+        String url = Constants.URL_VEHICLE_INFO;
 
-        // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
                     @Override
@@ -280,7 +295,6 @@ public class driver_vehicle_informationFragment extends Fragment {
                             String message = jsonResponse.getString("message");
 
                             if (!error) {
-                                // Data sent successfully
                                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                                 Login_customers otp = new Login_customers();
                                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -288,7 +302,6 @@ public class driver_vehicle_informationFragment extends Fragment {
                                 transaction.addToBackStack(null);
                                 transaction.commit();
                             } else {
-                                // Error sending data to server
                                 Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                             }
                         } catch (JSONException e) {
@@ -305,7 +318,6 @@ public class driver_vehicle_informationFragment extends Fragment {
         }) {
             @Override
             protected Map<String, String> getParams() {
-                // Parameters to be sent to the server
                 Map<String, String> params = new HashMap<>();
                 params.put("Vehicle_Model", vehicleModel);
                 params.put("Vehicle_type", selectedText.getText().toString());
@@ -318,7 +330,6 @@ public class driver_vehicle_informationFragment extends Fragment {
             }
         };
 
-        // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
 
@@ -329,13 +340,10 @@ public class driver_vehicle_informationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (selectedCard != null) {
-                    // Reset the color of the previously selected card
                     selectedCard.setSelected(false);
                 }
 
-                // Set the color of the clicked card
                 cardView.setSelected(true);
-                // Update the selected card and text
                 selectedCard = cardView;
                 selectedText = textView;
             }
@@ -345,9 +353,9 @@ public class driver_vehicle_informationFragment extends Fragment {
 
 
 
-      ///+++++++++++++++++++++++++++++++++++++getting driver id bby email+++++++++++++++++++++++++
-    public void driverifbyEmail(){
-            // Example using Volley
+      ///+++++++++++++++++++++++++++++++++++++getting driver id bby phone no+++++++++++++++++++++++++
+    public void driverifbyphoneno(){
+
         String url = "http://10.0.2.2/Cargo_Go/v1/gettingDriverIDbyemail.php";
             StringRequest stringRequest = new StringRequest(Request.Method.POST,
                     url,
@@ -358,10 +366,7 @@ public class driver_vehicle_informationFragment extends Fragment {
                                 JSONObject jsonObject = new JSONObject(response);
 
                                     if (!jsonObject.getBoolean("error")) {
-                                        // Parse the JSON response
                                        driverID = jsonObject.getInt("Driver_ID");
-                                        Toast.makeText(getActivity(), String.valueOf(driverID), Toast.LENGTH_SHORT).show();
-
                                     } else {
                                         String errorMessage = jsonObject.getString("message");
                                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
@@ -378,10 +383,8 @@ public class driver_vehicle_informationFragment extends Fragment {
                         @Override
                         public void onErrorResponse(VolleyError error) {
                             if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                                // Handle connection error here
                                 Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                             } else {
-                                // Handle other errors
                                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }
@@ -389,7 +392,7 @@ public class driver_vehicle_informationFragment extends Fragment {
                 @Override
                 protected Map<String, String> getParams() {
                     Map<String, String> params = new HashMap<>();
-                    params.put("Driver_Email", email);
+                    params.put("Driver_Phone_No", phone);
                     return params;
                 }
             };

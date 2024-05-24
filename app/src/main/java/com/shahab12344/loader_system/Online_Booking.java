@@ -42,28 +42,23 @@ public class Online_Booking extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_online__booking, container, false);
 
-        // Initialize views
+        // ----------------------------------Initialize views-------------------------------------
         radioGroup = view.findViewById(R.id.radioGroup);
         confirmPaymentButton = view.findViewById(R.id.buttonConfirmPayment);
         sessionManager = new SessionManager(getContext());
         bookingDetailSaveFile = new BookingSessionManager(getContext());
 
-        // Set OnClickListener for the Confirm Payment Button
+        //--------------------------------------------- Set OnClickListener for the Confirm Payment Button
         confirmPaymentButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Get the ID of the selected RadioButton
                 int selectedId = radioGroup.getCheckedRadioButtonId();
 
-                // Check if a RadioButton is selected
                 if (selectedId != -1) {
-                    // Find the selected RadioButton
                     RadioButton selectedRadioButton = view.findViewById(selectedId);
 
-                    // Perform the desired action
                     String paymentMethod = selectedRadioButton.getText().toString();
                     if(paymentMethod.equals("Cash on Delivery")){
                         SendTransactionToDb();
@@ -80,13 +75,14 @@ public class Online_Booking extends Fragment {
         return view;
     }
 
+
+    //----------------------------------record to db--------------------------------------------
     private void SendTransactionToDb(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
                 Constants.URL_PAYMENT_CASH,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Handle the response here
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             if (jsonObject.has("message")) {
@@ -104,7 +100,6 @@ public class Online_Booking extends Fragment {
                                 faqtransaction.commit();
 
                             } else {
-                                // If the response does not contain a "message" key, you can display a generic success message
                                 Toast.makeText(getContext(), "Payment is Complete.", Toast.LENGTH_LONG).show();
                             }
                         } catch (JSONException e) {
@@ -116,10 +111,8 @@ public class Online_Booking extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            // Handle connection error here
                             Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                         } else {
-                            // Handle other errors
                             Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -135,7 +128,6 @@ public class Online_Booking extends Fragment {
             }
         };
 
-        // Add the request to the Volley request queue
         RequestHandler.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 }

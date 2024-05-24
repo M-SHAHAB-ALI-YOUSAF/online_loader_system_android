@@ -34,7 +34,7 @@ public class ComplaintFragment extends Fragment {
 
     Button btn_submit_complaint;
     TextInputLayout complaintDescriptionLayout;
-    private BookingSessionManager bookingSessionManager;
+    public BookingSessionManager bookingSessionManager;
     TextInputEditText complaintDescriptionEditText;
     ImageView back_to_home;
     String complaintDescription;
@@ -60,6 +60,8 @@ public class ComplaintFragment extends Fragment {
         complaintDescriptionLayout = view.findViewById(R.id.complaint_text);
         complaintDescriptionEditText = view.findViewById(R.id.complaintDescriptionEditText);
         bookingSessionManager = new BookingSessionManager(getContext());
+        TextInputEditText driverNameEditText = view.findViewById(R.id.drivername);
+        driverNameEditText.setText(bookingSessionManager.getDriverName());
 
         // ++++++++++++++++++++++++++++++++++Button click listener+++++++++++++++++++++++++++
         btn_submit_complaint = view.findViewById(R.id.btn_complaint);
@@ -99,9 +101,10 @@ public class ComplaintFragment extends Fragment {
                             if (jsonObject.has("message")) {
                                 String message = jsonObject.getString("message");
                                 Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+                                Intent home = new Intent(getActivity(), Booking_Activity.class);
+                                startActivity(home);
                             } else {
                                 Toast.makeText(getContext(), "Complaint Registered.", Toast.LENGTH_LONG).show();
-
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -138,7 +141,7 @@ public class ComplaintFragment extends Fragment {
             complaintDescriptionLayout.setError("Description cannot be empty");
             return false;
         } else {
-            complaintDescriptionLayout.setError(null); // Clear any previous error
+            complaintDescriptionLayout.setError(null);
         }
         return true;
     }

@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DURATION = 3000; // 3 seconds
+    private static final int SPLASH_DURATION = 3000;
     private ImageView image;
     private SessionManager sessionManager;
 
@@ -33,10 +33,10 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        // Session for customer
+        //----------------------------------------------- Session for customer
         sessionManager = new SessionManager(this);
 
-        // Getting ids
+        //------------------------------------------------ Getting ids
         image = findViewById(R.id.logo_image);
 
         // Bitmap handling (consider using Glide or Picasso for more efficient image loading)
@@ -45,27 +45,22 @@ public class MainActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.logofina, options);
         image.setImageBitmap(bitmap);
 
-        // Setting animation to elements (add your animation code here)
 
         // Handle for going to login
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 if (sessionManager.isLoggedIn()) {
-                    // User is logged in, navigate based on the role
-                    String role = sessionManager.getRole(); // Assuming you have a method to get the user's role
+                    String role = sessionManager.getRole();
                     if ("Customer".equals(role)) {
-                        // Navigate to the customer dashboard
                         Intent intent = new Intent(MainActivity.this, Booking_Activity.class);
                         startActivity(intent);
                     } else if ("Driver".equals(role)) {
-                        // Navigate to the driver dashboard
                         Intent intent = new Intent(MainActivity.this, driver_homepage.class);
                         startActivity(intent);
                     }
                 } else {
                     Intent intent = new Intent(MainActivity.this, Login_Registration.class);
-                    // Attach all the elements those you want to animate in design
                     startActivity(intent);
                 }
             }

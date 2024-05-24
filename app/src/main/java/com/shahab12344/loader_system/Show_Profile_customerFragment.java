@@ -35,8 +35,7 @@ public class Show_Profile_customerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_show__profile_customer, container, false);
 
 
-
-        //session
+        //--------------------------------------session--------------------------------
         sessionManager = new SessionManager(getContext());
 
 
@@ -64,7 +63,7 @@ public class Show_Profile_customerFragment extends Fragment {
         TextInputLayout emailTabTextView = view.findViewById(R.id.et_email_customer);
         TextInputLayout phoneTabTextView = view.findViewById(R.id.et_phone_customer);
 
-        // Retrieve user data from SessionManager
+        // -------------------------------------Retrieve user data from SessionManager--------------------
         String firstName = sessionManager.getFirstName();
         String lastName = sessionManager.getLastName();
         String email = sessionManager.getEmail();
@@ -72,13 +71,12 @@ public class Show_Profile_customerFragment extends Fragment {
         String profileImageUri = sessionManager.getProfileImageUri();
         ImageView imageView = view.findViewById(R.id.profile_image);
         if (profileImageUri != null) {
-            // Load the profile image using Glide and transform it into a circle
             Glide.with(this)
                     .load("http://10.0.2.2/Cargo_Go/v1/" + profileImageUri)
                     .apply(RequestOptions.circleCropTransform())
                     .into(imageView);
         }
-        // Set the retrieved user data to TextViews
+        //------------------------------------- Set the retrieved user data to TextViews
         firstNameEditText.getEditText().setText(firstName);
         lastNameTabTextView.getEditText().setText(lastName);
         emailTabTextView.getEditText().setText(email);

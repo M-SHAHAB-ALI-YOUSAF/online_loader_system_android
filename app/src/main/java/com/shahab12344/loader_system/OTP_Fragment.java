@@ -162,6 +162,7 @@ public class OTP_Fragment extends Fragment {
         return view;
     }
 
+    //-----------------------------update resend button---------------------------------------------
     private void updateResendOtpButtonState() {
         if (isResendOtpEnabled) {
             resent_otp.setVisibility(View.VISIBLE);
@@ -178,6 +179,7 @@ public class OTP_Fragment extends Fragment {
         }
     }
 
+    //-------------------------------------start timer of resend otp--------------------------------
     private void startResendOtpTimer() {
         countdownText.setVisibility(View.VISIBLE);
         resent_otp.setVisibility(View.GONE);
@@ -198,6 +200,7 @@ public class OTP_Fragment extends Fragment {
         updateResendOtpButtonState();
     }
 
+    //-----------------------resend otp ---------------------------------------------------------
     private void resend_otp(String phone_no) {
         progressDialog.setMessage("OTP is Resending...");
         progressDialog.show();
@@ -233,6 +236,7 @@ public class OTP_Fragment extends Fragment {
         PhoneAuthProvider.verifyPhoneNumber(options);
     }
 
+    //---------------------------------------otp verification---------------------------------------
     private void OTP_Verify(String code, boolean isReverification, String newVerificationId) {
         PhoneAuthCredential credential;
 
@@ -250,9 +254,7 @@ public class OTP_Fragment extends Fragment {
 
                     if ("login_customer".equals(source)) {
                         if ("Customer".equals(loginRole)) {
-//                            Log.d("MyApp", "getUserDataByPhone will be called");
                             getUserDataByPhone(login_contact);
-//                            Toast.makeText(getContext(), "Working", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(getContext(), Booking_Activity.class);
                             startActivity(intent);
                         } else if ("Driver".equals(loginRole)) {
@@ -299,6 +301,7 @@ public class OTP_Fragment extends Fragment {
         });
     }
 
+    //--------------------------------getting user data----------------------------------------
     private void getUserDataByPhone(String phoneNumber) {
         if ("Customer".equals(loginRole)) {
             getalluser_url = "http://10.0.2.2/Cargo_Go/v1/alluserbyphoneno.php";
@@ -308,7 +311,7 @@ public class OTP_Fragment extends Fragment {
             phone_no_column = "Driver_Phone_No";
         } else {
             Toast.makeText(getContext(), "Something Went Wrong", Toast.LENGTH_SHORT).show();
-            return;  // Return early to avoid making an invalid request
+            return;
         }
         // Example using Volley
         StringRequest stringRequest = new StringRequest(Request.Method.POST,
@@ -321,7 +324,6 @@ public class OTP_Fragment extends Fragment {
                             JSONObject jsonObject = new JSONObject(response);
                             if(loginRole == "Customer"){
                             if (!jsonObject.getBoolean("error")) {
-                                // Parse the JSON response
                                 String customerId = jsonObject.getString("Customer_ID");
                                 String firstName = jsonObject.getString("First_Name");
                                 String lastName = jsonObject.getString("Last_Name");
@@ -329,7 +331,6 @@ public class OTP_Fragment extends Fragment {
                                 String phone = jsonObject.getString("Phone_No");
                                 String profileImage = jsonObject.getString("Profile_Image");
 
-                                // Save user data to SharedPreferences using SessionManager
                                 SessionManager sessionManager = new SessionManager(getContext());
                                     sessionManager.createUserSession(customerId, firstName, lastName, email, phone, loginRole);
                                 sessionManager.saveProfileImageUri(profileImage);
@@ -340,7 +341,6 @@ public class OTP_Fragment extends Fragment {
                             }
                             } else if (loginRole =="Driver") {
                                 if (!jsonObject.getBoolean("error")) {
-                                    // Parse the JSON response
                                     String customerId = jsonObject.getString("Driver_ID");
                                     String firstName = jsonObject.getString("Driver_First_Name");
                                     String lastName = jsonObject.getString("Driver_Last_Name");
@@ -348,7 +348,6 @@ public class OTP_Fragment extends Fragment {
                                     String phone = jsonObject.getString("Driver_Phone_No");
                                     String profileImage = jsonObject.getString("Driver_Profile_Image");
 
-                                    // Save user data to SharedPreferences using SessionManager
                                     SessionManager sessionManager = new SessionManager(getContext());
                                     sessionManager.createUserSession(customerId, firstName, lastName, email, phone, loginRole);
                                     sessionManager.saveProfileImageUri(profileImage);
@@ -360,7 +359,6 @@ public class OTP_Fragment extends Fragment {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            // Handle JSON parsing error
                         }
                     }
                 },
@@ -368,10 +366,8 @@ public class OTP_Fragment extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         if (error instanceof NoConnectionError || error instanceof TimeoutError) {
-                            // Handle connection error here
                             Toast.makeText(getContext(), "Unable to connect to the server. Please check your internet connection.", Toast.LENGTH_LONG).show();
                         } else {
-                            // Handle other errors
                             Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
                         }
                     }

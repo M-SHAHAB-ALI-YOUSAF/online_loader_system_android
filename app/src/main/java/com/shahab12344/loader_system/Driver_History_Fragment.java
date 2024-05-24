@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -26,6 +27,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,6 +40,7 @@ public class Driver_History_Fragment extends Fragment {
     private BookingHistoryAdapter adapter;
     private ProgressDialog progressDialog;
     private SessionManager sessionManager;
+    TextView noDataTextView;
     String role, url;
 
     public Driver_History_Fragment() {
@@ -48,7 +51,7 @@ public class Driver_History_Fragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_driver__history_, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
+        noDataTextView = view.findViewById(R.id.noDataTextView);
 
         progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Loading...");
@@ -123,6 +126,11 @@ public class Driver_History_Fragment extends Fragment {
                                     String Status = driverObject.getString("Ride_Status");
 
                                     bookingList.add(new Booking(Date, Pickup, drop_off, cost, Status));
+                                }
+                                if (bookingList.isEmpty()) {
+                                    noDataTextView.setVisibility(View.VISIBLE);
+                                } else {
+                                    noDataTextView.setVisibility(View.GONE);
                                 }
                                 adapter = new BookingHistoryAdapter( bookingList);
                                 recyclerView.setAdapter(adapter);

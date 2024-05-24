@@ -42,14 +42,14 @@ public class PaymentMethod extends AppCompatActivity {
         setContentView(R.layout.activity_payment_method);
 
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait..."); // Set the message for the progress dialog
+        progressDialog.setMessage("Please wait....."); // Set the message for the progress dialog
         progressDialog.setCancelable(false); // Make it not cancellable
         bookingSessionManager = new BookingSessionManager(getApplication());
 
 
-        // Initialize the PaymentSheet
+        //---------------------------- Initialize the PaymentSheet
         paymentSheet = new PaymentSheet(this, this::onPaymentResult);
-        // Fetch payment information from your API
+        //----------------------------------- Fetch payment information from your API
         fetchapi();
     }
 
@@ -92,10 +92,12 @@ public class PaymentMethod extends AppCompatActivity {
                 .show();
     }
 
+
+    //------------------------------------fetching DATA FROM APIS-----------------------------------
     public void fetchapi() {
         progressDialog.show();
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "http://10.0.2.2/stripe/index.php";
+        String url = "http://localhost/stripe/index.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 new Response.Listener<String>() {
@@ -111,7 +113,6 @@ public class PaymentMethod extends AppCompatActivity {
                             paymentintent = jsonObject.getString("paymentIntent");
                             PaymentConfiguration.init(getApplication(), jsonObject.getString("publishableKey"));
 
-                            // Present the payment sheet immediately after fetching data
                             paymentSheet.presentWithPaymentIntent(paymentintent, new PaymentSheet.Configuration("Cargo Go"));
 
                         } catch (JSONException e) {
@@ -128,12 +129,12 @@ public class PaymentMethod extends AppCompatActivity {
             protected Map<String, String> getParams() {
                 Map<String, String> paramV = new HashMap<>();
                 paramV.put("authkey", "abc");
-                paramV.put("paymentAmount", bookingSessionManager.getRideCost()); // Add payment amount
+                paramV.put("paymentAmount", bookingSessionManager.getRideCost());
                 return paramV;
             }
         };
 
-        int timeout = 30000; // 30 seconds (adjust as needed)
+        int timeout = 30000;
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
                 timeout,
                 DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
@@ -194,7 +195,6 @@ public class PaymentMethod extends AppCompatActivity {
             }
         };
 
-        // Add the request to the Volley request queue
         RequestHandler.getInstance(getApplication()).addToRequestQueue(stringRequest);
     }
 }

@@ -32,7 +32,7 @@ public class ParentAdapter extends RecyclerView.Adapter<ParentAdapter.ParentView
         QuestionAnswer qa = questionAnswers.get(position);
         holder.parentTitle.setText(qa.getQuestion());
 
-        // Set click listener to toggle answer visibility
+        //--------------------------------- Set click listener to toggle answer visibility
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,7 +42,7 @@ public class ParentAdapter extends RecyclerView.Adapter<ParentAdapter.ParentView
             }
         });
 
-        // Show/hide childRecyclerView based on expanded state
+        //-------------------------------------------- Show/hide childRecyclerView based on expanded state
         if (expandedStates[position]) {
             holder.childRecyclerView.setVisibility(View.VISIBLE);
         } else {

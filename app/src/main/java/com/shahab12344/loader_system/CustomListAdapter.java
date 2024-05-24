@@ -55,8 +55,8 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.Vi
         holder.customerNameTextView.setText("Customer Name: " + item.getCustomerName());
         holder.pickupLocationTextView.setText("Pick Up: " + item.getPickupLocation());
         holder.dropoffLocationTextView.setText("DropOff: " + item.getDropoffLocation());
-        holder.bookingCostTextView.setText("Helpers: " + item.getBookingCost());
-        holder.bookinghelpers.setText("Cost: " + item.getBookingHelpers());
+        holder.bookingCostTextView.setText("Cost: " + item.getBookingCost());
+        holder.bookinghelpers.setText("Helpers: " + item.getBookingHelpers());
 
         String bookindid = item.getBookingid();
         String Phoneno = item.getCustomerName();

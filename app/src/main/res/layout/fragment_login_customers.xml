@@ -40,7 +40,7 @@
                         android:id="@+id/loginascustomer"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/card_selector"
+                        android:background="@drawable/cardview_selector"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -73,7 +73,7 @@
                         android:id="@+id/loginasdriver"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/card_selector"
+                        android:background="@drawable/cardview_selector"
                         android:gravity="center"
                         android:orientation="vertical">
 
@@ -131,6 +131,7 @@
             android:layout_marginTop="@dimen/_10sdp"
             android:orientation="horizontal">
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/text"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -155,10 +156,10 @@
                 app:errorEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/enterphone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:text="" />
+                    android:inputType="phone" />
             </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>

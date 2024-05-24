@@ -231,6 +231,12 @@
                     android:hint="Pickup Point"
                     android:minHeight="48dp"
                     android:padding="@dimen/_5sdp" />
+                <TextView
+                    android:id="@+id/pickupErrorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#D83030"
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/editTextDestination"
@@ -240,6 +246,12 @@
                     android:hint="Destination Point"
                     android:minHeight="48dp"
                     android:padding="@dimen/_5sdp" />
+                <TextView
+                    android:id="@+id/destinationErrorText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#D83030"
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/editTextPassengers"

@@ -137,7 +137,7 @@ public class Signup_driverFragment extends Fragment {
                 dialog.dismiss();
 
                 driver_vehicle_informationFragment vehicle_info = new driver_vehicle_informationFragment();
-                bundle.putString("emailKey", email);
+                bundle.putString("phonekey", phoneno);
                 vehicle_info.setArguments(bundle);
                 FragmentTransaction vehicle = getFragmentManager().beginTransaction();
                 vehicle.replace(R.id.login_RegFragmentContainer, vehicle_info);
@@ -158,9 +158,7 @@ public class Signup_driverFragment extends Fragment {
             public void onClick(View view) {
 
                 registerdriver();
-//                Fragment fragment = new driver_vehicle_informationFragment();
-//                getFragmentManager().beginTransaction().replace(R.id.login_RegFragmentContainer, fragment).commit();
-            }
+         }
         });
 
         btn_go_login = view.findViewById(R.id.reg_login_btn);
@@ -173,23 +171,6 @@ public class Signup_driverFragment extends Fragment {
             }
         });
 
-        //image setting
-//        selectimage = view.findViewById(R.id.addphoto);
-//        imageView = view.findViewById(R.id.imageView);
-
-        //image picker
-
-//        selectimage.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                ImagePicker.with(Signup_driverFragment.this)
-//                        //	//Final image resolution will be less than 1080 x 1080(Optional)
-//                        .crop()
-//                        .start();
-//                //openImagePicker();
-//            }
-//        });
 
         return view;
     }
@@ -477,7 +458,7 @@ public class Signup_driverFragment extends Fragment {
 
     //+++++++++++++++++++++++++++++++After OTP VERIFICATION DATA IS SEND TO DB+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     private void senddatatodatabase() {
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.person_2);
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) getResources().getDrawable(R.drawable.profile_default);
         Bitmap bitmap = bitmapDrawable.getBitmap();
         ByteArrayOutputStream byteArrayOutputStream;
         byteArrayOutputStream = new ByteArrayOutputStream();
@@ -523,7 +504,7 @@ public class Signup_driverFragment extends Fragment {
                     params.put("Driver_Email", email);
                     params.put("Driver_Phone_No", phoneno);
                     params.put("Driver_Profile_Image", base64Image);
-                    params.put("is_Active", "True");
+                    params.put("is_Active", "False");
                     return params;
                 }
             };

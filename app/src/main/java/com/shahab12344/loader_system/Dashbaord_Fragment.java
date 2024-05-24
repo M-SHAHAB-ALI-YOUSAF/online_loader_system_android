@@ -69,6 +69,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
     private EditText editTextDestination;
     private EditText editTextPassengers;
     private Spinner spinnerCount;
+    private TextView pickupErrorText, destinationErrorText;
     private Button buttonFindDriver;
     NavigationView navigationView;
     ProgressDialog progressDialog;
@@ -114,6 +115,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         editTextPickup = view.findViewById(R.id.editTextPickup);
         editTextDestination = view.findViewById(R.id.editTextDestination);
         editTextPassengers = view.findViewById(R.id.editTextPassengers);
+        editTextPassengers.setEnabled(false);
         spinnerCount = view.findViewById(R.id.spinnerCount);
         buttonFindDriver = view.findViewById(R.id.buttonFindDriver);
 
@@ -132,6 +134,9 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
         CardView mediumtruck = view.findViewById(R.id.mediumtruck);
         CardView largetruck = view.findViewById(R.id.largetruck);
         CardView elargetruck = view.findViewById(R.id.elargetruck);
+
+        pickupErrorText = view.findViewById(R.id.pickupErrorText);
+        destinationErrorText = view.findViewById(R.id.destinationErrorText);
 
 
         smalltruck.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +198,7 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                 String passengersStr = editTextPassengers.getText().toString();
                 String selectedCountStr = spinnerCount.getSelectedItem().toString();
 
+
                 if (selectedCountStr.equals("Select No of Helpers")) {
                     Toast.makeText(getContext(), "Please select number of helpers", Toast.LENGTH_SHORT).show();
                     return;
@@ -203,7 +209,22 @@ public class Dashbaord_Fragment extends Fragment implements OnMapReadyCallback, 
                     Toast.makeText(getContext(), "Please fill in all the fields", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                // Validate pickup and destination fields for alphabets only
+                if (!pickup.matches("[a-zA-Z]+")) {
+                    pickupErrorText.setVisibility(View.VISIBLE);
+                    pickupErrorText.setText("Please enter alphabets only");
+                    return;
+                } else {
+                    pickupErrorText.setVisibility(View.GONE);
+                }
 
+                if (!destination.matches("[a-zA-Z]+")) {
+                    destinationErrorText.setVisibility(View.VISIBLE);
+                    destinationErrorText.setText("Please enter alphabets only");
+                    return;
+                } else {
+                    destinationErrorText.setVisibility(View.GONE);
+                }
                 Bundle bundle = new Bundle();
                 bundle.putString("pickup", pickup);
                 bundle.putString("destination", destination);
